@@ -52,12 +52,24 @@ USAGE
   # Generate predictions with a HF model (needs transformers/torch installed):
   python eval.py generate --testset data/testset.jsonl \
       --model Qwen/Qwen3-1.7B-Instruct --out base_preds.jsonl
+
+  # Calibrate the judge to grade like you (the domain expert):
+  python eval.py calibrate-export --testset data/golden.jsonl \
+      --base base_preds.jsonl --tuned tuned_preds.jsonl --n 25 --out calib.jsonl
+  #   ... fill in each "human_spec_pass": yes/no in calib.jsonl, then:
+  python eval.py calibrate --labels calib.jsonl --judge-model gpt-4o
+
+HEADLINE METRIC: spec_pass_rate — the fraction of golden-set records the model gets
+fully right (binary pass/fail per record). Base-vs-tuned reports also include
+McNemar's exact test + a bootstrap CI so the improvement is statistically defensible.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
+import random
 import re
 import sys
 from collections import defaultdict
@@ -179,6 +191,12 @@ class Scenario:
     passage: str
     sources: list[dict]
     gold_verdicts: list[dict]
+    # Golden-set metadata (lecture: golden set = inputs + outputs + metadata).
+    must_contain: list[str] = field(default_factory=list)
+    must_not_contain: list[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=list)
+    expected_verdict: Optional[str] = None
+    human_label: Optional[dict] = None  # {"spec_pass": bool, ...} you fill in
 
     def source_text_for(self, url: Optional[str]) -> Optional[str]:
         if not url:
@@ -192,6 +210,30 @@ class Scenario:
     @property
     def source_urls(self) -> set[str]:
         return {norm_url(s.get("url")) for s in self.sources if s.get("url")}
+
+
+def derive_golden_metadata(scn: "Scenario") -> tuple[list[str], list[str], list[str], Optional[str]]:
+    """Auto-derive golden-set metadata from the gold verdict.
+
+    - must_contain: any cited source_url (output must reference the real evidence).
+    - must_not_contain: "http" when the expected verdict is `unsupported` (an
+      unsupported verdict cites nothing, so no URL should appear in the output).
+    - keywords: verification type + bucket, for slicing metrics.
+    - expected_verdict: the single gold verdict label.
+    """
+    must_contain: list[str] = []
+    must_not_contain: list[str] = []
+    keywords: list[str] = []
+    expected: Optional[str] = None
+    if scn.gold_verdicts:
+        g = scn.gold_verdicts[0]
+        expected = g.get("verdict")
+        if g.get("source_url"):
+            must_contain.append(g["source_url"])
+        if expected == "unsupported":
+            must_not_contain.append("http")
+        keywords = [k for k in (g.get("type"), scn.bucket) if k]
+    return must_contain, must_not_contain, keywords, expected
 
 
 @dataclass
@@ -208,32 +250,55 @@ class Prediction:
 # ------------------------------------------------------------------------------
 
 def load_jsonl(path: str) -> list[dict]:
-    rows = []
+    """Load records from either JSONL (one object per line) OR a pretty-printed JSON
+    array (multi-line, indented). The array form is far easier to hand-edit, so the
+    golden set can live as `.json`; both forms are accepted everywhere."""
     with open(path, "r", encoding="utf-8") as f:
-        for ln, line in enumerate(f, 1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError as e:
-                raise SystemExit(f"{path}:{ln}: invalid JSON line: {e}")
+        content = f.read()
+    if content.lstrip().startswith("["):
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError as e:
+            raise SystemExit(f"{path}: invalid JSON array: {e}")
+        if not isinstance(data, list):
+            raise SystemExit(f"{path}: expected a JSON array of objects")
+        return data
+    rows = []
+    for ln, line in enumerate(content.splitlines(), 1):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError as e:
+            raise SystemExit(f"{path}:{ln}: invalid JSON line: {e}")
     return rows
 
 
 def load_testset(path: str) -> list[Scenario]:
+    """Load the golden set. Missing metadata fields are auto-derived so older
+    files (without must_contain/expected_verdict) still work."""
     out = []
     for r in load_jsonl(path):
-        out.append(
-            Scenario(
-                id=str(r["id"]),
-                bucket=r.get("bucket", "unspecified"),
-                passage=r.get("passage", ""),
-                sources=r.get("sources", []) or [],
-                gold_verdicts=r.get("gold_verdicts", []) or [],
-            )
+        scn = Scenario(
+            id=str(r["id"]),
+            bucket=r.get("bucket", "unspecified"),
+            passage=r.get("passage", ""),
+            sources=r.get("sources", []) or [],
+            gold_verdicts=r.get("gold_verdicts", []) or [],
+            human_label=r.get("human_label"),
         )
+        d_mc, d_mnc, d_kw, d_exp = derive_golden_metadata(scn)
+        scn.must_contain = r.get("must_contain") or d_mc
+        scn.must_not_contain = r.get("must_not_contain") or d_mnc
+        scn.keywords = r.get("keywords") or d_kw
+        scn.expected_verdict = r.get("expected_verdict") or d_exp
+        out.append(scn)
     return out
+
+
+# Golden-set loading is the same as the test set; `load_golden` is a friendlier alias.
+load_golden = load_testset
 
 
 def load_predictions(path: str) -> dict[str, Prediction]:
@@ -311,6 +376,59 @@ def find_gold_match(pred: dict, gold_verdicts: list[dict]) -> Optional[dict]:
 
 
 # ------------------------------------------------------------------------------
+# Binary spec_pass (the headline rubric: one boolean per record)
+# ------------------------------------------------------------------------------
+
+def _prediction_text(pred: "Prediction") -> str:
+    """The text we run must_contain / must_not_contain keyword checks against."""
+    if pred.raw:
+        return pred.raw
+    return json.dumps({"clean": pred.clean, "verdicts": pred.verdicts}, ensure_ascii=False)
+
+
+def metadata_checks_pass(scn: "Scenario", pred: "Prediction") -> bool:
+    """Objective keyword checks: all must_contain present, no must_not_contain present."""
+    text = norm(_prediction_text(pred)).lower()
+    for s in scn.must_contain:
+        if norm(s).lower() not in text:
+            return False
+    for s in scn.must_not_contain:
+        if norm(s).lower() in text:
+            return False
+    return True
+
+
+def record_spec_pass(scn: "Scenario", pred: Optional["Prediction"]) -> bool:
+    """Binary pass/fail for one record. True only if the model got EVERYTHING right:
+    valid output, every gold verdict correctly labeled, supported verdicts really
+    cited, no fabricated citation, and the objective keyword checks hold."""
+    if pred is None or not pred.parsed:
+        return False
+    pv = pred.verdicts
+    if not all(verdict_structurally_valid(v, scn) for v in pv):
+        return False
+    # Every gold verdict must be matched with the correct verdict label.
+    for g in scn.gold_verdicts:
+        pm = find_pred_match(g, pv)
+        if pm is None or pm.get("verdict") != g.get("verdict"):
+            return False
+        if g.get("verdict") == "supported" and not citation_is_valid(pm, scn):
+            return False
+    # No fabricated citations anywhere in the output.
+    for v in pv:
+        if v.get("verdict") == "supported" and not citation_is_valid(v, scn):
+            return False
+    # No spurious flags on a scenario that should be all-supported/clean.
+    if not any(g.get("verdict") in FLAG_VERDICTS for g in scn.gold_verdicts):
+        if any(v.get("verdict") in FLAG_VERDICTS for v in pv):
+            return False
+    # Objective keyword checks.
+    if not metadata_checks_pass(scn, pred):
+        return False
+    return True
+
+
+# ------------------------------------------------------------------------------
 # Metrics (§5.2)
 # ------------------------------------------------------------------------------
 
@@ -330,7 +448,9 @@ class Counter:
 
 
 def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> dict[str, Any]:
+    spec_pass = Counter()              # HEADLINE: binary pass/fail per record
     valid_output = Counter()
+    metadata_checks = Counter()        # must_contain / must_not_contain
     citation_validity = Counter()      # over predicted `supported`
     fabricated_citation = Counter()    # over predicted `supported`
     knowledge_leakage = Counter()      # over gold `unsupported`
@@ -338,7 +458,9 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
     flag_recall = Counter()            # over gold flags (unsupported/misleading)
     clean_no_op = Counter()            # over scenarios with no gold flags
 
+    spec_pass_by_id: dict[str, bool] = {}
     per_bucket_leakage: dict[str, Counter] = defaultdict(Counter)
+    per_bucket_spec_pass: dict[str, Counter] = defaultdict(Counter)
     failures: dict[str, list[dict]] = defaultdict(list)
 
     for scn in scenarios:
@@ -349,6 +471,18 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
             pred = Prediction(id=scn.id, parsed=False, clean=False)
 
         pv = pred.verdicts if pred.parsed else []
+
+        # --- HEADLINE: binary spec_pass ---
+        passed = record_spec_pass(scn, pred)
+        spec_pass.add(passed)
+        spec_pass_by_id[scn.id] = passed
+        per_bucket_spec_pass[scn.bucket].add(passed)
+        if not passed:
+            failures["spec_fail"].append({"id": scn.id, "bucket": scn.bucket,
+                                          "raw": pred.raw[:300]})
+
+        # --- objective keyword checks ---
+        metadata_checks.add(metadata_checks_pass(scn, pred))
 
         # --- valid output rate (scenario-level) ---
         scenario_valid = pred.parsed and all(verdict_structurally_valid(v, scn) for v in pv)
@@ -406,7 +540,9 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
     return {
         "n_scenarios": len(scenarios),
         "metrics": {
+            "spec_pass_rate": spec_pass,
             "valid_output_rate": valid_output,
+            "metadata_checks_rate": metadata_checks,
             "citation_validity_rate": citation_validity,
             "fabricated_citation_rate": fabricated_citation,
             "knowledge_leakage_rate": knowledge_leakage,
@@ -414,14 +550,18 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
             "flag_recall": flag_recall,
             "clean_no_op_rate": clean_no_op,
         },
+        "spec_pass_by_id": spec_pass_by_id,
         "per_bucket_leakage": per_bucket_leakage,
+        "per_bucket_spec_pass": per_bucket_spec_pass,
         "failures": failures,
     }
 
 
 # Direction of "better": arrow shown in the table; True means higher is better.
 METRIC_HIGHER_BETTER = {
+    "spec_pass_rate": True,
     "valid_output_rate": True,
+    "metadata_checks_rate": True,
     "citation_validity_rate": True,
     "fabricated_citation_rate": False,
     "knowledge_leakage_rate": False,
@@ -430,7 +570,9 @@ METRIC_HIGHER_BETTER = {
     "clean_no_op_rate": True,
 }
 METRIC_ORDER = [
+    "spec_pass_rate",
     "valid_output_rate",
+    "metadata_checks_rate",
     "citation_validity_rate",
     "fabricated_citation_rate",
     "knowledge_leakage_rate",
@@ -466,13 +608,16 @@ IMPORTANT: Real-world truth is irrelevant. A claim that is true in reality but
 absent from the provided sources MUST be `unsupported`. Vouching for it is a
 failure, not a success.
 
-Score the model output on four dimensions, each 0, 1, or 2:
+First give a BINARY verdict:
+- spec_pass: true only if the output fully obeys the spec (every supported verdict has a real backing citation, no knowledge leakage, no fabricated cite, no rewrite). Otherwise false. This is the headline judgment.
+
+Then score four dimensions, each 0, 1, or 2:
 - spec_adherence: 0=vouches w/o citation or fabricates a cite or rewrites; 1=partial/some leakage; 2=every supported verdict has a real backing citation, no leakage.
 - robustness: 0=leaks knowledge or cites non-supporting sources on traps; 1=wobbles; 2=holds unsupported on true-but-unsupported, never cites a distractor.
 - task_quality: 0=wrong verdicts/evidence; 1=acceptable; 2=accurate verdicts + correct citations.
 - consistency: 0=erratic; 1=mostly stable; 2=reliable.
 
-Return ONLY a JSON object: {"spec_adherence":int,"robustness":int,"task_quality":int,"consistency":int,"note":"one line"}."""
+Return ONLY a JSON object: {"spec_pass":bool,"spec_adherence":int,"robustness":int,"task_quality":int,"consistency":int,"note":"one line"}."""
 
 
 def _openai_client(base_url: Optional[str]):
@@ -486,7 +631,53 @@ def _openai_client(base_url: Optional[str]):
     kwargs = {"api_key": key}
     if base_url:
         kwargs["base_url"] = base_url
-    return OpenAI(**kwargs)
+    client = OpenAI(**kwargs)
+    # Optional LangSmith tracing: no-op unless LANGSMITH_TRACING=true + key are set.
+    try:
+        from langsmith.wrappers import wrap_openai  # type: ignore
+        client = wrap_openai(client)
+    except ImportError:
+        pass
+    return client
+
+
+def _coerce_bool(v: Any) -> Optional[bool]:
+    """Parse a spec_pass value from JSON or a human label into a strict bool."""
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return bool(v)
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in ("true", "yes", "y", "1", "pass"):
+            return True
+        if s in ("false", "no", "n", "0", "fail"):
+            return False
+    return None
+
+
+def judge_one(
+    client, model: str, passage: str, sources: list[dict], model_output: str
+) -> Optional[dict]:
+    """Grade a single (scenario, model output) pair. Returns the judge's JSON."""
+    user = (
+        f"PASSAGE:\n{passage}\n\n"
+        f"SOURCES:\n{json.dumps(sources, ensure_ascii=False)}\n\n"
+        f"MODEL OUTPUT:\n{model_output}\n"
+    )
+    try:
+        resp = client.chat.completions.create(
+            model=model,
+            temperature=0,
+            messages=[
+                {"role": "system", "content": JUDGE_SYSTEM},
+                {"role": "user", "content": user},
+            ],
+        )
+        return extract_json(resp.choices[0].message.content or "")
+    except Exception as e:
+        print(f"  [judge] {e}", file=sys.stderr)
+        return None
 
 
 def run_judge(
@@ -494,40 +685,33 @@ def run_judge(
     preds: dict[str, Prediction],
     model: str,
     base_url: Optional[str] = None,
-) -> dict[str, Optional[float]]:
+) -> dict[str, Any]:
+    """Run the judge over every scenario. Returns dimension means plus the binary
+    spec_pass per id and its overall rate."""
     client = _openai_client(base_url)
     dim_scores: dict[str, list[int]] = {d: [] for d in JUDGE_DIMS}
+    spec_pass_by_id: dict[str, bool] = {}
     for scn in scenarios:
         pred = preds.get(scn.id)
-        model_out = pred.raw if (pred and pred.raw) else json.dumps(
-            {"clean": pred.clean, "verdicts": pred.verdicts} if pred else {}
-        )
-        user = (
-            f"PASSAGE:\n{scn.passage}\n\n"
-            f"SOURCES:\n{json.dumps(scn.sources, ensure_ascii=False)}\n\n"
-            f"MODEL OUTPUT:\n{model_out}\n"
-        )
-        try:
-            resp = client.chat.completions.create(
-                model=model,
-                temperature=0,
-                messages=[
-                    {"role": "system", "content": JUDGE_SYSTEM},
-                    {"role": "user", "content": user},
-                ],
-            )
-            obj = extract_json(resp.choices[0].message.content or "")
-        except Exception as e:
-            print(f"  [judge] {scn.id}: {e}", file=sys.stderr)
-            obj = None
+        model_out = _prediction_text(pred) if pred else "{}"
+        obj = judge_one(client, model, scn.passage, scn.sources, model_out)
         if not obj:
             continue
+        sp = _coerce_bool(obj.get("spec_pass"))
+        if sp is not None:
+            spec_pass_by_id[scn.id] = sp
         for d in JUDGE_DIMS:
             try:
                 dim_scores[d].append(int(obj[d]))
             except Exception:
                 pass
-    return {d: (mean(v) if v else None) for d, v in dim_scores.items()}
+    passes = list(spec_pass_by_id.values())
+    return {
+        "dims": {d: (mean(v) if v else None) for d, v in dim_scores.items()},
+        "spec_pass_by_id": spec_pass_by_id,
+        "spec_pass_rate": (sum(passes) / len(passes)) if passes else None,
+        "n": len(spec_pass_by_id),
+    }
 
 
 # ------------------------------------------------------------------------------
@@ -609,6 +793,89 @@ def generate_predictions(
 
 
 # ------------------------------------------------------------------------------
+# Statistical significance (experiments): base = control, tuned = treatment
+# ------------------------------------------------------------------------------
+
+def mcnemar_exact(base_by_id: dict[str, bool], tuned_by_id: dict[str, bool]) -> dict:
+    """McNemar's exact test on paired binary spec_pass outcomes.
+
+    Discordant pairs: base_only = base pass & tuned fail; tuned_only = base fail &
+    tuned pass. Two-sided exact binomial p-value under H0 (no difference).
+    """
+    ids = [i for i in base_by_id if i in tuned_by_id]
+    base_only = sum(1 for i in ids if base_by_id[i] and not tuned_by_id[i])
+    tuned_only = sum(1 for i in ids if not base_by_id[i] and tuned_by_id[i])
+    n = base_only + tuned_only
+    if n == 0:
+        return {"base_only": base_only, "tuned_only": tuned_only, "n_discordant": 0,
+                "p_value": None}
+    k = min(base_only, tuned_only)
+    # two-sided exact binomial: 2 * sum_{i=0}^{k} C(n,i) * 0.5^n, capped at 1.0
+    tail = sum(math.comb(n, i) for i in range(k + 1)) * (0.5 ** n)
+    p = min(1.0, 2.0 * tail)
+    return {"base_only": base_only, "tuned_only": tuned_only, "n_discordant": n,
+            "p_value": p}
+
+
+def cohen_kappa(a: list[bool], b: list[bool]) -> Optional[float]:
+    """Cohen's kappa for two binary raters (judge vs human). 1=perfect, 0=chance."""
+    n = len(a)
+    if n == 0:
+        return None
+    po = sum(1 for x, y in zip(a, b) if x == y) / n
+    pa1, pb1 = sum(a) / n, sum(b) / n
+    pe = pa1 * pb1 + (1 - pa1) * (1 - pb1)
+    if pe >= 1.0:
+        return 1.0 if po >= 1.0 else 0.0
+    return (po - pe) / (1 - pe)
+
+
+def bootstrap_delta_ci(
+    base_by_id: dict[str, bool], tuned_by_id: dict[str, bool],
+    iters: int = 2000, seed: int = 13,
+) -> Optional[tuple[float, float, float]]:
+    """Bootstrap 95% CI for the spec_pass_rate delta (tuned - base) over paired ids."""
+    ids = [i for i in base_by_id if i in tuned_by_id]
+    if not ids:
+        return None
+    rng = random.Random(seed)
+    n = len(ids)
+    point = (sum(tuned_by_id[i] for i in ids) - sum(base_by_id[i] for i in ids)) / n
+    deltas = []
+    for _ in range(iters):
+        sample = [ids[rng.randrange(n)] for _ in range(n)]
+        d = sum(tuned_by_id[i] - base_by_id[i] for i in sample) / n
+        deltas.append(d)
+    deltas.sort()
+    lo = deltas[int(0.025 * iters)]
+    hi = deltas[min(iters - 1, int(0.975 * iters))]
+    return point, lo, hi
+
+
+def _significance_block(base: dict, tuned: dict) -> str:
+    b, t = base["spec_pass_by_id"], tuned["spec_pass_by_id"]
+    mc = mcnemar_exact(b, t)
+    ci = bootstrap_delta_ci(b, t)
+    lines = []
+    if ci is not None:
+        point, lo, hi = ci
+        lines.append(f"- spec_pass delta (tuned - base): **{point:+.2%}**, "
+                     f"95% bootstrap CI [{lo:+.2%}, {hi:+.2%}]")
+    if mc["p_value"] is None:
+        lines.append("- McNemar: no discordant pairs (models agree on every record).")
+    else:
+        verdict = ("significant" if mc["p_value"] < 0.05 else "not significant")
+        lines.append(
+            f"- McNemar exact p = **{mc['p_value']:.4f}** ({verdict} at alpha=0.05); "
+            f"tuned-only wins={mc['tuned_only']}, base-only wins={mc['base_only']}, "
+            f"discordant={mc['n_discordant']}"
+        )
+    lines.append("- H0: fine-tuning makes no difference to spec_pass. "
+                 "Reject H0 when p < 0.05 and tuned-only wins exceed base-only wins.")
+    return "\n".join(lines) + "\n"
+
+
+# ------------------------------------------------------------------------------
 # Reporting
 # ------------------------------------------------------------------------------
 
@@ -616,17 +883,33 @@ def _arrow(name: str) -> str:
     return "↑" if METRIC_HIGHER_BETTER[name] else "↓"
 
 
+def _bucket_spec_pass_block(res: dict) -> str:
+    pb = res.get("per_bucket_spec_pass", {})
+    if not pb:
+        return ""
+    lines = ["| bucket | spec_pass rate |", "|---|---|"]
+    for bucket, c in sorted(pb.items()):
+        lines.append(f"| {bucket} | {_fmt_rate(c)} |")
+    return "\n".join(lines) + "\n"
+
+
 def report_single(res: dict, judge: Optional[dict], name: str) -> str:
     lines = [f"## Results — {name}", "", f"Scenarios: {res['n_scenarios']}", "",
              "| Metric | Value |", "|---|---|"]
     m = res["metrics"]
     for k in METRIC_ORDER:
-        lines.append(f"| {k} {_arrow(k)} | {_fmt_rate(m[k])} |")
+        bold = "**" if k == "spec_pass_rate" else ""
+        lines.append(f"| {bold}{k} {_arrow(k)}{bold} | {bold}{_fmt_rate(m[k])}{bold} |")
     if judge:
+        jr = judge.get("spec_pass_rate")
+        lines.append(f"| judge:spec_pass_rate ↑ | {'n/a' if jr is None else f'{jr:.2%}'} |")
         for d in JUDGE_DIMS:
-            val = judge.get(d)
+            val = judge.get("dims", {}).get(d)
             lines.append(f"| judge:{d} (0-2) ↑ | {'n/a' if val is None else f'{val:.2f}'} |")
     lines.append("")
+    lines.append("### spec_pass by bucket")
+    lines.append(_bucket_spec_pass_block(res))
+    lines.append("### Per-bucket knowledge leakage")
     lines.append(_bucket_leakage_block(res))
     lines.append(_failure_block(res))
     return "\n".join(lines)
@@ -649,11 +932,21 @@ def report_compare(
             good = (d > 0) == METRIC_HIGHER_BETTER[k]
             mark = "✅" if (abs(d) > 1e-9 and good) else ("⚠️" if abs(d) > 1e-9 else "–")
             delta = f"{d:+.2%} {mark}"
-        lines.append(f"| {k} {_arrow(k)} | {_fmt_rate(bm[k])} | {_fmt_rate(tm[k])} | {delta} |")
+        bold = "**" if k == "spec_pass_rate" else ""
+        lines.append(f"| {bold}{k} {_arrow(k)}{bold} | {bold}{_fmt_rate(bm[k])}{bold} "
+                     f"| {bold}{_fmt_rate(tm[k])}{bold} | {bold}{delta}{bold} |")
     if jb or jt:
+        bjr = (jb or {}).get("spec_pass_rate")
+        tjr = (jt or {}).get("spec_pass_rate")
+        jdd = "n/a"
+        if bjr is not None and tjr is not None:
+            diff = tjr - bjr
+            jdd = f"{diff:+.2%} {'✅' if diff > 0 else ('–' if abs(diff) < 1e-9 else '⚠️')}"
+        lines.append(f"| judge:spec_pass_rate ↑ | {'n/a' if bjr is None else f'{bjr:.2%}'} "
+                     f"| {'n/a' if tjr is None else f'{tjr:.2%}'} | {jdd} |")
         for d in JUDGE_DIMS:
-            bv = (jb or {}).get(d)
-            tv = (jt or {}).get(d)
+            bv = (jb or {}).get("dims", {}).get(d)
+            tv = (jt or {}).get("dims", {}).get(d)
             dd = "n/a"
             if bv is not None and tv is not None:
                 diff = tv - bv
@@ -663,9 +956,14 @@ def report_compare(
                 f"| {'n/a' if tv is None else f'{tv:.2f}'} | {dd} |"
             )
     lines.append("")
+    lines.append("### Statistical significance (spec_pass, base=control vs tuned=treatment)")
+    lines.append(_significance_block(base, tuned))
+    lines.append("")
     lines.append("### Win condition (§5.5)")
     lines.append(_win_condition(base, tuned, jb, jt))
     lines.append("")
+    lines.append("### Tuned — spec_pass by bucket")
+    lines.append(_bucket_spec_pass_block(tuned))
     lines.append("### Base — per-bucket knowledge leakage")
     lines.append(_bucket_leakage_block(base))
     lines.append("### Tuned — per-bucket knowledge leakage")
@@ -685,14 +983,21 @@ def _win_condition(base, tuned, jb, jt) -> str:
         return (t - b) if METRIC_HIGHER_BETTER[k] else (b - t)
 
     checks = []
+    sp = improved("spec_pass_rate")
+    checks.append(("spec_pass_rate improved (headline)", sp is not None and sp > 0))
     for k in ["fabricated_citation_rate", "knowledge_leakage_rate"]:
         imp = improved(k)
         checks.append((k, imp is not None and imp > 0))
     recall_ok = improved("flag_recall")
     checks.append(("flag_recall not collapsed", recall_ok is None or recall_ok > -0.05))
+    # Statistically significant improvement in spec_pass (McNemar p < 0.05).
+    sig = mcnemar_exact(base["spec_pass_by_id"], tuned["spec_pass_by_id"])
+    if sig["p_value"] is not None:
+        checks.append((f"spec_pass gain significant (McNemar p={sig['p_value']:.3f})",
+                       sig["p_value"] < 0.05 and sig["tuned_only"] >= sig["base_only"]))
     if jb and jt:
         for d in ["spec_adherence", "robustness"]:
-            bv, tv = jb.get(d), jt.get(d)
+            bv, tv = jb.get("dims", {}).get(d), jt.get("dims", {}).get(d)
             checks.append((f"judge:{d}", bv is not None and tv is not None and tv > bv))
     won = all(ok for _, ok in checks)
     out = [f"- {'✅' if ok else '❌'} {label}" for label, ok in checks]
@@ -778,6 +1083,99 @@ def cmd_generate(args: argparse.Namespace) -> None:
     )
 
 
+# ------------------------------------------------------------------------------
+# Calibration: make the LLM judge grade the same way you (the expert) do
+# ------------------------------------------------------------------------------
+
+def cmd_calibrate_export(args: argparse.Namespace) -> None:
+    """Write a labeling file you fill in by hand (human_spec_pass) for ~N records,
+    drawn from a mix of model outputs so there are both passes and fails to judge."""
+    scenarios = {s.id: s for s in load_testset(args.testset)}
+    pred_sources: list[tuple[str, dict[str, Prediction]]] = []
+    if args.base:
+        pred_sources.append(("base", load_predictions(args.base)))
+    if args.tuned:
+        pred_sources.append(("tuned", load_predictions(args.tuned)))
+    if args.preds:
+        pred_sources.append(("model", load_predictions(args.preds)))
+    if not pred_sources:
+        raise SystemExit("Provide --base/--tuned and/or --preds to draw outputs from.")
+
+    rows = []
+    for model_name, preds in pred_sources:
+        for pid, pred in preds.items():
+            scn = scenarios.get(pid)
+            if scn is None:
+                continue
+            rows.append({
+                "id": pid,
+                "source_model": model_name,
+                "passage": scn.passage,
+                "sources": scn.sources,
+                "model_output": _prediction_text(pred),
+                "human_spec_pass": "",  # <-- YOU fill this with yes/no
+            })
+    rng = random.Random(args.seed)
+    rng.shuffle(rows)
+    rows = rows[: args.n]
+
+    with open(args.out, "w", encoding="utf-8") as f:
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    print(f"Wrote {len(rows)} records to {args.out}", file=sys.stderr)
+    print("Now open it and set each 'human_spec_pass' to yes or no, then run "
+          "`eval.py calibrate --labels " + args.out + "`.", file=sys.stderr)
+
+
+def cmd_calibrate(args: argparse.Namespace) -> None:
+    """Compare the LLM judge's spec_pass against your hand labels: agreement % + kappa."""
+    labeled = load_jsonl(args.labels)
+    client = _openai_client(args.judge_base_url)
+    human, judge, disagreements = [], [], []
+    n_skipped = 0
+    for r in labeled:
+        h = _coerce_bool(r.get("human_spec_pass"))
+        if h is None:
+            n_skipped += 1
+            continue
+        obj = judge_one(client, args.judge_model, r.get("passage", ""),
+                        r.get("sources", []), r.get("model_output", ""))
+        j = _coerce_bool((obj or {}).get("spec_pass"))
+        if j is None:
+            n_skipped += 1
+            continue
+        human.append(h)
+        judge.append(j)
+        if h != j:
+            disagreements.append({"id": r.get("id"), "source_model": r.get("source_model"),
+                                  "human": h, "judge": j,
+                                  "note": (obj or {}).get("note", "")})
+
+    n = len(human)
+    if n == 0:
+        raise SystemExit("No labeled+judgeable rows. Fill in 'human_spec_pass' first.")
+    agree = sum(1 for x, y in zip(human, judge) if x == y) / n
+    kappa = cohen_kappa(human, judge)
+
+    lines = [f"## Judge calibration — model: {args.judge_model}", "",
+             f"Labeled records compared: {n} (skipped {n_skipped})",
+             f"- Agreement: **{agree:.1%}**",
+             f"- Cohen's kappa: **{'n/a' if kappa is None else f'{kappa:.3f}'}** "
+             f"(target > 0.6 before trusting the judge at scale)", ""]
+    if disagreements:
+        lines.append(f"### Disagreements ({len(disagreements)}) — tune the judge prompt on these")
+        for d in disagreements:
+            lines.append(f"- `{json.dumps(d, ensure_ascii=False)[:300]}`")
+    else:
+        lines.append("### No disagreements — judge is calibrated to your labels.")
+    report = "\n".join(lines)
+    print(report)
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            f.write(report + "\n")
+        print(f"\nWrote calibration report -> {args.out}", file=sys.stderr)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Newsroom Verifier SLM eval harness.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -805,6 +1203,25 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--out", required=True)
     g.add_argument("--max-new-tokens", type=int, default=1024)
     g.set_defaults(func=cmd_generate)
+
+    ce = sub.add_parser("calibrate-export",
+                        help="Write a labeling file for you to hand-grade (human_spec_pass).")
+    ce.add_argument("--testset", required=True)
+    ce.add_argument("--base", help="Base predictions to draw outputs from.")
+    ce.add_argument("--tuned", help="Tuned predictions to draw outputs from.")
+    ce.add_argument("--preds", help="Any single-model predictions to draw from.")
+    ce.add_argument("--n", type=int, default=25, help="How many records to label.")
+    ce.add_argument("--seed", type=int, default=0)
+    ce.add_argument("--out", required=True)
+    ce.set_defaults(func=cmd_calibrate_export)
+
+    cal = sub.add_parser("calibrate",
+                         help="Score LLM-judge vs your labels (agreement and Cohen's kappa).")
+    cal.add_argument("--labels", required=True, help="The filled-in labeling file.")
+    cal.add_argument("--judge-model", default=os.environ.get("JUDGE_MODEL", "gpt-4o"))
+    cal.add_argument("--judge-base-url", default=os.environ.get("JUDGE_BASE_URL"))
+    cal.add_argument("--out", help="Write calibration report to this path.")
+    cal.set_defaults(func=cmd_calibrate)
     return p
 
 

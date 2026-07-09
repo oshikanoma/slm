@@ -1,0 +1,147 @@
+## Owners
+
+- Tiffany Lam <[tiffany.lam@alphaaiengineering.com>](mailto:tiffany.lam@alphaaiengineering.com)
+
+## Purpose
+
+The “Purpose” is to outline the domain knowledge, technical requirements and behavioral qualities a small language model needs to function as a newsroom copy editor, specifically one that checks for AP Style adherence, fact-checking accuracy and transcript/quote fidelity.
+
+### In Scope
+
+- AP Style Guidebook rules, such as abbreviations, numerals, titles and oxford commas (I know, it looks gross!)
+- Understanding the technical mechanisms that enable an SLM to specialize in a narrow task (LoRA, QLoRA, supervised fine-tuning)
+- Defining what “correct” editorial behavior looks like so it can be translated into training examples and evaluation rubrics
+- Researching evaluation methods that measure whether the model *behaves* like a copy editor, not just whether it produces fluent text
+- Building structured knowledge that can be passed directly to AI as context during development and fine-tuning conversations
+
+### Out of Scope
+
+- General LLM capabilities not relevant to editorial tasks (e.g. code generation, math reasoning)
+- Deployment infrastructure, API design or production engineering concerns
+- Replacing editorial judgment wholesale. The SLM is a checking and flagging tool, not an autonomous editor
+
+---
+
+## DOK 4: Spiky Points of View (SPOVs)
+
+- **Spiky POV 1:** Journalism's hesitance toward incorporating AI in the field has set the profession back, and it requires a complete upheaval to catch it up to the efficiency of other occupations.
+   - **Elaboration:** For decades, AI has been shunned from writing spaces, especially journalism, in fear of replacing journalistic integrity and human empathy within reporting. However, this is only because journalists are focusing their efforts on the wrong parts where AI can benefit the community. There are numerous deterministic parts of the journalistic process that can be offloaded with AI, such as copy editing for AP Style Guidebook adherence and fact-checking. The distinction is mechanical vs. creative labor. None of these tasks require a reporter’s instinct, sourcing relationships or moral judgment. They are the cognitive overhead that buries journalists in mechanical labor, pulling them away from the parts of the job that only a human can do: original reporting, source cultivation, narrative judgment, and bearing witness.
+- **Spiky POV 2:** Writing is an art form that AI can mimic but never truly replicate.
+   - **Elaboration:** Language models are trained to produce statistically probable sequences of text. They can approximate the surface of great writing, but they cannot replicate what makes journalism irreplaceable, such as the lived experience of a reporter in the room or the moral weight of deciding what to publish. Writing is not a deterministic process. There is no single correct answer to “how should this lede be written,” and any model that attempts to answer that question is not editing but overwriting the author’s voice. However, copy editing for AP Style, fact-checking and hyperlink verification are deterministic with objectively correct answers. This is the only category of journalistic labor where an SLM’s output can be graded, and that binary gradability is what makes AI viable here and nowhere else in the editorial process.
+
+---
+
+## Experts
+
+- **Francesco Marconi**
+   - **Who:** Former head of AI at the Associated Press and Wall Street Journal; author of *Newsmakers: Artificial Intelligence and the Future of Journalism*
+   - **Focus:** Building and deploying AI editorial tools inside major newsrooms, making the case for AI as a journalistic efficiency layer without replacing reporters
+   - **Why Follow:** Marconi has spent a decade integrating AI into the copy editing and production pipeline of real newsrooms. His work directly validates SPOV 1 and provides institutional evidence that deterministic editorial tasks can be offloaded to AI without sacrificing journalistic integrity.
+   - **Where:** [francescomarconi.com](http://francescomarconi.com)/*Newsmakers* (Columbia University Press)
+- **Tim Dettmers**
+   - **Who:** Lead researcher and co-author of the QLoRA paper (Dettmers et al., 2023), PhD researcher in efficient deep learning
+   - **Focus:** Making large model fine-tuning accessible through quantization, specifically NF4, double quantization and paged optimizers
+   - **Why Follow:** Dettmers is the primary source on the exact technical mechanism this project uses. Understanding his reasoning behind QLoRA's design directly informs how to think about the quantization-adapter tradeoff.
+   - **Where:** [timdettmers.com](http://timdettmers.com)/Google Scholar/Hugging Face
+- **Joe Amditis**
+   - **Who:** Associate director of products and technology at the Center for Cooperative Media, Montclair State University
+   - **Focus:** Practical AI tool adoption for local and resource-constrained newsrooms
+   - **Why Follow:** Amditis writes accessibly about what AI can realistically do for journalists today. His work bridges the gap between research and newsroom implementation, directly supporting the argument that the journalism profession needs to catch up on AI adoption.
+   - **Where:** X ([@joeamditis](https://twitter.com/joeamditis))/Center for Cooperative Media publications
+
+---
+
+## DOK 3: Insights
+
+- **Insight 1:** **The job of an editor is solely to surface and flag problems, which is the same constraint a reliable AI editor must internalize.** Cutting words and rearranging syntax in the name of efficiency and clarity may alter the reporter’s tone or change the meaning of the sentence entirely. While a human has the discernment to judge how to preserve a writer’s voice, an LLM or SLM must require rigorous training fine-tuning to develop the same skill. Thus, we cannot trust an AI model purely on its context of shifting an entire article to a “journalistic” tone, as it does not have enough discretion for stylistic decisions.
+- **Insight 2:** **The same deterministic property that makes copy editing automatable is also what makes it the ideal training signal for fine-tuning.** AP Style rules, fact-checking verdicts, and hyperlink checks all produce clean binary labels (correct/incorrect, supported/unsupported, resolves/broken). Training data for a copy-editing SLM can be constructed with high confidence without expensive human preference labeling as the foundation already exists in the AP Stylebook and IFCN methodology. Most fine-tuning projects fail because the desired behavior is too subjective to label consistently. A journalism SLM sidesteps this problem entirely.
+- **Insight 3: Dataset quality matters more than model size for narrow editorial tasks.** A 7B parameter model fine-tuned on 500 high-quality AP Style correction examples will outperform a 70B base model prompted to follow AP Style because fine-tuning encodes the behavior into weights while prompting only activates existing patterns. The bottleneck for this project is curation of clean, well-labeled editorial training examples.
+
+---
+
+## DOK 2: Knowledge Tree
+
+- **Category 1:** Newsroom Copy Editing
+   - **Subcategory 1.1:** Responsibilities of a Copy Editor
+      - **Source 1:** *The New York Times Manual of Style and Usage* (or *The Associated Press Stylebook*)
+         - **DOK 1 - Facts:**
+            - Copy editors are responsible for accuracy, clarity, consistency and readability before publication by verifying spelling, grammar, punctuation, AP Style and factual consistency
+            - Editors preserve the author’s voice while improving clarity
+            - Headlines, captions, hyperlinks and pull quotes are also reviewed
+            - Professional editing is designed to reduce legal risk (defamation, attribution errors, plagiarism, libel)
+            - Copy editors work in layers. A first pass targets structural issues (logic, flow, completeness), a second pass targets per-line issues (grammar, style, word choice)
+            - AP Style is not applied uniformly. Editors use judgment to determine when deviating from style serves clarity (e.g. technical terms, brand names, direct quotes)
+            - A copy editor is the last line of defense before publication. The scope of intervention is bounded by what the author intended
+            - In digital newsrooms, copy editors also evaluate SEO implications of headlines and metadata, not just editorial quality
+            - Copy editors must distinguish between errors of commission (wrong information stated) vs. errors of omission (true but incomplete, misleading by absence)
+         - **DOK 2 - Summary:** AP Style functions as a standardized rule system that enables multiple editors to produce consistent writing regardless of author. The editor's responsibility is constrained to improving what the author intended while preserving their voice.
+- **Category 2**: Verification
+   - **Subcategory 2.1**: Fact Checking
+      - **Source**: International Fact-Checking Network (IFCN)
+         - **DOK 1 - Facts**:
+            - Professional fact-checkers verify every factual assertion independently
+            - Claims are classified as supported, unsupoprted, misleading or false
+            - Missing evidence is treated differently from incorrect evidence
+            - Reliable fact checking depends on source attribution rather than model confidence
+            - Fact-checkers distinguish between primary sources (original data, documents, statements) and secondary sources (reporting, synthesis). Primary sources are always preferred
+            - The burden of proof rests on the claim, not the correction. A claim without a source is flagged regardless of whether a counter-source exists
+         - **DOK 2 - Summary:** Fact checking is fundamentally an evidence-matching process. Editors should identify unsupported claims instead of rewriting or guessing missing information. An unsupported claim is flagged even if it happens to be true because reliability is a function of traceable evidence.
+   - **Subcategory 2.2:** Quote verification
+      - **Source:** Reuters Handbook of Journalism
+         - **DOK 1 - Facts:**
+            - Quotes should match source material exactly
+            - Minor punctuation edits are acceptable only if meaning is preserved
+            - Attribution must match the original speaker
+            - Ellipses used to shorten a quote must nove remove contezt that changes the meaning of what remains
+            - Quotes pulled from secondary sources (e.g. another article quoting the original speaker) must be traced back to the primary source before use
+            - The same words mean different things in different contexts, and a quote stripped of context can become misleading even if technically accurate
+         - **DOK 2 - Summary:** Quote verification is fidelity checking between two documents. The published quote must be a faithful representation of the original in both wording and context.
+   - **Subcategory 2.3**: Hyperlink verification
+      - **Source**: Google Search Central documentation/newsroom publishing guides
+         - **DOK 1 - Facts:**
+            - Links should resolve successfully (HTTP 200)
+            - Anchor text should accurately describe the linked content
+            - Links should support the surrounding factual claim
+            - Redirect chains (301/302) should be checked to confirm the final destination is the intended source, not a parked domain or unrelated page
+            - Canonical URLs should be used over tracking-parameter-laden URLs when linking to evidence
+            - A link to a paywall-blocked source should be flagged. Readers cannot verify the claim if they cannot access the evidence
+            - Links to social media posts (tweets, press releases) require additional scrutiny. The original post may be deleted or edited after publication
+            - Linking to a general homepage rather than the specific page containing the evidence is insufficient for support
+         - **DOK 2 - Summary:** Hyperlinks function as evidence in digital journalism and must be evaluated for three things independently: technical validity (does it resolve?), contextual relevance (does it support the specific claim?), and reader accessibility (can the reader actually verify it?)
+- **Category 3:** Small Language Models
+   - **Subcategory 3.1:** Supervised Fine-Tuning
+      - **Source:** GLoRA paper (Dettmers et al., 2023)
+         - **DOK 1 - Facts:**
+            - SFT teaches desired behaviors through instruction-response examples
+            - QLoRA enables fine-tuning using 4-bit quantization
+            - LoRA trains adapters instead of updating all model weights
+            - Dataset quality has greater impact than hyperparameter tuning for narrow behaviors
+         - **DOK 2 - Summary:** Fine-tuning specializes a general-purpose language model by repeatedly exposing it to examples of a desired behavior, making that behavior more reliable than prompting alone.
+   - **Subcategory 3.2:** LoRA
+      - **Source:** [https://medium.com/@chaturvarma/beginners-guide-to-lora-and-qlora-finetuning-for-llms-4ba641c6299c](https://medium.com/@chaturvarma/beginners-guide-to-lora-and-qlora-finetuning-for-llms-4ba641c6299c)
+         - **DOK 1 - Facts:**
+            - Popular parameter-efficient fine-tuning method that lets a large language model specialize without updating all of its weights
+            - Separate set of parameters that capture only the task-specific adjustments, which is represented as a change matrix of the same size as the original weight matrix
+            - Change matrix decomposed into A and B so you need fewer parameters to store and update, called low-rank matrices
+            - Usually stored with 16-bit or 32-bit precision (takes up lots of memory w/ very large models)
+         - **DOK 2 - Summary:** LoRA exploits the observation that fine-tuning only needs to move weights in a small subspace. By decomposing that update into two thin matrices, it achieves specialization at a fraction of the memory cost, with rank and alpha as the primary levers for controlling the tradeoff between expressiveness and efficiency.
+   - **Subcategory 3.3:** QLoRA
+      - **Source:** [https://wandb.ai/sauravmaheshkar/QLoRA/reports/What-is-QLoRA—Vmlldzo2MTI2OTc5](https://wandb.ai/sauravmaheshkar/QLoRA/reports/What-is-QLoRA---Vmlldzo2MTI2OTc5)
+         - **DOK 1 - Facts:**
+            - Memory efficient version of LoRA, quanticizes matrices to 4-bit or 8-bit
+            - Scales factors for each row or block of the weight matrix, stretching the low-bit numbers back to roughly the same range as the original full-precision weights
+            - Efficiency - can process large data sequences much more efficiently than traditional LLMs due to its query-based local attention mechanism, which allows the model to focus on relevant parts of the input data.
+            - Effectiveness - can achieve comparable accuracy to traditional LLMs despite requiring significantly less computational resources. This makes it a more attractive option for resource-constrained environments
+            - Accessibility - efficiency makes it a more accessible option for researchers and developers who do not have access to the same resources as larger institutions. This is helping to democratize access to LLMs and accelerate their adoption across diverse fields.
+            - Performance - very effective at understanding and generating natural language. This makes it a valuable tool for applications that require a deep understanding of context, such as language translation, content creation, and even complex problem-solving tasks.
+            - Real-time applications - process information quickly and accurately makes it ideal for real-time applications. This is particularly significant in fields like customer service, where AI can provide immediate and contextually relevant responses to user inquiries.
+         - **DOK 2 - Summary:** QLoRA keeps the frozen base model in 4-bit memory while training full-precision LoRA adapters on top. Quantization noise in the frozen weights is acceptable because the adapters absorb and correct for it during training.
+- **Category 4: Evaluation**
+   - **Subcategory 4.1:** Measuring Editorial Performance
+      - **Source:** HELM, MT-Bench, AlpacaEval, LLM-as-a-Judge papers
+         - **DOK 1 - Facts:**
+            - Evaluation should compare the same prompts across base and tuned models to isolate the effect of fine-tuning
+            - Behavioral metrics are often more meaningful than accuracy metrics for specialized assistants
+            - LLM-as-judge is commonly used to evaluate instruction adherence. A stronger model (e.g. GPT-4) scores outputs on rubrics like helpfulness, accuracy, and format compliance
+            - Evaluation datasets should reflect the actual task distribution. A model that scores well on general benchmarks may still fail on domain-specific editorial prompts
+         - **DOK 2 - Summary:** A successful fine-tuning project demonstrates measurable improvements in behavior consistency rather than raw language capability. Evaluating a fine-tuned editorial model requires behavioral benchmarks over domain-specific prompts. Win-rate and LLM-as-judge rubrics capture whether the model behaves like a good editor, while generic accuracy metrics miss the nuance of whether it edits like a journalist.

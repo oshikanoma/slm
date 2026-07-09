@@ -127,69 +127,90 @@ Out of scope: HTTP status/redirect checks (deterministic code), any judgment req
 
 ---
 
-## 5. Eval harness (build this BEFORE training)
+## 5. Eval harness — golden set + calibrated rubric (build this BEFORE training)
 
-Three layers, run identically on **base and tuned** models over the **same held-out scenarios**.
+Follows the eval-suite methodology: a **golden set** (inputs + outputs + metadata), a **binary-first rubric** (one `spec_pass` boolean per record, tracked as a percentage), an **LLM-judge-vs-human calibration** step, and **statistical significance** on the base-vs-tuned delta. Everything runs identically on base and tuned models over the same golden set. Implemented in [eval.py](eval.py).
 
-### 5.1 Held-out test set composition (~60–100 scenarios, never used in training)
-Each scenario = passage + source bundle (with distractors) + gold verdicts.
-- **~30% supported cases:** claims/quotes/links a provided source genuinely backs. Gold = `supported` with correct `source_url` + `evidence_span`.
-- **~25% unsupported cases:** claims no provided source backs. Gold = `unsupported`.
-- **~20% "true-but-unsupported" traps (killer set):** claims **true in the real world** but **absent from the bundle**. Gold = `unsupported`. *This is where knowledge leakage is measured.*
-- **~15% "distractor-present" traps:** a plausible-looking but non-supporting source is in the bundle. Model must not cite it. Measures citation precision.
-- **~10% misleading cases:** distorted quotes, out-of-context ellipses, homepage/paywall links, anchor mismatches.
+### 5.1 The golden set (`data/golden.jsonl`, never used in training)
+A golden set is not just input/output pairs — it carries **metadata** you assert about each record, so every record is objectively gradeable. Size **50–200 records** (recommend ~120), with this bucket mix:
+- **~30% supported:** a provided source genuinely backs the claim. Gold = `supported` + correct `source_url`/`evidence_span`.
+- **~25% unsupported:** no provided source backs it. Gold = `unsupported`.
+- **~20% true-but-unsupported (killer set):** true in the real world but absent from the bundle. Gold = `unsupported`. *Where knowledge leakage is measured.*
+- **~15% distractor-present:** a plausible non-supporting source is in the bundle; the model must not cite it.
+- **~10% misleading:** distorted/out-of-context quotes, homepage/paywall links.
 
-Store as JSONL: `{ "id", "passage", "sources": [...], "gold_verdicts": [...], "bucket" }`.
+Each record (JSONL):
+```json
+{
+  "id": "...", "bucket": "...",
+  "passage": "...", "sources": [{"url": "...", "text": "..."}],
+  "gold_verdicts": [ ... ],
+  "must_contain": ["<url the output must cite>"],
+  "must_not_contain": ["http"],            // for unsupported: no URL may appear
+  "keywords": ["claim", "unsupported"],    // for slicing metrics
+  "expected_verdict": "unsupported",
+  "human_label": null                       // optional, filled during calibration
+}
+```
+`must_contain` / `must_not_contain` / `keywords` / `expected_verdict` are auto-derived by [datagen.py](datagen.py), so the golden set and training data carry them for free. (`must_not_contain: ["http"]` on an `unsupported` record is a cheap, exact objective check: a correct `unsupported` verdict cites nothing, so no URL should appear in the output.)
 
-### 5.2 Deterministic behavioral checks (no LLM — your hard numbers)
-1. **Valid output rate:** parses as schema; `span` verbatim in passage; every `supported` has non-null `source_url` + `evidence_span`.
-2. **Citation-validity rate:** for `supported` verdicts, `source_url` ∈ provided URLs **and** `evidence_span` is a verbatim substring of that source's text. (Fails on fabricated citations.)
-3. **Fabricated-citation rate (forbidden-failure metric A) ↓:** fraction of `supported` verdicts with an invented URL or non-verbatim quote.
-4. **Knowledge-leakage rate (forbidden-failure metric B) ↓:** on true-but-unsupported traps, fraction wrongly marked `supported`. **Headline number.**
-5. **Citation precision ↑:** of `supported` verdicts, fraction whose cited span genuinely backs the claim (substring + judge spot-check); penalizes citing distractors.
-6. **Flag recall ↑:** of gold `unsupported`/`misleading` items, fraction correctly flagged.
-7. **Clean no-op rate ↑:** on fully-supported scenarios, fraction with no spurious flags.
+### 5.2 Binary-first rubric — the headline metric
+The headline is **`spec_pass_rate`**: the fraction of golden-set records the model gets *fully* right. A record's `spec_pass` is `true` only if ALL hold (a single boolean, tracked as a %):
+- valid schema output, AND
+- every gold verdict is matched with the correct verdict label, AND
+- every `supported` verdict cites a real, verbatim source (no fabricated citation), AND
+- no knowledge leakage, and no spurious flags on clean records, AND
+- all `must_contain` present and no `must_not_contain` present.
 
-### 5.3 LLM-as-judge rubric (frontier model)
-Adapt Appendix A. Judge 0/1/2:
+Keep it simple: one yes/no per record, one percentage per model.
+
+### 5.3 Objective sub-metrics (no LLM — the hard numbers)
+Reported alongside the headline for diagnosis: `valid_output_rate`, `metadata_checks_rate`, `citation_validity_rate`, **`fabricated_citation_rate ↓`**, **`knowledge_leakage_rate ↓`**, `citation_precision`, `flag_recall`, `clean_no_op_rate` — plus `spec_pass` and leakage broken out **per bucket**.
+
+### 5.4 Calibrated LLM-as-judge (subjective layer)
+The judge emits a binary `spec_pass` (headline) **and** the 0/1/2 dimensions for the required Appendix A deliverable:
 
 | Dimension | 0 | 1 | 2 |
 |---|---|---|---|
-| **Spec adherence** | Vouches without citation / fabricates a cite / rewrites | Partial; some leakage | Every `supported` has a real, backing citation |
-| **Robustness** | Leaks knowledge or cites distractors on traps | Wobbles | Holds `unsupported`; never cites a non-supporting source |
+| **Spec adherence** | Vouches without citation / fabricates / rewrites | Partial; some leakage | Every `supported` has a real, backing citation |
+| **Robustness** | Leaks knowledge or cites distractors on traps | Wobbles | Holds `unsupported`; never cites a distractor |
 | **Task quality** | Wrong verdicts / wrong evidence | Acceptable | Accurate verdicts + correct citations |
 | **Consistency** | Varies across similar inputs | Mostly stable | Reliable every time |
 
-Judge prompt includes the Behavior Spec (§1) and notes: **real-world truth is irrelevant — only the provided sources count.**
+**Calibration (do this before trusting the judge at scale):** the judge is only useful if it grades the way you — the newsroom domain expert — would.
+1. `eval.py calibrate-export` samples ~25 records (mixing base and tuned outputs, so there are both passes and fails) into a labeling file.
+2. You set `human_spec_pass` = yes/no on each by hand.
+3. `eval.py calibrate` runs the judge on the same records and reports **agreement %** and **Cohen's kappa**, plus the exact disagreements.
+4. If kappa is low (< 0.6), tighten the judge prompt / try a stronger `--judge-model` and repeat. Once kappa is high, trust the judge to grade the full set.
 
-### 5.4 Base-vs-tuned protocol + results table
+```mermaid
+flowchart LR
+  outputs[Model outputs] --> humanLabel[You label ~25]
+  outputs --> judgeLabel[LLM judge labels same 25]
+  humanLabel --> compare["Agreement pct + kappa"]
+  judgeLabel --> compare
+  compare -->|"kappa < 0.6"| tune[Tune judge prompt or model]
+  tune --> judgeLabel
+  compare -->|"kappa high"| trust[Trust judge at scale]
+```
 
-| Metric | Base | Tuned | Δ |
-|---|---|---|---|
-| Valid output rate | | | |
-| Citation-validity rate ↑ | | | |
-| **Fabricated-citation rate ↓** | | | |
-| **Knowledge-leakage rate (traps) ↓** | | | |
-| Citation precision ↑ | | | |
-| Flag recall ↑ | | | |
-| Clean no-op rate ↑ | | | |
-| Judge: Spec adherence (mean 0–2) | | | |
-| Judge: Robustness (mean 0–2) | | | |
-| Judge: Task quality (mean 0–2) | | | |
-| Judge: Consistency (mean 0–2) | | | |
+### 5.5 Experiment: base vs tuned, with statistical significance
+Frame it as an experiment: **base = control, tuned = treatment**, single manipulated variable = the fine-tuning, **H0 = fine-tuning makes no difference to `spec_pass`**. The `score` report prints, per metric, Base / Tuned / Δ (headline `spec_pass_rate` first), the 0/1/2 judge means, and:
+- **McNemar's exact test** on paired `spec_pass` outcomes → p-value.
+- **Bootstrap 95% CI** on the `spec_pass_rate` delta.
 
-Plus an **error-analysis paragraph**: where does the tuned model still leak or mis-cite, and is it a data problem?
+Reject H0 when p < 0.05 and tuned-only wins exceed base-only wins. (This is why the golden set needs 50–200 records — too few and the delta won't reach significance.) Plus an **error-analysis paragraph** from the per-bucket `spec_pass` and sampled failures: where does the tuned model still fail, and is it a data problem?
 
-### 5.5 Success criteria
-- **Midweek gate (Day 3):** base-vs-tuned numbers on the board on this exact harness.
-- **Win condition:** tuned model beats base on **fabricated-citation rate** and **knowledge-leakage rate** (both much lower) plus **Judge Spec adherence + Robustness**, without collapsing recall. Thesis proven when the tuned model reliably (a) cites a real, verbatim source for everything it calls `supported`, and (b) says `unsupported` on true-but-unsupported traps where the base model vouches or invents a link.
+### 5.6 Success criteria
+- **Midweek gate (Day 3):** base-vs-tuned numbers on the board on this harness.
+- **Win condition (auto-checked by `eval.py`):** tuned beats base on **`spec_pass_rate`** (headline), **`fabricated_citation_rate ↓`**, and **`knowledge_leakage_rate ↓`**, without collapsing `flag_recall`, and the `spec_pass` gain is **statistically significant** (McNemar p < 0.05) plus judged higher on spec adherence + robustness.
 
 ---
 
 ## 6. How the spec drives data generation
 
 - Teacher generates `(passage + source bundle → JSON verdicts)` pairs. The bundle is assembled by the thin retriever (or handcrafted) and **always includes distractors**.
-- **Quality gate (must pass §5.2 before entering the dataset):** reject any example where a `supported` verdict's `source_url`/`evidence_span` isn't verbatim in the bundle, or `span` isn't verbatim in the passage.
+- **Quality gate (must pass the §5.3 objective checks before entering the dataset):** reject any example where a `supported` verdict's `source_url`/`evidence_span` isn't verbatim in the bundle, or `span` isn't verbatim in the passage.
 - **Deliberately seed true-but-unsupported claims** (labeled `unsupported`) and **distractor-only bundles** — this is the core signal that fights both faces of the forbidden failure.
 - Include misleading quotes/links, clean scenarios, and varied bundle lengths so the model learns to read evidence, not pattern-match.
 

@@ -1,0 +1,33 @@
+# Secrets — never commit
+.env
+.env.*
+*_env
+*.slm_teacher_env
+*.key
+secrets*
+
+# Model artifacts (large; regenerated in Colab)
+outputs/
+*.safetensors
+*-lora/
+*-lora.zip
+*.ckpt
+
+# Prediction / result outputs (regenerated per run)
+base_preds.jsonl
+tuned_preds.jsonl
+results*.md
+calib*.jsonl
+
+# Local junk / scratch data
+data/junk*.jsonl
+data/train.junk*.jsonl
+data/*.sample.jsonl
+data/synth_chunks/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/

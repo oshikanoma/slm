@@ -11,3 +11,8 @@ openai>=1.0
 # torch>=2.2
 # peft>=0.11
 # accelerate>=0.33
+
+# --- Real-article ingestion (ingest_texastribune.py) ---
+# Pulls Texas Tribune (Creative Commons) articles into golden-set scaffolds.
+requests>=2.31
+beautifulsoup4>=4.12

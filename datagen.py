@@ -42,6 +42,7 @@ from eval import (
     Scenario,
     build_messages,
     citation_is_valid,
+    derive_golden_metadata,
     extract_json,
     is_verbatim_substring,
     norm_url,
@@ -64,7 +65,14 @@ def teacher_client(base_url: Optional[str]):
     kwargs = {"api_key": key}
     if base_url:
         kwargs["base_url"] = base_url
-    return OpenAI(**kwargs)
+    client = OpenAI(**kwargs)
+    # Optional LangSmith tracing: no-op unless LANGSMITH_TRACING=true + key are set.
+    try:
+        from langsmith.wrappers import wrap_openai  # type: ignore
+        client = wrap_openai(client)
+    except ImportError:
+        pass
+    return client
 
 
 # ------------------------------------------------------------------------------
@@ -199,6 +207,44 @@ def passes_gate(scn: Scenario, bucket: str) -> tuple[bool, str]:
 # Generation
 # ------------------------------------------------------------------------------
 
+class FatalAPIError(Exception):
+    """Non-retryable API failure (bad key, inactive billing) — abort, don't hammer."""
+
+
+# Substrings that mean "stop immediately, retrying won't help."
+_FATAL_MARKERS = (
+    "billing_not_active", "account is not active", "invalid_api_key",
+    "incorrect api key", "no such organization", "insufficient_quota",
+    "401", "403",
+)
+# Substrings that mean "transient — back off and retry."
+_RETRY_MARKERS = ("rate limit", "rate_limit", "429", "timeout", "timed out",
+                  "temporarily", "overloaded", "503", "502", "connection")
+
+
+def _create_with_retry(client, *, max_retries: int = 5, **kwargs):
+    """Call chat.completions.create with backoff on rate limits; abort on fatal errors."""
+    delay = 2.0
+    last_exc: Optional[Exception] = None
+    for attempt in range(max_retries):
+        try:
+            return client.chat.completions.create(**kwargs)
+        except Exception as e:  # noqa: BLE001 — classify below
+            msg = str(e).lower()
+            if any(m in msg for m in _FATAL_MARKERS):
+                raise FatalAPIError(str(e))
+            last_exc = e
+            if any(m in msg for m in _RETRY_MARKERS) and attempt < max_retries - 1:
+                print(f"  [rate-limited, retrying in {delay:.0f}s] {str(e)[:120]}",
+                      file=sys.stderr)
+                time.sleep(delay)
+                delay = min(delay * 2, 30.0)
+                continue
+            raise
+    if last_exc:
+        raise last_exc
+
+
 def gen_one(client, model: str, bucket: str, topic: str, temperature: float) -> Optional[Scenario]:
     user = (
         f"Topic: {topic}.\n"
@@ -207,7 +253,8 @@ def gen_one(client, model: str, bucket: str, topic: str, temperature: float) -> 
         "Return the JSON object now."
     )
     try:
-        resp = client.chat.completions.create(
+        resp = _create_with_retry(
+            client,
             model=model,
             temperature=temperature,
             messages=[
@@ -215,6 +262,8 @@ def gen_one(client, model: str, bucket: str, topic: str, temperature: float) -> 
                 {"role": "user", "content": user},
             ],
         )
+    except FatalAPIError:
+        raise  # bubble up to main() for a clean abort
     except Exception as e:
         print(f"  [api error] {e}", file=sys.stderr)
         return None
@@ -322,12 +371,19 @@ def to_sft_record(scn: Scenario) -> dict:
 
 
 def to_scenario_record(scn: Scenario) -> dict:
+    """Golden-set record: inputs + outputs + auto-derived metadata (must_contain,
+    must_not_contain, keywords, expected_verdict) so every record is gradeable."""
+    mc, mnc, kw, exp = derive_golden_metadata(scn)
     return {
         "id": scn.id,
         "bucket": scn.bucket,
         "passage": scn.passage,
         "sources": scn.sources,
         "gold_verdicts": scn.gold_verdicts,
+        "must_contain": mc,
+        "must_not_contain": mnc,
+        "keywords": kw,
+        "expected_verdict": exp,
     }
 
 
@@ -363,7 +419,22 @@ def main(argv: Optional[list[str]] = None) -> None:
         if args.junk:
             scn = gen_junk(bucket, len(accepted), rng)
         else:
-            scn = gen_one(client, args.model, bucket, topic, args.temperature)
+            try:
+                scn = gen_one(client, args.model, bucket, topic, args.temperature)
+            except FatalAPIError as e:
+                raise SystemExit(
+                    "\nFATAL: the teacher API rejected the request and retrying won't help:\n"
+                    f"  {e}\n\n"
+                    "Common causes:\n"
+                    "  - OpenAI 'billing_not_active': your org has no API credits (ask your admin),\n"
+                    "    or the key is under a different org. This is NOT a code problem.\n"
+                    "  - Bad/rotated key.\n\n"
+                    "Free alternatives (no OpenAI billing): point datagen at another provider:\n"
+                    "  export TEACHER_BASE_URL='https://api.groq.com/openai/v1'   # free Groq key\n"
+                    "  export TEACHER_MODEL='llama-3.3-70b-versatile'\n"
+                    "  export OPENAI_API_KEY='gsk_...'\n"
+                    "or run a local Ollama teacher (TEACHER_BASE_URL=http://localhost:11434/v1)."
+                )
         if scn is None:
             reject_reasons["unparseable"] += 1
             continue
