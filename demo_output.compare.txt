@@ -1,0 +1,24 @@
+  [retriever] backend=wikipedia query='James Webb Space Telescope launched December 25 2021 French Guiana.'
+
+=== RETRIEVE (search backend: wikipedia) ===
+  [1] https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+      The James Webb Space Telescope ( JWST ) is a space telescope designed to conduct infrared astronomy . It is the largest ...
+  [2] https://en.wikipedia.org/wiki/Launch_and_commissioning_of_the_James_Webb_Space_Telescope
+      The James Webb Space Telescope (JWST) is a space telescope designed primarily to conduct infrared astronomy . Its comple...
+  [3] https://en.wikipedia.org/wiki/Guiana_Space_Centre
+      The Guiana Space Centre ( French: Centre spatial guyanais ; CSG ), also called Europe's Spaceport , [ 3 ] [ 4 ] is a spa...
+
+=== TUNED model (v3 adapter) verdicts ===
+  [✓ SUPPORTED] The James Webb Space Telescope launched on December 25, 2021 from French Guiana.
+      cited:   https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+      backing: "The telescope was confirmed to be receiving power, starting a two-week deployment phase of its parts [ 4 ] and"
+      checked: https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+      nearest: "The telescope was confirmed to be receiving power, starting a two-week deployment phase of its parts [ 4 ] and"
+
+=== BASE model (no adapter) verdicts — for contrast ===
+  [✓ SUPPORTED] The James Webb Space Telescope launched on December 25, 2021 from French Guiana.
+      cited:   https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+      backing: ""
+      checked: https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+      nearest: "The Webb was launched on 25 December 2021 on an Ariane 5 rocket from Kourou , French Guiana."
+

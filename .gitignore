@@ -6,24 +6,31 @@
 *.key
 secrets*
 
-# Model artifacts (large; regenerated in Colab)
+# Model artifacts (large; downloaded from Colab, regenerable)
 outputs/
+artifacts/
 *.safetensors
 *-lora/
-*-lora.zip
+*-lora*.zip
 *.ckpt
 
-# Prediction / result outputs (regenerated per run)
-base_preds.jsonl
-tuned_preds.jsonl
-results*.md
+# Prediction outputs (regenerated per run)
+base_preds*.jsonl
+tuned_preds*.jsonl
 calib*.jsonl
+# transient scoring output (keep the committed results.v*.colab.md evidence files)
+/results.md
+/results-*.md
 
-# Local junk / scratch data
+# Local junk / scratch data + backups
 data/junk*.jsonl
 data/train.junk*.jsonl
 data/*.sample.jsonl
 data/synth_chunks/
+data/v1_backup/
+data/v2_backup/
+data/tt.excluded.json
+data/wikinews.excluded.json
 
 # Python
 __pycache__/
