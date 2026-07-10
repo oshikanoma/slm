@@ -179,9 +179,12 @@ def extract_json(text: str) -> Optional[dict]:
 # Data model
 # ------------------------------------------------------------------------------
 
-FLAG_VERDICTS = {"unsupported", "misleading"}
-VALID_TYPES = {"claim", "quote", "link"}
-VALID_VERDICTS = {"supported", "unsupported", "misleading"}
+FLAG_VERDICTS = {"unsupported", "misleading", "ap_flag"}
+VALID_TYPES = {"claim", "quote", "link", "ap_style"}
+VALID_VERDICTS = {"supported", "unsupported", "misleading", "ap_flag"}
+# AP-style verdicts check the passage against a deterministic style rule, NOT against
+# a source, so they are exempt from the source_url/checked_source_url requirements.
+AP_VERDICTS = {"ap_flag"}
 
 
 @dataclass
@@ -348,9 +351,14 @@ def verdict_structurally_valid(v: dict, scn: Scenario) -> bool:
         return False
     if not is_verbatim_substring(v.get("span"), scn.passage):
         return False
-    # v2 contract: EVERY verdict must show the source it checked (a real provided
-    # URL) and a verbatim nearest_span from that source — the model always shows
-    # its work, even when flagging.
+    # AP-style verdicts are checked against a deterministic style rule, not a source.
+    # They require a rule + a suggested fix, and must NOT rewrite the passage (the
+    # suggestion is a separate field). No source/citation applies.
+    if v.get("type") == "ap_style" or v.get("verdict") == "ap_flag":
+        return (v.get("type") == "ap_style" and v.get("verdict") == "ap_flag"
+                and bool(v.get("rule")) and bool(v.get("suggestion")))
+    # v2 contract: EVERY (non-AP) verdict must show the source it checked (a real
+    # provided URL) and a verbatim nearest_span — the model always shows its work.
     if not checked_source_is_valid(v, scn):
         return False
     if v.get("verdict") == "supported":
@@ -385,6 +393,23 @@ def checked_source_is_valid(v: dict, scn: Scenario) -> bool:
 # ------------------------------------------------------------------------------
 # Matching predicted verdicts to gold verdicts
 # ------------------------------------------------------------------------------
+
+_AP_RULE_AREAS = ["number", "time", "a.m", "p.m", "month", "date", "comma",
+                  "oxford", "serial", "percent", "%", "title", "state"]
+
+
+def _ap_rule_matches(pred: dict, gold: dict) -> bool:
+    """Lenient: the predicted AP rule should reference the same rule AREA as gold
+    (e.g. both about 'numbers' or both about 'time'), not word-for-word identical."""
+    pg = norm(pred.get("rule")).lower()
+    gg = norm(gold.get("rule")).lower()
+    if not pg:
+        return False
+    gold_areas = {a for a in _AP_RULE_AREAS if a in gg}
+    if not gold_areas:
+        return bool(pg)  # gold rule uncategorized -> accept any non-empty rule
+    return any(a in pg for a in gold_areas)
+
 
 def find_pred_match(gold: dict, pred_verdicts: list[dict]) -> Optional[dict]:
     for p in pred_verdicts:
@@ -438,6 +463,9 @@ def record_spec_pass(scn: "Scenario", pred: Optional["Prediction"]) -> bool:
         if pm is None or pm.get("verdict") != g.get("verdict"):
             return False
         if g.get("verdict") == "supported" and not citation_is_valid(pm, scn):
+            return False
+        # AP flag: the predicted rule must name the same AP rule area as gold.
+        if g.get("verdict") == "ap_flag" and not _ap_rule_matches(pm, g):
             return False
     # No fabricated citations anywhere in the output.
     for v in pv:
@@ -764,8 +792,10 @@ Rules:
 
 Distinction: source_url/evidence_span mean "this source BACKS the claim" (only on supported). checked_source_url/nearest_span mean "this is the source I LOOKED AT" (always). On unsupported, source_url is null but checked_source_url is still set.
 
+AP STYLE: Also flag AP Stylebook violations in the passage with type "ap_style", verdict "ap_flag". Give the AP `rule` and a `suggestion` (the corrected text) — but DO NOT rewrite the passage; the suggestion goes only in its own field. Common rules: spell out numbers one through nine, figures for 10+; times are lowercase "a.m."/"p.m." with periods and no ":00" on the hour; abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. only with a date (never March–July); no serial/Oxford comma in a simple series; use "%" with a numeral (e.g. 10%). AP-style verdicts have no source_url/checked_source_url.
+
 Output ONLY a single JSON object, no prose:
-{"clean": <bool>, "verdicts": [{"type":"claim|quote|link","span":"...","verdict":"supported|unsupported|misleading","source_url":"..."|null,"evidence_span":"..."|null,"checked_source_url":"...","nearest_span":"...","explanation":"..."}]}
+{"clean": <bool>, "verdicts": [{"type":"claim|quote|link|ap_style","span":"...","verdict":"supported|unsupported|misleading|ap_flag","source_url":"..."|null,"evidence_span":"..."|null,"checked_source_url":"..."|null,"nearest_span":"..."|null,"rule":"<AP rule, ap_style only>","suggestion":"<corrected text, ap_style only>","explanation":"..."}]}
 `clean` is true iff `verdicts` is empty."""
 
 

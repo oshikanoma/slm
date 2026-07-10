@@ -4207,5 +4207,565 @@
     ],
     "expected_verdict": "misleading",
     "human_label": null
+  },
+  {
+    "id": "ap_oxf_0088",
+    "bucket": "ap_style",
+    "passage": "The flag was silver, blue, and black.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was silver, blue, and black.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was silver, blue and black.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0087",
+    "bucket": "ap_style",
+    "passage": "The vote was held on December 16.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on December 16.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Dec. 16.",
+        "explanation": "With a specific date, AP abbreviates 'December' to 'Dec.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0072",
+    "bucket": "ap_style",
+    "passage": "The vote was held on January 16.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on January 16.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Jan. 16.",
+        "explanation": "With a specific date, AP abbreviates 'January' to 'Jan.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0149",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 20 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 20 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 20% this year.",
+        "explanation": "AP now uses '20%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0034",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 4 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 4 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 4% this year.",
+        "explanation": "AP now uses '4%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0126",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 4:00 P.M. sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 4:00 P.M. sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 4 p.m. sharp.",
+        "explanation": "AP uses '4 p.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0131",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 12:00 AM sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 12:00 AM sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 12 a.m. sharp.",
+        "explanation": "AP uses '12 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0114",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 19 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 19 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 19% this year.",
+        "explanation": "AP now uses '19%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0032",
+    "bucket": "ap_style",
+    "passage": "The vote was held on January 9.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on January 9.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Jan. 9.",
+        "explanation": "With a specific date, AP abbreviates 'January' to 'Jan.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0078",
+    "bucket": "ap_style",
+    "passage": "The flag was silver, gold, and bronze.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was silver, gold, and bronze.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was silver, gold and bronze.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0127",
+    "bucket": "ap_style",
+    "passage": "The vote was held on December 2.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on December 2.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Dec. 2.",
+        "explanation": "With a specific date, AP abbreviates 'December' to 'Dec.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0150",
+    "bucket": "ap_style",
+    "passage": "The board has 3 reports.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The board has 3 reports.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "The board has three reports.",
+        "explanation": "AP spells out numbers below 10, so '3' should be 'three'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0152",
+    "bucket": "ap_style",
+    "passage": "The vote was held on September 19.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on September 19.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Sept. 19.",
+        "explanation": "With a specific date, AP abbreviates 'September' to 'Sept.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0019",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 25 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 25 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 25% this year.",
+        "explanation": "AP now uses '25%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0062",
+    "bucket": "ap_style",
+    "passage": "The vote was held on December 14.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on December 14.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Dec. 14.",
+        "explanation": "With a specific date, AP abbreviates 'December' to 'Dec.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0046",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 3:00 A.M. sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 3:00 A.M. sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 3 a.m. sharp.",
+        "explanation": "AP uses '3 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0123",
+    "bucket": "ap_style",
+    "passage": "The flag was bronze, white, and yellow.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was bronze, white, and yellow.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was bronze, white and yellow.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0013",
+    "bucket": "ap_style",
+    "passage": "The flag was white, green, and copper.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was white, green, and copper.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was white, green and copper.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0144",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 27 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 27 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 27% this year.",
+        "explanation": "AP now uses '27%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0051",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 12:00 A.M. sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 12:00 A.M. sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 12 a.m. sharp.",
+        "explanation": "AP uses '12 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
   }
 ]
