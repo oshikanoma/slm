@@ -228,11 +228,18 @@ def derive_golden_metadata(scn: "Scenario") -> tuple[list[str], list[str], list[
     if scn.gold_verdicts:
         g = scn.gold_verdicts[0]
         expected = g.get("verdict")
+        # A correct output must reference the real evidence: the backing citation
+        # when supported, and always the checked source it reviewed (v2 contract).
         if g.get("source_url"):
             must_contain.append(g["source_url"])
-        if expected == "unsupported":
-            must_not_contain.append("http")
+        if g.get("checked_source_url"):
+            must_contain.append(g["checked_source_url"])
+        # NOTE (v2): we no longer forbid "http" on unsupported records — an
+        # unsupported verdict now legitimately carries a checked_source_url. Knowledge
+        # leakage is measured directly (gold-unsupported marked supported), not by URL
+        # presence. must_not_contain stays available for explicit per-record use.
         keywords = [k for k in (g.get("type"), scn.bucket) if k]
+    must_contain = list(dict.fromkeys(must_contain))  # de-dup, preserve order
     return must_contain, must_not_contain, keywords, expected
 
 
@@ -341,10 +348,15 @@ def verdict_structurally_valid(v: dict, scn: Scenario) -> bool:
         return False
     if not is_verbatim_substring(v.get("span"), scn.passage):
         return False
+    # v2 contract: EVERY verdict must show the source it checked (a real provided
+    # URL) and a verbatim nearest_span from that source — the model always shows
+    # its work, even when flagging.
+    if not checked_source_is_valid(v, scn):
+        return False
     if v.get("verdict") == "supported":
-        # supported REQUIRES a non-null citation
+        # supported REQUIRES a non-null backing citation
         return bool(v.get("source_url")) and bool(v.get("evidence_span"))
-    # unsupported / misleading -> citation fields should be null/empty
+    # unsupported / misleading -> source_url/evidence_span policy handled elsewhere
     return True
 
 
@@ -355,6 +367,19 @@ def citation_is_valid(v: dict, scn: Scenario) -> bool:
         return False
     src_text = scn.source_text_for(url)
     return is_verbatim_substring(v.get("evidence_span"), src_text)
+
+
+def checked_source_is_valid(v: dict, scn: Scenario) -> bool:
+    """v2: every verdict names the closest source it reviewed (`checked_source_url`,
+    verbatim from the provided bundle) and a `nearest_span` quoted verbatim from that
+    source. This is the transparency guarantee — the model must show what it looked at
+    even when it flags a claim `unsupported`. A missing or fabricated checked source
+    is a failure just like a fabricated citation."""
+    url = v.get("checked_source_url")
+    if norm_url(url) not in scn.source_urls:
+        return False
+    src_text = scn.source_text_for(url)
+    return is_verbatim_substring(v.get("nearest_span"), src_text)
 
 
 # ------------------------------------------------------------------------------
@@ -600,19 +625,27 @@ return verdicts (supported/unsupported/misleading) for claims, quotes, and links
 A `supported` verdict is valid ONLY if it cites a source_url copied verbatim from
 the provided sources AND an evidence_span quoted verbatim from that source that
 directly backs the claim. If no provided source supports a claim, the correct
-verdict is `unsupported` with null citation. The model must NOT use outside/
-real-world knowledge to vouch for a claim, must NOT invent URLs or quotes, and
-must NOT rewrite the passage.
+verdict is `unsupported` with source_url/evidence_span null. The model must NOT use
+outside/real-world knowledge to vouch for a claim, must NOT invent URLs or quotes,
+and must NOT rewrite the passage.
+
+TRANSPARENCY REQUIREMENT (important for grading): EVERY verdict — including
+`unsupported` — must also include checked_source_url (a provided URL, copied
+verbatim) and nearest_span (a verbatim substring of that source), showing which
+source the model reviewed and the closest content it found. An output that flags a
+claim `unsupported` but omits or fabricates checked_source_url/nearest_span FAILS.
+Conversely, an `unsupported` verdict that correctly leaves source_url null while
+providing a real checked_source_url is CORRECT — do not penalize it for "not citing."
 
 IMPORTANT: Real-world truth is irrelevant. A claim that is true in reality but
-absent from the provided sources MUST be `unsupported`. Vouching for it is a
-failure, not a success.
+absent from the provided sources MUST be `unsupported` (source_url null, but
+checked_source_url still set). Vouching for it is a failure, not a success.
 
 First give a BINARY verdict:
-- spec_pass: true only if the output fully obeys the spec (every supported verdict has a real backing citation, no knowledge leakage, no fabricated cite, no rewrite). Otherwise false. This is the headline judgment.
+- spec_pass: true only if the output fully obeys the spec (every supported verdict has a real backing citation; every verdict has a real checked_source_url + nearest_span; no knowledge leakage; no fabricated cite; no rewrite). Otherwise false. This is the headline judgment.
 
 Then score four dimensions, each 0, 1, or 2:
-- spec_adherence: 0=vouches w/o citation or fabricates a cite or rewrites; 1=partial/some leakage; 2=every supported verdict has a real backing citation, no leakage.
+- spec_adherence: 0=vouches w/o citation, fabricates a cite/checked_source, or rewrites; 1=partial/some leakage or missing checked_source; 2=every supported verdict has a real backing citation and every verdict has a real checked_source_url, no leakage.
 - robustness: 0=leaks knowledge or cites non-supporting sources on traps; 1=wobbles; 2=holds unsupported on true-but-unsupported, never cites a distractor.
 - task_quality: 0=wrong verdicts/evidence; 1=acceptable; 2=accurate verdicts + correct citations.
 - consistency: 0=erratic; 1=mostly stable; 2=reliable.
@@ -725,11 +758,14 @@ Rules:
 - Mark a verdict `supported` ONLY if you can copy a source_url exactly from the provided sources AND quote an evidence_span that is an exact substring of that source's text and directly backs the claim.
 - If no provided source supports a claim, mark it `unsupported` with source_url and evidence_span set to null.
 - Mark `misleading` for quotes altered from the source, out-of-context quotes, or links whose page does not support the specific claim.
+- ALWAYS show your work: for EVERY verdict, set checked_source_url to the provided source you reviewed that is closest/most relevant to the claim (copied exactly from the sources), and nearest_span to an exact substring of THAT source's text that is the closest thing to the claim. This is required even when the verdict is `unsupported` — it shows which source you checked and why it does not back the claim. checked_source_url must be a real provided URL; never invent one.
 - NEVER use outside or real-world knowledge to vouch for a claim. A claim that is true in reality but absent from the sources is `unsupported`.
 - NEVER invent a URL or a quote. NEVER rewrite the passage.
 
+Distinction: source_url/evidence_span mean "this source BACKS the claim" (only on supported). checked_source_url/nearest_span mean "this is the source I LOOKED AT" (always). On unsupported, source_url is null but checked_source_url is still set.
+
 Output ONLY a single JSON object, no prose:
-{"clean": <bool>, "verdicts": [{"type":"claim|quote|link","span":"...","verdict":"supported|unsupported|misleading","source_url":"..."|null,"evidence_span":"..."|null,"explanation":"..."}]}
+{"clean": <bool>, "verdicts": [{"type":"claim|quote|link","span":"...","verdict":"supported|unsupported|misleading","source_url":"..."|null,"evidence_span":"..."|null,"checked_source_url":"...","nearest_span":"...","explanation":"..."}]}
 `clean` is true iff `verdicts` is empty."""
 
 

@@ -41,6 +41,7 @@ from typing import Optional
 from eval import (
     Scenario,
     build_messages,
+    checked_source_is_valid,
     citation_is_valid,
     derive_golden_metadata,
     extract_json,
@@ -90,6 +91,8 @@ You produce one self-contained scenario as a single JSON object with these field
      "verdict": "supported|unsupported|misleading",
      "source_url": "<a url COPIED EXACTLY from sources>" or null,
      "evidence_span": "<a span COPIED EXACTLY from that source's text>" or null,
+     "checked_source_url": "<the url COPIED EXACTLY from sources that you reviewed / is closest to the claim>",
+     "nearest_span": "<a span COPIED EXACTLY from that checked source's text — the closest content to the claim>",
      "explanation": "<one sentence>"}
 
 HARD RULES (data is rejected if violated):
@@ -99,9 +102,14 @@ HARD RULES (data is rejected if violated):
    must genuinely back the claim.
 3. For verdict "unsupported": "source_url" and "evidence_span" MUST be null, and
    NO source may actually contain the claimed fact.
-4. Use realistic-looking but FICTIONAL urls and facts (e.g. numbers, names). Do not
+4. ALWAYS (every verdict, including unsupported): "checked_source_url" MUST exactly
+   equal one url in "sources", and "nearest_span" MUST be an exact substring of THAT
+   source's "text". This shows which source was reviewed. On "supported" it is
+   normally the same url as source_url; on "unsupported" it is the closest
+   non-supporting source. Never invent a checked_source_url.
+5. Use realistic-looking but FICTIONAL urls and facts (e.g. numbers, names). Do not
    rely on real-world knowledge being checkable — only the provided sources count.
-5. Output ONLY the JSON object, no prose."""
+6. Output ONLY the JSON object, no prose."""
 
 BUCKET_INSTRUCTIONS = {
     "supported": (
@@ -173,6 +181,10 @@ def passes_gate(scn: Scenario, bucket: str) -> tuple[bool, str]:
         return False, f"bad verdict {v.get('verdict')!r}"
     if not is_verbatim_substring(v.get("span"), scn.passage):
         return False, "span not verbatim in passage"
+
+    # v2 contract: every verdict must show a real checked source it reviewed.
+    if not checked_source_is_valid(v, scn):
+        return False, "checked_source_url/nearest_span not verbatim / url not in sources"
 
     verdict = v.get("verdict")
     if verdict == "supported":

@@ -50,7 +50,17 @@ This is the Brainlift's IFCN insight made trainable: *"reliability is a function
 
 ---
 
-## 3. Output contract (structured, gradable)
+## 3. Output contract (structured, gradable) — v2
+
+> **v2 change (show-your-work).** Calibration with the newsroom expert surfaced that a
+> bare `unsupported` verdict ("no source backs this," citing nothing) is unsatisfying
+> for an editor: they want to see *which source the model checked* and *why it fell
+> short*. v2 adds two fields to **every** verdict — `checked_source_url` and
+> `nearest_span` — the source the model reviewed and the closest content it found.
+> Crucially, `source_url`/`evidence_span` still stay **null on `unsupported`**, so the
+> "supported ⇒ has a real backing citation" line stays bright and fabrication remains
+> cheaply detectable. `checked_source_url` = "what I looked at" (always); `source_url`
+> = "what BACKS the claim" (only when supported).
 
 The model outputs **a single JSON object, no prose before or after**:
 
@@ -64,6 +74,8 @@ The model outputs **a single JSON object, no prose before or after**:
       "verdict": "supported",
       "source_url": "https://bls.gov/news/march-jobs",
       "evidence_span": "The March jobs report showed unemployment at 3.2%.",
+      "checked_source_url": "https://bls.gov/news/march-jobs",
+      "nearest_span": "The March jobs report showed unemployment at 3.2%.",
       "explanation": "Figure and month match the cited source verbatim."
     },
     {
@@ -72,7 +84,9 @@ The model outputs **a single JSON object, no prose before or after**:
       "verdict": "unsupported",
       "source_url": null,
       "evidence_span": null,
-      "explanation": "No provided source states a decade comparison. Not asserting from outside knowledge."
+      "checked_source_url": "https://bls.gov/news/march-jobs",
+      "nearest_span": "Unemployment fell 0.2 points from February.",
+      "explanation": "Checked the BLS release; it reports the drop but makes no decade comparison. Not asserting from outside knowledge."
     },
     {
       "type": "quote",
@@ -80,15 +94,9 @@ The model outputs **a single JSON object, no prose before or after**:
       "verdict": "misleading",
       "source_url": "https://gov.example/transcript",
       "evidence_span": "\"We are cautiously optimistic about these numbers,\" Gov. Lee said.",
+      "checked_source_url": "https://gov.example/transcript",
+      "nearest_span": "\"We are cautiously optimistic about these numbers,\" Gov. Lee said.",
       "explanation": "Quote alters wording ('thrilled' vs 'cautiously optimistic'); changes meaning."
-    },
-    {
-      "type": "link",
-      "span": "[full report](https://example.com/home)",
-      "verdict": "unsupported",
-      "source_url": null,
-      "evidence_span": null,
-      "explanation": "Linked page is a homepage; its provided text does not contain the specific figure it's cited for."
     }
   ]
 }
@@ -97,8 +105,9 @@ The model outputs **a single JSON object, no prose before or after**:
 Contract rules:
 - `clean: true` **iff** `verdicts` is empty (everything checkable was cited & supported).
 - `span` = exact substring of the passage.
-- For `supported`: **both** `source_url` (verbatim from a provided source's metadata) **and** `evidence_span` (verbatim substring of that source's text) are required and non-null.
-- For `unsupported`: `source_url` and `evidence_span` are both `null`.
+- **Every verdict** (all three labels): `checked_source_url` is a provided URL copied verbatim, and `nearest_span` is a verbatim substring of that source's text — the source the model reviewed and the closest content it found. A missing/fabricated checked source is a failure, same as a fabricated citation.
+- For `supported`: **also** `source_url` (verbatim from a provided source) **and** `evidence_span` (verbatim substring of that source) are required and non-null; normally `checked_source_url == source_url`.
+- For `unsupported`: `source_url` and `evidence_span` are both `null` (only `checked_source_url`/`nearest_span` are set).
 - The model outputs verdicts only — never edits the passage.
 - `type` ∈ {`claim`, `quote`, `link`}; `verdict` ∈ {`supported`, `unsupported`, `misleading`}.
 

@@ -16,13 +16,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2026/07/07/ice-fatal-shooting-houston-lorenzo-salgado-araujo/",
+        "nearest_span": "In Texas last year, an agent shot and killed a man on South Padre Island ."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2026/07/07/ice-fatal-shooting-houston-lorenzo-salgado-araujo/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -47,7 +49,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/12/01/texas-tech-university-system-brandon-creighton-race-gender-discussions/",
         "evidence_span": "In a memo to university presidents, Creighton said instructors may not promote that “one race or sex is inherently superior to another; an individual, by virtue or race or sex, is inherently racist, sexist or oppressive, consciously or unconsciously; any person should be discriminated against or receive adverse treatment because of race or sex; moral character or worth is determined by race or sex; individuals bear responsibility or guilt for actions of others of the same race or sex; or meritocracy or a strong work ethic are racist, sexist or constructs of oppression.” Creighton defined promotion as “presenting these beliefs as correct or required and pressuring students to affirm them, rather than analyzing or critiquing them as one viewpoint among others.” The memo includes a flowchart detailing a new approval process for any course content that touches on the restricted topics.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/12/01/texas-tech-university-system-brandon-creighton-race-gender-discussions/",
+        "nearest_span": "In a memo to university presidents, Creighton said instructors may not promote that “one race or sex is inherently superior to another; an individual, by virtue or race or sex, is inherently racist, sexist or oppressive, consciously or unconsciously; any person should be discriminated against or receive adverse treatment because of race or sex; moral character or worth is determined by race or sex; individuals bear responsibility or guilt for actions of others of the same race or sex; or meritocracy or a strong work ethic are racist, sexist or constructs of oppression.” Creighton defined promotion as “presenting these beliefs as correct or required and pressuring students to affirm them, rather than analyzing or critiquing them as one viewpoint among others.” The memo includes a flowchart detailing a new approval process for any course content that touches on the restricted topics."
       }
     ],
     "must_contain": [
@@ -78,13 +82,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2026/04/10/texas-tech-ban-gender-identity-sexual-orientation-academics/",
+        "nearest_span": "In core and lower-level undergraduate courses, the memo says instructors generally cannot assign materials that are “centered on” or “include” sexual orientation or gender identity and defined the concepts: If an industry-standard textbook contains such content, the memo says faculty do not have to redact it, but they cannot highlight it, test students on it or spend class time on it."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2026/04/10/texas-tech-ban-gender-identity-sexual-orientation-academics/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -109,7 +115,9 @@
         "verdict": "supported",
         "source_url": "https://www.ic3.gov/",
         "evidence_span": "The Internet Crime Complaint Center (IC3) is the central hub for reporting cyber-enabled crime.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.ic3.gov/",
+        "nearest_span": "The Internet Crime Complaint Center (IC3) is the central hub for reporting cyber-enabled crime."
       }
     ],
     "must_contain": [
@@ -140,13 +148,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.gallup.com/analytics/711827/scams-in-america.aspx",
+        "nearest_span": "Stop Scams Alliance and Gallup’s first joint study finds that scams affected millions of Americans in 2025, imposing significant financial and emotional costs."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.gallup.com/analytics/711827/scams-in-america.aspx"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -171,13 +181,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.ic3.gov/PSA/2026/PSA260515-2",
+        "nearest_span": "As a supplement to the Internet Crime Complaint Center ( IC3 ) 2025 Annual Report , the Federal Bureau of Investigation ( FBI ) provides the following data involving cryptocurrency kiosks at the state level."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.ic3.gov/PSA/2026/PSA260515-2"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -202,13 +214,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://house.texas.gov/videos/22699",
+        "nearest_span": "The .gov means it's official. State government websites often end in .gov Before sharing sensitive information, make sure you're on a State government site. The site is secure. The https://"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://house.texas.gov/videos/22699"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -233,7 +247,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/04/13/texas-tamu-president-susan-ballabina/",
         "evidence_span": "Ballabina, who assumes the role on May 11, most recently served as executive vice chancellor for the Texas A&M University System, overseeing day-to-day operations across its 12 universities and eight state agencies.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/04/13/texas-tamu-president-susan-ballabina/",
+        "nearest_span": "Ballabina, who assumes the role on May 11, most recently served as executive vice chancellor for the Texas A&M University System, overseeing day-to-day operations across its 12 universities and eight state agencies."
       }
     ],
     "must_contain": [
@@ -264,13 +280,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2025/12/10/texas-a-m-mark-welsh-regents-abbott-fired/",
+        "nearest_span": "But almost immediately after he was named interim president in mid-2023, some members of the Texas A&M University System Board of Regents, who oversee the university, were raising concerns."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2025/12/10/texas-a-m-mark-welsh-regents-abbott-fired/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -295,7 +313,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/11/04/texas-am-university-mark-welsh-separation-agreement/",
         "evidence_span": "Welsh III more than $3.5 million after he resigned amid the fallout of a controversy over the teaching of gender identity issues, according to a separation agreement obtained through a public records request.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/11/04/texas-am-university-mark-welsh-separation-agreement/",
+        "nearest_span": "Welsh III more than $3.5 million after he resigned amid the fallout of a controversy over the teaching of gender identity issues, according to a separation agreement obtained through a public records request."
       }
     ],
     "must_contain": [
@@ -326,7 +346,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/11/03/texas-trump-immigration-crackdown-ice-arrests-deportation/",
         "evidence_span": "“But believe me, this was not my intention; I only wanted to get her help.” In Texas, which has the second-largest population of undocumented immigrants in the country — with more than 1.6 million of the estimated 13.7 million nationally — the local criminal justice system has become the main funnel sending undocumented immigrants into ICE custody, according to a Texas Tribune analysis of federal government data.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/11/03/texas-trump-immigration-crackdown-ice-arrests-deportation/",
+        "nearest_span": "“But believe me, this was not my intention; I only wanted to get her help.” In Texas, which has the second-largest population of undocumented immigrants in the country — with more than 1.6 million of the estimated 13.7 million nationally — the local criminal justice system has become the main funnel sending undocumented immigrants into ICE custody, according to a Texas Tribune analysis of federal government data."
       }
     ],
     "must_contain": [
@@ -357,7 +379,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/05/04/ruben-ray-martinez-josh-orta-south-padre-ice-shooting-death/",
         "evidence_span": "Josh, 25, saw officers in South Padre Island drag Ruben out of his car that night in March 2025.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/05/04/ruben-ray-martinez-josh-orta-south-padre-ice-shooting-death/",
+        "nearest_span": "Josh, 25, saw officers in South Padre Island drag Ruben out of his car that night in March 2025."
       }
     ],
     "must_contain": [
@@ -388,13 +412,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.reaganlibrary.gov/exhibits/virtual-exhibits/nancy-reagan-and-fight-against-drug-abuse",
+        "nearest_span": "And I just want to say a heartfelt ‘thank you’ to all those people out there who are working so hard to get drug abuse under control."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.reaganlibrary.gov/exhibits/virtual-exhibits/nancy-reagan-and-fight-against-drug-abuse"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -419,13 +445,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2026/03/09/texas-cannabis-hemp-thc-police-raids/",
+        "nearest_span": "Dallas attorney Chelsie Spencer specializes in making sure Texas businesses that sell hemp-derived THC products know how to stay in compliance with state and federal rules and regulations, an area that can be very confusing."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2026/03/09/texas-cannabis-hemp-thc-police-raids/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -450,13 +478,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2025/07/22/texas-marijuana-hemp-data-poison-control-overdose/",
+        "nearest_span": "As a father, I can’t ignore that, and as a body, I don’t think we should ignore it.” Data provided from the Texas Poison Center Network confirms a sharp increase in marijuana-related calls starting in 2019, a year after hemp-derived THC was legalized by the federal government, from 923 to 2,592 calls in 2024."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2025/07/22/texas-marijuana-hemp-data-poison-control-overdose/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -481,7 +511,9 @@
         "verdict": "supported",
         "source_url": "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-illegal-voting-tipline-stop-unlawful-voting-activity-ahead",
         "evidence_span": "Free and fair elections are a cornerstone of a thriving republic, and with the authority granted to my office by the Legislature, we will stop at nothing to uncover and stop any illegal voting activity,” said Attorney General Paxton.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-illegal-voting-tipline-stop-unlawful-voting-activity-ahead",
+        "nearest_span": "Free and fair elections are a cornerstone of a thriving republic, and with the authority granted to my office by the Legislature, we will stop at nothing to uncover and stop any illegal voting activity,” said Attorney General Paxton."
       }
     ],
     "must_contain": [
@@ -512,13 +544,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/26/texas-democratic-convention-james-talarico-gina-hinojosa-economy-corruption-culture-wars/",
+        "nearest_span": "CORPUS CHRISTI — James Talarico and Gina Hinojosa , who will lead Texas Democrats’ ticket in November, closed the first full day of their party’s state convention Friday with speeches that sharply focused on populist economic politics and accused Republicans of fixating on culture wars to distract from what they cast as the ruling party’s corruption and hollowing out of the middle class."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2026/06/26/texas-democratic-convention-james-talarico-gina-hinojosa-economy-corruption-culture-wars/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -543,7 +577,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/12/09/greg-abbott-schools-property-tax-cut-election-2026/",
         "evidence_span": "The three-term governor’s signature proposal is a sweeping property tax-cut platform.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/12/09/greg-abbott-schools-property-tax-cut-election-2026/",
+        "nearest_span": "The three-term governor’s signature proposal is a sweeping property tax-cut platform."
       }
     ],
     "must_contain": [
@@ -574,13 +610,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.nytimes.com/interactive/polls/texas-governor-election-polls-2026.html",
+        "nearest_span": "Trump won in the presidential election, while Republicans have only two seats to protect in states Kamala Harris won."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.nytimes.com/interactive/polls/texas-governor-election-polls-2026.html"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -605,13 +643,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source sentence backs the specific claim."
+        "explanation": "No provided source sentence backs the specific claim.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/03/new-world-screwworm-texas-reported-case/",
+        "nearest_span": "The infested animal is a three-week old calf, and there have been no other detections so far."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.texastribune.org/2026/06/03/new-world-screwworm-texas-reported-case/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -636,7 +676,9 @@
         "verdict": "supported",
         "source_url": "https://x.com/repchiproy/status/2069552782487499116?s=46&t=ZL8JosuzQ8pnfXAfUHOpoQ",
         "evidence_span": "This dereliction of duty has raised serious questions about whether repeat offenders, including criminal aliens, are being adequately prosecuted and whether the safety of law-abiding Austin residents is being put first.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://x.com/repchiproy/status/2069552782487499116?s=46&t=ZL8JosuzQ8pnfXAfUHOpoQ",
+        "nearest_span": "This dereliction of duty has raised serious questions about whether repeat offenders, including criminal aliens, are being adequately prosecuted and whether the safety of law-abiding Austin residents is being put first."
       }
     ],
     "must_contain": [
@@ -667,7 +709,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/08/texas-data-centers-reporting-impact/",
         "evidence_span": "Fill out the form below to help us continue our reporting.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/08/texas-data-centers-reporting-impact/",
+        "nearest_span": "Fill out the form below to help us continue our reporting."
       }
     ],
     "must_contain": [
@@ -698,7 +742,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/12/texas-gop-convention-greg-abbott-demolish-democrats-james-talarico-2027-legislature/",
         "evidence_span": "Greg Abbott on Friday vowed to eviscerate Democrats in November’s midterm elections during a speech at the Texas GOP convention that previewed his next legislative priorities and his message for the fall campaign: tying the opposition to “Bernie Sanders socialism.” Speaking to thousands of delegates at the George R.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/12/texas-gop-convention-greg-abbott-demolish-democrats-james-talarico-2027-legislature/",
+        "nearest_span": "Greg Abbott on Friday vowed to eviscerate Democrats in November’s midterm elections during a speech at the Texas GOP convention that previewed his next legislative priorities and his message for the fall campaign: tying the opposition to “Bernie Sanders socialism.” Speaking to thousands of delegates at the George R."
       }
     ],
     "must_contain": [
@@ -729,7 +775,9 @@
         "verdict": "supported",
         "source_url": "https://www.biblegateway.com/passage/?search=luke%2014%3A7-11&version=NIRV",
         "evidence_span": "11 All those who lift themselves up will be made humble.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.biblegateway.com/passage/?search=luke%2014%3A7-11&version=NIRV",
+        "nearest_span": "11 All those who lift themselves up will be made humble."
       }
     ],
     "must_contain": [
@@ -760,7 +808,9 @@
         "verdict": "supported",
         "source_url": "https://apnews.com/article/abortion-texas-hospital-doomed-pregnancy-discharge-308ea695a17f72500cbf31622fdb521a",
         "evidence_span": "Kyleigh Thurman, one of the patients who filed a federal complaint against an emergency room for not treating her ectopic pregnancy, talks about her experience at her studio, Aug.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://apnews.com/article/abortion-texas-hospital-doomed-pregnancy-discharge-308ea695a17f72500cbf31622fdb521a",
+        "nearest_span": "Kyleigh Thurman, one of the patients who filed a federal complaint against an emergency room for not treating her ectopic pregnancy, talks about her experience at her studio, Aug."
       }
     ],
     "must_contain": [
@@ -791,7 +841,9 @@
         "verdict": "supported",
         "source_url": "https://x.com/GregAbbott_TX/status/2072429052133089540?s=20",
         "evidence_span": "Greg Abbott @GregAbbott_TX Kelly led the Comptroller’s office during a pivotal chapter for Texas.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://x.com/GregAbbott_TX/status/2072429052133089540?s=20",
+        "nearest_span": "Greg Abbott @GregAbbott_TX Kelly led the Comptroller’s office during a pivotal chapter for Texas."
       }
     ],
     "must_contain": [
@@ -822,7 +874,9 @@
         "verdict": "supported",
         "source_url": "https://schoolsnewsfeed.com/board-meeting-recap-district-2/",
         "evidence_span": "have 250 students enrolled by the end of the year",
-        "explanation": "The source directly quotes and supports the claim of 250 students enrolling by the end of the year in the new STEM program."
+        "explanation": "The source directly quotes and supports the claim of 250 students enrolling by the end of the year in the new STEM program.",
+        "checked_source_url": "https://schoolsnewsfeed.com/board-meeting-recap-district-2/",
+        "nearest_span": "have 250 students enrolled by the end of the year"
       }
     ],
     "must_contain": [
@@ -853,7 +907,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/01/14/texas-legislature-2025-speaker-race-live-updates/",
         "evidence_span": "The party indicated as much late last year, after Burrows announced that he had enough bipartisan support to win the speakership, though it’s likely that any attempt to bar lawmakers from primary ballots would face legal challenges.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/01/14/texas-legislature-2025-speaker-race-live-updates/",
+        "nearest_span": "The party indicated as much late last year, after Burrows announced that he had enough bipartisan support to win the speakership, though it’s likely that any attempt to bar lawmakers from primary ballots would face legal challenges."
       }
     ],
     "must_contain": [
@@ -884,7 +940,9 @@
         "verdict": "supported",
         "source_url": "https://www.corporatefinancials.com/q2report2024",
         "evidence_span": "The report notes that the increase in Q2 earnings is largely attributed to a 15% reduction in operational costs, leading to a 25% year-over-year increase in net income.",
-        "explanation": "This claim is directly supported by the company's quarterly report."
+        "explanation": "This claim is directly supported by the company's quarterly report.",
+        "checked_source_url": "https://www.corporatefinancials.com/q2report2024",
+        "nearest_span": "The report notes that the increase in Q2 earnings is largely attributed to a 15% reduction in operational costs, leading to a 25% year-over-year increase in net income."
       }
     ],
     "must_contain": [
@@ -915,7 +973,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/15/texas-big-bend-border-wall-property-rights-eminent-domain/",
         "evidence_span": "Over the past year, the Trump administration has sent mixed signals about its plans to erect border barriers in this rugged, mountainous region, saying that it prefers other infrastructure such cameras, sensors and vehicle barriers inside Big Bend National Park and the neighboring Big Bend Ranch State Park.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/15/texas-big-bend-border-wall-property-rights-eminent-domain/",
+        "nearest_span": "Over the past year, the Trump administration has sent mixed signals about its plans to erect border barriers in this rugged, mountainous region, saying that it prefers other infrastructure such cameras, sensors and vehicle barriers inside Big Bend National Park and the neighboring Big Bend Ranch State Park."
       }
     ],
     "must_contain": [
@@ -946,7 +1006,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/11/texas-tech-ken-paxton-brendan-sorsby-big-12/",
         "evidence_span": "Texas Tech University quarterback Brendan Sorsby will not play in the upcoming college football season, a school official said Monday, after the Big 12 Conference sued the university to keep Sorsby off the field amid concerns over improper betting.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/11/texas-tech-ken-paxton-brendan-sorsby-big-12/",
+        "nearest_span": "Texas Tech University quarterback Brendan Sorsby will not play in the upcoming college football season, a school official said Monday, after the Big 12 Conference sued the university to keep Sorsby off the field amid concerns over improper betting."
       }
     ],
     "must_contain": [
@@ -977,7 +1039,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
         "evidence_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
+        "nearest_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones."
       }
     ],
     "must_contain": [
@@ -1008,7 +1072,9 @@
         "verdict": "supported",
         "source_url": "https://www.cityoflufkin.com/_T2_R653.php",
         "evidence_span": "Based on current projections, the project would support approximately 500 construction jobs over more than four years and approximately 30 full-time operational positions once in service.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.cityoflufkin.com/_T2_R653.php",
+        "nearest_span": "Based on current projections, the project would support approximately 500 construction jobs over more than four years and approximately 30 full-time operational positions once in service."
       }
     ],
     "must_contain": [
@@ -1039,7 +1105,9 @@
         "verdict": "supported",
         "source_url": "https://www.houstonchronicle.com/politics/texas/article/snap-food-stamps-soda-chips-20252881.php",
         "evidence_span": "Miles said while everyone may want to have healthy food, there are people in urban and rural areas who don’t have access to the type Middleton wants them to eat",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.houstonchronicle.com/politics/texas/article/snap-food-stamps-soda-chips-20252881.php",
+        "nearest_span": "Miles said while everyone may want to have healthy food, there are people in urban and rural areas who don’t have access to the type Middleton wants them to eat"
       }
     ],
     "must_contain": [
@@ -1070,7 +1138,9 @@
         "verdict": "supported",
         "source_url": "https://www.fox26houston.com/news/houston-drowning-hospital-childrens-patient-treatment-update",
         "evidence_span": "Further testing will help guide care and there are no imminent plans to end care regardless of results.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.fox26houston.com/news/houston-drowning-hospital-childrens-patient-treatment-update",
+        "nearest_span": "Further testing will help guide care and there are no imminent plans to end care regardless of results."
       }
     ],
     "must_contain": [
@@ -1101,7 +1171,9 @@
         "verdict": "supported",
         "source_url": "https://highwaydevelopmentagency.gov/press-releases/new-interchange-planned-for-highway-12-and-county-road-5",
         "evidence_span": "A major construction project will be completed by 2028, enhancing traffic flow and safety in the region.",
-        "explanation": "The provided source directly supports the claim"
+        "explanation": "The provided source directly supports the claim",
+        "checked_source_url": "https://highwaydevelopmentagency.gov/press-releases/new-interchange-planned-for-highway-12-and-county-road-5",
+        "nearest_span": "A major construction project will be completed by 2028, enhancing traffic flow and safety in the region."
       }
     ],
     "must_contain": [
@@ -1132,7 +1204,9 @@
         "verdict": "supported",
         "source_url": "https://investor.corpnetworthinc.com/q2-2023-earnings-release",
         "evidence_span": "Net Income: $12.5 million",
-        "explanation": "The earnings release directly states the company's net income for the quarter."
+        "explanation": "The earnings release directly states the company's net income for the quarter.",
+        "checked_source_url": "https://investor.corpnetworthinc.com/q2-2023-earnings-release",
+        "nearest_span": "Net Income: $12.5 million"
       }
     ],
     "must_contain": [
@@ -1163,7 +1237,9 @@
         "verdict": "supported",
         "source_url": "https://example.org/annual-report-fact-check",
         "evidence_span": "250 new donors contributed a total of $1.2 million to our organization.",
-        "explanation": "The claim was directly supported by a source that matched the exact details of the claim."
+        "explanation": "The claim was directly supported by a source that matched the exact details of the claim.",
+        "checked_source_url": "https://example.org/annual-report-fact-check",
+        "nearest_span": "250 new donors contributed a total of $1.2 million to our organization."
       }
     ],
     "must_contain": [
@@ -1194,7 +1270,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2025/12/23/texas-app-store-child-ban-age-verification/",
         "evidence_span": "District Judge Robert Pitman, an Obama appointee, on Tuesday sided with the law’s opponents, saying that parts of it are “unconstitutionally vague” and “exceedingly overbroad.” “The Act is akin to a law that would require every bookstore to verify the age of every customer at the door and, for minors, require parental consent before the child or teen could enter and again when they try to purchase a book,” Pitman wrote in a 20-page ruling granting a preliminary injunction.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2025/12/23/texas-app-store-child-ban-age-verification/",
+        "nearest_span": "District Judge Robert Pitman, an Obama appointee, on Tuesday sided with the law’s opponents, saying that parts of it are “unconstitutionally vague” and “exceedingly overbroad.” “The Act is akin to a law that would require every bookstore to verify the age of every customer at the door and, for minors, require parental consent before the child or teen could enter and again when they try to purchase a book,” Pitman wrote in a 20-page ruling granting a preliminary injunction."
       }
     ],
     "must_contain": [
@@ -1225,7 +1303,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
         "evidence_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
+        "nearest_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones."
       }
     ],
     "must_contain": [
@@ -1256,7 +1336,9 @@
         "verdict": "supported",
         "source_url": "https://www.justice.gov/eoir/staff-profile/chief-administrative-hearing-officer",
         "evidence_span": "James McHenry was appointed Chief Administrative Hearing Officer (CAHO) in January 2021, after previously working for the Executive Office for Immigration Review (EOIR) in multiple capacities.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.justice.gov/eoir/staff-profile/chief-administrative-hearing-officer",
+        "nearest_span": "James McHenry was appointed Chief Administrative Hearing Officer (CAHO) in January 2021, after previously working for the Executive Office for Immigration Review (EOIR) in multiple capacities."
       }
     ],
     "must_contain": [
@@ -1287,7 +1369,9 @@
         "verdict": "supported",
         "source_url": "https://www.keranews.org/news/2025-10-23/dallas-oak-lawn-united-methodist-church-umc-rainbow-steps-abbott-crosswalks",
         "evidence_span": "Freshly painted rainbow colors could be seen on the left side of the stairs outside Oak Lawn United Methodist Church in Dallas Wednesday afternoon — a public display of support for the neighborhood’s large LGBTQ community amid a new directive from the governor.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.keranews.org/news/2025-10-23/dallas-oak-lawn-united-methodist-church-umc-rainbow-steps-abbott-crosswalks",
+        "nearest_span": "Freshly painted rainbow colors could be seen on the left side of the stairs outside Oak Lawn United Methodist Church in Dallas Wednesday afternoon — a public display of support for the neighborhood’s large LGBTQ community amid a new directive from the governor."
       }
     ],
     "must_contain": [
@@ -1326,7 +1410,9 @@
         "verdict": "supported",
         "source_url": "https://www.theguardian.com/business/2026/apr/13/oil-price-tops-100-dollars-barrel-us-blockade-strait-of-hormuz",
         "evidence_span": "US president’s previous threat to block strait of Hormuz had led to a 6.9% increase in earlier trading Oil prices have fallen back after briefly rising to above $100 a barrel as Donald Trump claimed Iran had made contact and wanted “very badly” to strike a deal in the face of his blockade of the strait of Hormuz.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.theguardian.com/business/2026/apr/13/oil-price-tops-100-dollars-barrel-us-blockade-strait-of-hormuz",
+        "nearest_span": "US president’s previous threat to block strait of Hormuz had led to a 6.9% increase in earlier trading Oil prices have fallen back after briefly rising to above $100 a barrel as Donald Trump claimed Iran had made contact and wanted “very badly” to strike a deal in the face of his blockade of the strait of Hormuz."
       }
     ],
     "must_contain": [
@@ -1357,7 +1443,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
         "evidence_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/04/screwworm-texas-united-states/",
+        "nearest_span": "Here is a breakdown of why the cattle industry and government leaders are concerned about a parasitic fly: The New World screwworm is a type of blowfly that lays its eggs in the flesh of living animals rather than dead ones."
       }
     ],
     "must_contain": [
@@ -1388,7 +1476,9 @@
         "verdict": "supported",
         "source_url": "https://www.texastribune.org/2026/06/26/texas-democratic-convention-james-talarico-gina-hinojosa-economy-corruption-culture-wars/",
         "evidence_span": "They’re just buying the system.” Hinojosa, the Democratic nominee for governor, made a parallel case , railing against Gov.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.texastribune.org/2026/06/26/texas-democratic-convention-james-talarico-gina-hinojosa-economy-corruption-culture-wars/",
+        "nearest_span": "They’re just buying the system.” Hinojosa, the Democratic nominee for governor, made a parallel case , railing against Gov."
       }
     ],
     "must_contain": [
@@ -1419,7 +1509,9 @@
         "verdict": "supported",
         "source_url": "https://www.nal.usda.gov/exhibits/speccoll/exhibits/show/stop-screwworms--selections-fr/introduction",
         "evidence_span": "livestock industry benefits by more than $900 million a year as a result of the eradication of the screwworm.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://www.nal.usda.gov/exhibits/speccoll/exhibits/show/stop-screwworms--selections-fr/introduction",
+        "nearest_span": "livestock industry benefits by more than $900 million a year as a result of the eradication of the screwworm."
       }
     ],
     "must_contain": [
@@ -1450,7 +1542,9 @@
         "verdict": "supported",
         "source_url": "https://apnews.com/article/big-12-sorsby-texas-tech-gambling-59463edb53a2722dd09f31ccaae56348",
         "evidence_span": "Texas Tech transfer quarterback Brendan Sorsby has won a temporary injunction against the NCAA over his gambling suspension.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://apnews.com/article/big-12-sorsby-texas-tech-gambling-59463edb53a2722dd09f31ccaae56348",
+        "nearest_span": "Texas Tech transfer quarterback Brendan Sorsby has won a temporary injunction against the NCAA over his gambling suspension."
       }
     ],
     "must_contain": [
@@ -1481,7 +1575,9 @@
         "verdict": "supported",
         "source_url": "https://fortworthreport.org/2026/04/08/234-uta-employees-in-96-departments-and-offices-applied-for-buyouts-public-records-show/",
         "evidence_span": "The University of Texas at Arlington saw 234 employees from 96 departments and offices apply for buyouts, according to data obtained from a public records request.",
-        "explanation": "Source sentence overlaps the claim's key terms/numbers."
+        "explanation": "Source sentence overlaps the claim's key terms/numbers.",
+        "checked_source_url": "https://fortworthreport.org/2026/04/08/234-uta-employees-in-96-departments-and-offices-applied-for-buyouts-public-records-show/",
+        "nearest_span": "The University of Texas at Arlington saw 234 employees from 96 departments and offices apply for buyouts, according to data obtained from a public records request."
       }
     ],
     "must_contain": [
@@ -1520,13 +1616,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While the nonprofit reports on various metrics and financials, there is no mention of food basket distribution numbers."
+        "explanation": "While the nonprofit reports on various metrics and financials, there is no mention of food basket distribution numbers.",
+        "checked_source_url": "https://helpinghandsnonprofit.org/donations",
+        "nearest_span": "Donations received in 2022: $250,000\nDonor recognition list: John Smith, Jane Doe, Bob Johnson\nGrants received: $100,000"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://helpinghandsnonprofit.org/donations"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1559,13 +1657,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No evidence supports that the Silver Slippers will host their 500th home game tonight."
+        "explanation": "No evidence supports that the Silver Slippers will host their 500th home game tonight.",
+        "checked_source_url": "https://www.silverslippers.com/news/team-history",
+        "nearest_span": "The Silver Slippers were founded in 2010 and have been a beloved part of the community ever since. Our team has a rich history of success on and off the"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.silverslippers.com/news/team-history"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1598,13 +1698,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not mention any recorded migration of monarch butterflies exceeding 5,000 miles."
+        "explanation": "The provided sources do not mention any recorded migration of monarch butterflies exceeding 5,000 miles.",
+        "checked_source_url": "https://research.u.edu/news/2022/entomology-study",
+        "nearest_span": "The study, titled 'Butterfly Migration Patterns', aimed to explore the complex relationships between monarch butterfly populations and environmental factors."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://research.u.edu/news/2022/entomology-study"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1637,13 +1739,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No sources confirm the estimated cost of the new stadium."
+        "explanation": "No sources confirm the estimated cost of the new stadium.",
+        "checked_source_url": "https://stallions.com/team-news/",
+        "nearest_span": "The Silver Stallions are a professional sports team competing in the Eastern Conference. They have a dedicated fan base and are known for their high-energy games."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://stallions.com/team-news/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1676,13 +1780,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provides information on the median home price in April or its increase from last year's record high."
+        "explanation": "No source provides information on the median home price in April or its increase from last year's record high.",
+        "checked_source_url": "https://news.housingmarket.com/housing-market-analysis-2024/",
+        "nearest_span": "The housing market has seen a steady decline in sales over the past quarter, with a 12% drop in the number of properties sold. Home prices have increased slightly, but"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://news.housingmarket.com/housing-market-analysis-2024/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1715,13 +1821,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided information on the duration of the longest-running lawsuit in US history."
+        "explanation": "No source provided information on the duration of the longest-running lawsuit in US history.",
+        "checked_source_url": "https://www.courtrulings.com/judicial-philosophy",
+        "nearest_span": "The philosophy of judicial review in the United States is based on the principles of stare decisis."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.courtrulings.com/judicial-philosophy"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1754,13 +1862,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided evidence to support the claim."
+        "explanation": "No source provided evidence to support the claim.",
+        "checked_source_url": "https://www.nationalweather.com/climate-reports/2024",
+        "nearest_span": "National climate reports continue to show a rise in temperatures, but no major hurricanes made landfall in 2024."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.nationalweather.com/climate-reports/2024"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1793,13 +1903,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source mentions the contract length or value."
+        "explanation": "No source mentions the contract length or value.",
+        "checked_source_url": "https://www.slammers.com/team-history",
+        "nearest_span": "The Slammers were founded in 2002 and have won four league championships since their inception."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.slammers.com/team-history"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1832,13 +1944,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "According to available information, the inaugural season budget for the Red Devils is unverified"
+        "explanation": "According to available information, the inaugural season budget for the Red Devils is unverified",
+        "checked_source_url": "https://sportsupdate.press/league-profiles/standings",
+        "nearest_span": "The current league standing show the Red Storm in first place, with the Blue Hawks trailing closely behind."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://sportsupdate.press/league-profiles/standings"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1871,13 +1985,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The sources provided do not mention the unemployment rate reaching 30% in April."
+        "explanation": "The sources provided do not mention the unemployment rate reaching 30% in April.",
+        "checked_source_url": "https://usworkforce.gov/statistics/reports/2023/annual",
+        "nearest_span": "The US labor market has seen steady growth in the past year, with an average monthly increase of 150,000 jobs."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://usworkforce.gov/statistics/reports/2023/annual"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1910,13 +2026,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources mention a specific staff increase or a percentage of staff increase."
+        "explanation": "None of the provided sources mention a specific staff increase or a percentage of staff increase.",
+        "checked_source_url": "https://www.galactic-sports-portal.com/galactic-slammers-2024-season-preview",
+        "nearest_span": "Galactic Slammers are preparing for their seventh consecutive season in the intergalactic league."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.galactic-sports-portal.com/galactic-slammers-2024-season-preview"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1949,13 +2067,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources mention the number of residents affected by the riot."
+        "explanation": "None of the provided sources mention the number of residents affected by the riot.",
+        "checked_source_url": "https://localnews.org/police-report",
+        "nearest_span": "A recent survey found that 80% of residents felt that the police department handled the situation appropriately."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://localnews.org/police-report"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -1988,13 +2108,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No reliable sources were found to support the voter participation rate of 75%."
+        "explanation": "No reliable sources were found to support the voter participation rate of 75%.",
+        "checked_source_url": "https://euraznews.net/azuria-election-2023",
+        "nearest_span": "Azuria's top contender for governor, Emily J. Miller, secured 30% of the state-wide vote. Meanwhile, in the hotly contested senate seat, Rachel P. Lee narrowly won with 55.4% of the"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://euraznews.net/azuria-election-2023"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2027,13 +2149,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources mention a budget of $120 million allocated for fiscal year 2025 or a 30% increase from the previous year."
+        "explanation": "None of the provided sources mention a budget of $120 million allocated for fiscal year 2025 or a 30% increase from the previous year.",
+        "checked_source_url": "https://finance.city.gov/public-transportation-budget",
+        "nearest_span": "Public transportation funding includes: bus operations, $40 million; train maintenance, $20 million; other expenses, $30 million."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://finance.city.gov/public-transportation-budget"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2066,13 +2190,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not mention the percentage of the vote Rachel Lee secured."
+        "explanation": "The provided sources do not mention the percentage of the vote Rachel Lee secured.",
+        "checked_source_url": "https://localnews.press/council-election-results/",
+        "nearest_span": "The incumbent won 8 out of 10 wards, a significant improvement over the previous election."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://localnews.press/council-election-results/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2105,13 +2231,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not mention the building's energy source."
+        "explanation": "The provided sources do not mention the building's energy source.",
+        "checked_source_url": "https://newhaven.edu/projects/climate-science-building/",
+        "nearest_span": "Our new climate science building uses natural ventilation to cool the buildings."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://newhaven.edu/projects/climate-science-building/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2144,13 +2272,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The sources provided do not mention the specific amount of food distributed by the local food bank in the past year."
+        "explanation": "The sources provided do not mention the specific amount of food distributed by the local food bank in the past year.",
+        "checked_source_url": "https://www.foodbank.org/nonprofit-annual-reports/annual_report_2020.pdf",
+        "nearest_span": "Our local food bank provides food assistance to over 2,000 individuals monthly."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.foodbank.org/nonprofit-annual-reports/annual_report_2020.pdf"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2183,13 +2313,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided information about the bridge being the longest in the country."
+        "explanation": "No source provided information about the bridge being the longest in the country.",
+        "checked_source_url": "https://example.com/highway-project-update",
+        "nearest_span": "The highway project will include new interchanges and improved traffic management systems."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://example.com/highway-project-update"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "unsupported"
@@ -2222,13 +2354,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not mention home prices increasing over the past decade."
+        "explanation": "The provided sources do not mention home prices increasing over the past decade.",
+        "checked_source_url": "https://homesalesreport.com/q1-2022-housing-market-overview",
+        "nearest_span": "The first quarter of 2022 saw a decline in home sales, with prices remaining flat due to high inventory levels."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://homesalesreport.com/q1-2022-housing-market-overview"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2261,13 +2395,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "Even though hand washing is widely practiced and studied, the specific claim about research showing its effectiveness is not mentioned in the provided sources."
+        "explanation": "Even though hand washing is widely practiced and studied, the specific claim about research showing its effectiveness is not mentioned in the provided sources.",
+        "checked_source_url": "https://www.healthline.com/nutrition/hand-washing",
+        "nearest_span": "Regular hand washing can help prevent the spread of common illnesses like the common cold, flu, and other viral infections."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.healthline.com/nutrition/hand-washing"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2300,13 +2436,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided sources assert the claim that nearly 30 million Americans work in retail jobs."
+        "explanation": "No provided sources assert the claim that nearly 30 million Americans work in retail jobs.",
+        "checked_source_url": "https://www.census.gov/programs-surveys/cps.html",
+        "nearest_span": "The Current Population Survey (CPS) is a monthly survey of households conducted by the US Census Bureau. The CPS is the primary source of information on the labor force, employment,"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.census.gov/programs-surveys/cps.html"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2339,13 +2477,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The sources provided do not support the claim made by President Thomas."
+        "explanation": "The sources provided do not support the claim made by President Thomas.",
+        "checked_source_url": "https://www.schoolboardmeetingminutes.com/2022-q4-report.pdf",
+        "nearest_span": "The 2022 Q4 report highlights the school board's efforts to improve student-teacher ratios and increase extracurricular activities."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.schoolboardmeetingminutes.com/2022-q4-report.pdf"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2374,13 +2514,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided verifies the population growth rate."
+        "explanation": "No source provided verifies the population growth rate.",
+        "checked_source_url": "https://citygov.org/council-meeting-may-20-2022",
+        "nearest_span": "The council discussed various proposals for infrastructure development in the city. The mayor highlighted the importance of investing in public transportation."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://citygov.org/council-meeting-may-20-2022"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2413,13 +2555,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No provided source directly states that the average home price has exceeded the price of 5,000 square foot mansions, and the relationship between the housing market and home prices is not explicitly discussed."
+        "explanation": "No provided source directly states that the average home price has exceeded the price of 5,000 square foot mansions, and the relationship between the housing market and home prices is not explicitly discussed.",
+        "checked_source_url": "https://www.realtor.org/news/state-of-housing",
+        "nearest_span": "Home prices have increased steadily over the past decade, but the rate of growth has slowed in recent years."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.realtor.org/news/state-of-housing"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2452,13 +2596,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While the passage claims a specific temperature increase, none of the provided sources confirm this exact statement."
+        "explanation": "While the passage claims a specific temperature increase, none of the provided sources confirm this exact statement.",
+        "checked_source_url": "https://www.weather.gov/climate/temperature",
+        "nearest_span": "The average temperature varies depending on the location."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.weather.gov/climate/temperature"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2487,13 +2633,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No supporting information was found in the provided sources."
+        "explanation": "No supporting information was found in the provided sources.",
+        "checked_source_url": "https://citycouncil.example.gov/minutes/202202.pdf",
+        "nearest_span": "The city council minutes for February covered the approval of new budget allocations."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://citycouncil.example.gov/minutes/202202.pdf"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2526,13 +2674,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provides evidence to support this claim."
+        "explanation": "No source provides evidence to support this claim.",
+        "checked_source_url": "https://france.gov/news/2022/01/10/official-statement-on-foreign-policy/",
+        "nearest_span": "We stand firmly in our commitment to European cooperation and solidarity."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://france.gov/news/2022/01/10/official-statement-on-foreign-policy/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2561,13 +2711,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided supports this claim."
+        "explanation": "No source provided supports this claim.",
+        "checked_source_url": "https://www.citiesfinance.org/news/2022/05/urban-budgeting-strategies/",
+        "nearest_span": "Urban budgeting strategies include long-term planning and collaboration with local businesses."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.citiesfinance.org/news/2022/05/urban-budgeting-strategies/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2600,13 +2752,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "This claim is not supported by any of the provided sources."
+        "explanation": "This claim is not supported by any of the provided sources.",
+        "checked_source_url": "https://www.nationsdatabank.org/national-minimum-wage-standards/",
+        "nearest_span": "The following nations have raised their minimum wage rates: France increased to 10.47 euros per hour, while the United Kingdom raised theirs to £9.90."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.nationsdatabank.org/national-minimum-wage-standards/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2635,13 +2789,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not support this claim."
+        "explanation": "The provided sources do not support this claim.",
+        "checked_source_url": "https://www.census.gov/",
+        "nearest_span": "The United States Census Bureau — Data and Statistics"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.census.gov/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2674,13 +2830,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not contain information supporting this claim."
+        "explanation": "The provided sources do not contain information supporting this claim.",
+        "checked_source_url": "https://yankeespress.com/special-reports",
+        "nearest_span": "An in-depth look at the Yankees' history and legacy."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://yankeespress.com/special-reports"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2709,13 +2867,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided supports the statement that the United States has 50 states."
+        "explanation": "No source provided supports the statement that the United States has 50 states.",
+        "checked_source_url": "https://www.usgs.gov/library/maps/national-map-series",
+        "nearest_span": "This national map series provides geographic information, including state and county boundaries."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.usgs.gov/library/maps/national-map-series"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2740,13 +2900,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The sources provided do not support the claim that NovaTech's Starlight is the world's first commercially available smartphone with a foldable OLED display."
+        "explanation": "The sources provided do not support the claim that NovaTech's Starlight is the world's first commercially available smartphone with a foldable OLED display.",
+        "checked_source_url": "https://www.novatechcorp.com/press/2022/03/14/novatech-unveils-new-research-in-foldable-display-technology/",
+        "nearest_span": "NovaTech Corporation is announcing today a breakthrough in foldable display technology, demonstrating a working prototype that shows great promise for this emerging field."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.novatechcorp.com/press/2022/03/14/novatech-unveils-new-research-in-foldable-display-technology/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2779,13 +2941,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While the general composition of New York City is widely known, the provided sources do not contain information on the city's boroughs."
+        "explanation": "While the general composition of New York City is widely known, the provided sources do not contain information on the city's boroughs.",
+        "checked_source_url": "https://www.newyorktimes.com/city-government",
+        "nearest_span": "New York is a city with a rich history..."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.newyorktimes.com/city-government"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2814,13 +2978,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "There is no direct evidence provided in the sources to support this specific claim."
+        "explanation": "There is no direct evidence provided in the sources to support this specific claim.",
+        "checked_source_url": "https://www.nonprofit.org/news/2022/mar/covid-19-food-assistance/",
+        "nearest_span": "Despite the pandemic, many nonprofits were still providing vital services, such as food banks and pantries."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.nonprofit.org/news/2022/mar/covid-19-food-assistance/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2853,13 +3019,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The claim is true in general but lacks specific evidence from the provided sources."
+        "explanation": "The claim is true in general but lacks specific evidence from the provided sources.",
+        "checked_source_url": "https://www.schoolboard.gov/boardnews",
+        "nearest_span": "Members of the community came together to support the local school."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.schoolboard.gov/boardnews"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2892,13 +3060,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While the sources discuss climate change causes and effects, they do not specifically state that the Earth's average temperature has risen by approximately 1 degree Celsius since the late 19th century."
+        "explanation": "While the sources discuss climate change causes and effects, they do not specifically state that the Earth's average temperature has risen by approximately 1 degree Celsius since the late 19th century.",
+        "checked_source_url": "https://www.climateawareness.org/environmental-issues/causes-of-climate-change",
+        "nearest_span": "Causes of climate change include the increasing levels of greenhouse gases in the atmosphere, such as carbon dioxide and methane."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.climateawareness.org/environmental-issues/causes-of-climate-change"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2931,13 +3101,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source provided information about the thinnest phone available in the market."
+        "explanation": "No source provided information about the thinnest phone available in the market.",
+        "checked_source_url": "https://www.novatech.com/press-release/",
+        "nearest_span": "At NovaTech, we're dedicated to making technology more accessible and fun for everyone."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.novatech.com/press-release/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -2970,13 +3142,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "This claim is true in general knowledge, but it is not supported by the provided sources."
+        "explanation": "This claim is true in general knowledge, but it is not supported by the provided sources.",
+        "checked_source_url": "https://www.geologytoday.org/us-geology-overview",
+        "nearest_span": "The geology of the United States is characterized by the presence of ancient rocks and the movement of tectonic plates."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.geologytoday.org/us-geology-overview"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "true_but_unsupported"
@@ -3009,13 +3183,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While sources mention the city's investment in public spaces, none provide evidence for the specific claim of $500 million going towards the parks department."
+        "explanation": "While sources mention the city's investment in public spaces, none provide evidence for the specific claim of $500 million going towards the parks department.",
+        "checked_source_url": "https://www.cityplanner.net/announcements/city-budget-2023",
+        "nearest_span": "The city's parks department allocated $200 million to new park projects in the previous fiscal year."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.cityplanner.net/announcements/city-budget-2023"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3048,13 +3224,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While scandals are mentioned, no source confirms this specific claim."
+        "explanation": "While scandals are mentioned, no source confirms this specific claim.",
+        "checked_source_url": "https://www.fakenewscentral.com/election-scoop",
+        "nearest_span": "The Smith campaign's woes began with allegations of misuse of funds and the infamous 'coffee cup scandal'."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.fakenewscentral.com/election-scoop"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3087,13 +3265,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources confirm Dr. Kim's claim of a 30% energy optimization breakthrough."
+        "explanation": "None of the provided sources confirm Dr. Kim's claim of a 30% energy optimization breakthrough.",
+        "checked_source_url": "https://www.forbes.com/ai-energy-breakthroughs/",
+        "nearest_span": "Researchers at top universities are working on AI projects to improve energy efficiency, but no specific breakthroughs have been announced."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.forbes.com/ai-energy-breakthroughs/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3126,13 +3306,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "Despite speculation about the upcoming matchup, no official games are mentioned in the provided sources."
+        "explanation": "Despite speculation about the upcoming matchup, no official games are mentioned in the provided sources.",
+        "checked_source_url": "http://sportsbuzz.com/game-preview-next-weekend",
+        "nearest_span": "The team is expected to face off against their rivals in a highly anticipated matchup, but no official games have been announced yet."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "http://sportsbuzz.com/game-preview-next-weekend"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3165,13 +3347,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources confirm that this decision was a victory for businesses."
+        "explanation": "None of the provided sources confirm that this decision was a victory for businesses.",
+        "checked_source_url": "https://www.reuters.com/business/law/contract-breach-decision-has-broad-implications-2023-02-15",
+        "nearest_span": "Contract breach decision has broad implications, analysts say."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.reuters.com/business/law/contract-breach-decision-has-broad-implications-2023-02-15"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3204,13 +3388,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "While the sources mention a shooting incident involving Officer James, none of them confirm that the suspect was fleeing or that the suspect was killed."
+        "explanation": "While the sources mention a shooting incident involving Officer James, none of them confirm that the suspect was fleeing or that the suspect was killed.",
+        "checked_source_url": "https://www.police-department.gov/news-letters/2024/02/15/officer-shooting",
+        "nearest_span": "Officer James was involved in a shooting incident last night."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.police-department.gov/news-letters/2024/02/15/officer-shooting"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3243,13 +3429,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source confirmed the specific claim of a 30% increase in frequency of severe droughts."
+        "explanation": "No source confirmed the specific claim of a 30% increase in frequency of severe droughts.",
+        "checked_source_url": "https://www.climate.gov/science/droughts",
+        "nearest_span": "Droughts are a normal part of the Earth's water cycle."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.climate.gov/science/droughts"
     ],
+    "must_not_contain": [],
     "keywords": [
       "quote",
       "distractor"
@@ -3280,13 +3468,15 @@
         "type": "claim",
         "span": "Lee leading by a landslide in the polls, as",
         "verdict": "unsupported",
-        "explanation": "No source provides direct evidence for this claim."
+        "explanation": "No source provides direct evidence for this claim.",
+        "checked_source_url": "https://www.leeforcouncil.com/news/",
+        "nearest_span": "Lee For Council - official news from our campaign!"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.leeforcouncil.com/news/"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3319,13 +3509,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source confirms that the suspect was driving a black SUV."
+        "explanation": "No source confirms that the suspect was driving a black SUV.",
+        "checked_source_url": "https://citytimes.news/high-speed-chase-reported-yesterday-evening",
+        "nearest_span": "The incident was likely just a joyride gone wrong, based on the reckless abandon displayed by the suspect."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://citytimes.news/high-speed-chase-reported-yesterday-evening"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3358,13 +3550,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "Although the Public Health Agency noticed a higher risk of mosquito-borne diseases, the actual risk level was reported as orange, not red."
+        "explanation": "Although the Public Health Agency noticed a higher risk of mosquito-borne diseases, the actual risk level was reported as orange, not red.",
+        "checked_source_url": "https://www.greenfield-county.gov/public-health/news/2022-06-15-mosquito-borne-disease-risk-level-red",
+        "nearest_span": "The risk level is currently orange"
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.greenfield-county.gov/public-health/news/2022-06-15-mosquito-borne-disease-risk-level-red"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3397,13 +3591,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The sources provided do not confirm the specific claim made about the highway connecting directly to the city center."
+        "explanation": "The sources provided do not confirm the specific claim made about the highway connecting directly to the city center.",
+        "checked_source_url": "https://urbanplanningtoday.net/latest-updates",
+        "nearest_span": "We're expecting major changes to the city's infrastructure this year."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://urbanplanningtoday.net/latest-updates"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3436,13 +3632,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "No source confirms the specific claim about commute times."
+        "explanation": "No source confirms the specific claim about commute times.",
+        "checked_source_url": "https://www.googlemaps.com/blogs/infrastructure-updates",
+        "nearest_span": "A study by a leading urban planning firm suggests that a 20% increase in commute times is not uncommon in urban areas experiencing high population growth."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.googlemaps.com/blogs/infrastructure-updates"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3475,13 +3673,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "The provided sources do not confirm that a new expressway is projected to halve commute times to downtown."
+        "explanation": "The provided sources do not confirm that a new expressway is projected to halve commute times to downtown.",
+        "checked_source_url": "https://www.highwayjournal.com/new-expressway-opens-2028",
+        "nearest_span": "The proposed new expressway is expected to alleviate traffic congestion in the region."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.highwayjournal.com/new-expressway-opens-2028"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3514,13 +3714,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "This phrase is an emotional statement and does not provide a factual account of the incident."
+        "explanation": "This phrase is an emotional statement and does not provide a factual account of the incident.",
+        "checked_source_url": "https://downtownbulletin.com/police-investigate-convenience-store-shooting-1234567",
+        "nearest_span": "Police are investigating a shooting that occurred at a downtown convenience store on Tuesday evening."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://downtownbulletin.com/police-investigate-convenience-store-shooting-1234567"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3553,13 +3755,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources confirm the specific claim of a product launch for an AI assistant tomorrow."
+        "explanation": "None of the provided sources confirm the specific claim of a product launch for an AI assistant tomorrow.",
+        "checked_source_url": "https://techglobe.net/novaspire-latest-development-2023",
+        "nearest_span": "NovaSpire has been working on a high-profile project, but details remain scarce."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://techglobe.net/novaspire-latest-development-2023"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3592,13 +3796,15 @@
         "verdict": "unsupported",
         "source_url": null,
         "evidence_span": null,
-        "explanation": "None of the provided sources confirm the specific claim of John Smith winning the mayoral election with 75% of the vote."
+        "explanation": "None of the provided sources confirm the specific claim of John Smith winning the mayoral election with 75% of the vote.",
+        "checked_source_url": "https://www.nbcnews.com/news/elections/smith-mayoral-election-2023",
+        "nearest_span": "With the election behind us, it's clear who the real winners are: the voters."
       }
     ],
-    "must_contain": [],
-    "must_not_contain": [
-      "http"
+    "must_contain": [
+      "https://www.nbcnews.com/news/elections/smith-mayoral-election-2023"
     ],
+    "must_not_contain": [],
     "keywords": [
       "claim",
       "distractor"
@@ -3623,7 +3829,9 @@
         "verdict": "misleading",
         "source_url": "https://budgethearing.mayoraltranscripts.org/2024-02-20",
         "evidence_span": "While it's too early to confirm exact figures, we're anticipating a 10% reduction in spending to help bridge the budget gap.",
-        "explanation": "The original quote was taken out of context and misrepresented the mayor's actual statement."
+        "explanation": "The original quote was taken out of context and misrepresented the mayor's actual statement.",
+        "checked_source_url": "https://budgethearing.mayoraltranscripts.org/2024-02-20",
+        "nearest_span": "While it's too early to confirm exact figures, we're anticipating a 10% reduction in spending to help bridge the budget gap."
       }
     ],
     "must_contain": [
@@ -3654,7 +3862,9 @@
         "verdict": "misleading",
         "source_url": "https://climate.research.u.edu/press/kim-interview-20221215",
         "evidence_span": "Well, I think this study is an important contribution to the field, but we're not necessarily the top researchers.",
-        "explanation": "The original quote, taken out of context, does not support the claim of being the top researchers."
+        "explanation": "The original quote, taken out of context, does not support the claim of being the top researchers.",
+        "checked_source_url": "https://climate.research.u.edu/press/kim-interview-20221215",
+        "nearest_span": "Well, I think this study is an important contribution to the field, but we're not necessarily the top researchers."
       }
     ],
     "must_contain": [
@@ -3685,7 +3895,9 @@
         "verdict": "misleading",
         "source_url": "https://www.schoolboardtranscripts.gov/meeting-1234",
         "evidence_span": "I think we need to keep talking about this, make sure everyone is on the same page before we make any decisions.",
-        "explanation": "The actual quote, when seen in context, reveals a different opinion than what was presented."
+        "explanation": "The actual quote, when seen in context, reveals a different opinion than what was presented.",
+        "checked_source_url": "https://www.schoolboardtranscripts.gov/meeting-1234",
+        "nearest_span": "I think we need to keep talking about this, make sure everyone is on the same page before we make any decisions."
       }
     ],
     "must_contain": [
@@ -3716,7 +3928,9 @@
         "verdict": "misleading",
         "source_url": "https://housingeconomicreview.com/economist-transcript-2023-q1",
         "evidence_span": "We're experiencing a broad, multiyear expansion, but I believe there are some warning signs of a possible slowdown in the housing market. I don't believe we're in a bubble, but we should be cautious of market volatility.",
-        "explanation": "The economist never said there was a 'housing bubble' or predicted prices would drop within 6 months."
+        "explanation": "The economist never said there was a 'housing bubble' or predicted prices would drop within 6 months.",
+        "checked_source_url": "https://housingeconomicreview.com/economist-transcript-2023-q1",
+        "nearest_span": "We're experiencing a broad, multiyear expansion, but I believe there are some warning signs of a possible slowdown in the housing market. I don't believe we're in a bubble, but we should be cautious of market volatility."
       }
     ],
     "must_contain": [
@@ -3747,7 +3961,9 @@
         "verdict": "misleading",
         "source_url": "https://www.housingreport.com/transcript/12345",
         "evidence_span": "While we do see a slowing trend in the housing market, it's not the lowest point in history. We're actually seeing some positive indicators in certain regions.",
-        "explanation": "The quote was taken out of context and altered to support a false claim."
+        "explanation": "The quote was taken out of context and altered to support a false claim.",
+        "checked_source_url": "https://www.housingreport.com/transcript/12345",
+        "nearest_span": "While we do see a slowing trend in the housing market, it's not the lowest point in history. We're actually seeing some positive indicators in certain regions."
       }
     ],
     "must_contain": [
@@ -3778,7 +3994,9 @@
         "verdict": "misleading",
         "source_url": "https://www.policedept.com/incident-transcript/123456",
         "evidence_span": "I want to assure the public that our officers were following proper protocol during the protest. There's no question that our intentions were to maintain order, not to provoke the crowd.",
-        "explanation": "The statement in the passage was taken out of context and altered to convey a different meaning than the original quote."
+        "explanation": "The statement in the passage was taken out of context and altered to convey a different meaning than the original quote.",
+        "checked_source_url": "https://www.policedept.com/incident-transcript/123456",
+        "nearest_span": "I want to assure the public that our officers were following proper protocol during the protest. There's no question that our intentions were to maintain order, not to provoke the crowd."
       }
     ],
     "must_contain": [
@@ -3809,7 +4027,9 @@
         "verdict": "misleading",
         "source_url": "https://sportsnews.com/transcripts/coach-interview",
         "evidence_span": "While we're confident about our chances, it's not all about winning. We're focused on improving our skills and doing our best.",
-        "explanation": "The original quote was taken out of context to make the team sound more confident than they actually are."
+        "explanation": "The original quote was taken out of context to make the team sound more confident than they actually are.",
+        "checked_source_url": "https://sportsnews.com/transcripts/coach-interview",
+        "nearest_span": "While we're confident about our chances, it's not all about winning. We're focused on improving our skills and doing our best."
       }
     ],
     "must_contain": [
@@ -3840,7 +4060,9 @@
         "verdict": "misleading",
         "source_url": "https://www.communitycarealliance.org/news/2023-annual-report.php",
         "evidence_span": "Interviewer: That's a big growth, 500 strong last year, 5000 strong now. Director: Yes, we've had some significant volunteer turnout. It's a testament to our community spirit.",
-        "explanation": "The director did not make this statement. The actual statement was taken out of context to exaggerate the growth rate and imply the organization is 'ready to take on the challenges of 2024'."
+        "explanation": "The director did not make this statement. The actual statement was taken out of context to exaggerate the growth rate and imply the organization is 'ready to take on the challenges of 2024'.",
+        "checked_source_url": "https://www.communitycarealliance.org/news/2023-annual-report.php",
+        "nearest_span": "Interviewer: That's a big growth, 500 strong last year, 5000 strong now. Director: Yes, we've had some significant volunteer turnout. It's a testament to our community spirit."
       }
     ],
     "must_contain": [
@@ -3871,7 +4093,9 @@
         "verdict": "misleading",
         "source_url": "https://www.policedeptreport.com/transcript-2024-01-15",
         "evidence_span": "We've seen a significant decrease in certain types of crime rates, not overall crime rates, in the city over the past year. We still have work to do in addressing some persistent issues.",
-        "explanation": "The passage omits crucial context, specifically the mention of 'certain types of crime rates' and the existence of persistent issues."
+        "explanation": "The passage omits crucial context, specifically the mention of 'certain types of crime rates' and the existence of persistent issues.",
+        "checked_source_url": "https://www.policedeptreport.com/transcript-2024-01-15",
+        "nearest_span": "We've seen a significant decrease in certain types of crime rates, not overall crime rates, in the city over the past year. We still have work to do in addressing some persistent issues."
       }
     ],
     "must_contain": [
@@ -3902,7 +4126,9 @@
         "verdict": "misleading",
         "source_url": "https://investor.eclarkcorp.com/q22023earnings",
         "evidence_span": "I want to acknowledge that our Q2 performance was impacted by several factors. However, we're optimistic about the prospects for the second half of the year.",
-        "explanation": "The quoted statement was taken out of context, omitting the mention of Q2 performance being impacted by factors."
+        "explanation": "The quoted statement was taken out of context, omitting the mention of Q2 performance being impacted by factors.",
+        "checked_source_url": "https://investor.eclarkcorp.com/q22023earnings",
+        "nearest_span": "I want to acknowledge that our Q2 performance was impacted by several factors. However, we're optimistic about the prospects for the second half of the year."
       }
     ],
     "must_contain": [
@@ -3933,7 +4159,9 @@
         "verdict": "misleading",
         "source_url": "https://investor.corp.com/q1-transcript.txt",
         "evidence_span": "We believe that by doing so, we can create sustainable value for our stakeholders.",
-        "explanation": "The true quote has been altered to make it seem like the company is shifting its focus from profits to innovation."
+        "explanation": "The true quote has been altered to make it seem like the company is shifting its focus from profits to innovation.",
+        "checked_source_url": "https://investor.corp.com/q1-transcript.txt",
+        "nearest_span": "We believe that by doing so, we can create sustainable value for our stakeholders."
       }
     ],
     "must_contain": [
@@ -3964,7 +4192,9 @@
         "verdict": "misleading",
         "source_url": "https://www.abcuniversity.edu/newsroom/release-2023-02-15-renewable-energy.html",
         "evidence_span": "While our team has made significant strides in the development of this new technology, it's essential to note that solving climate change will be an ongoing process that requires continued research and collaboration.",
-        "explanation": "The actual quote from Dr. Smith suggests that the breakthrough is a step forward, but not a solution to climate change immediately."
+        "explanation": "The actual quote from Dr. Smith suggests that the breakthrough is a step forward, but not a solution to climate change immediately.",
+        "checked_source_url": "https://www.abcuniversity.edu/newsroom/release-2023-02-15-renewable-energy.html",
+        "nearest_span": "While our team has made significant strides in the development of this new technology, it's essential to note that solving climate change will be an ongoing process that requires continued research and collaboration."
       }
     ],
     "must_contain": [
