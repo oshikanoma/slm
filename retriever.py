@@ -83,11 +83,28 @@ def _search_serper(query: str, k: int) -> list[str]:
 
 
 def _search_tavily(query: str, k: int) -> list[str]:
+    """Tavily search. Free tier, no credit card. Key: env TAVILY_API_KEY (tvly-...).
+    Auth via Bearer header (current API); api_key in body also accepted."""
     key = os.environ["TAVILY_API_KEY"]
-    r = requests.post("https://api.tavily.com/search",
-                      json={"api_key": key, "query": query, "max_results": k}, timeout=20)
+    r = requests.post(
+        "https://api.tavily.com/search",
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        json={"query": query, "max_results": k, "search_depth": "basic"}, timeout=25)
     r.raise_for_status()
     return [item["url"] for item in r.json().get("results", [])][:k]
+
+
+def _search_wikipedia(query: str, k: int) -> list[str]:
+    """No-key, no-card fallback via the MediaWiki search API. Real citable article
+    URLs (encyclopedia-scoped, not open web). Reliable where DuckDuckGo HTML is not."""
+    r = requests.get("https://en.wikipedia.org/w/api.php", params={
+        "action": "query", "list": "search", "srsearch": query,
+        "format": "json", "srlimit": k}, headers={"User-Agent": UA}, timeout=15)
+    r.raise_for_status()
+    out = []
+    for h in r.json().get("query", {}).get("search", []):
+        out.append("https://en.wikipedia.org/wiki/" + quote_plus(h["title"].replace(" ", "_")))
+    return out[:k]
 
 
 def _search_duckduckgo(query: str, k: int) -> list[str]:
@@ -111,13 +128,14 @@ def _search_duckduckgo(query: str, k: int) -> list[str]:
 
 
 def _active_backend() -> tuple[str, callable]:
+    # Prefer an open-web API key if present; else free Wikipedia (no key/card).
+    if os.environ.get("TAVILY_API_KEY"):
+        return "tavily", _search_tavily
     if os.environ.get("BRAVE_API_KEY"):
         return "brave", _search_brave
     if os.environ.get("SERPER_API_KEY"):
         return "serper", _search_serper
-    if os.environ.get("TAVILY_API_KEY"):
-        return "tavily", _search_tavily
-    return "duckduckgo", _search_duckduckgo
+    return "wikipedia", _search_wikipedia
 
 
 def search(query: str, k: int = 5) -> list[str]:
