@@ -412,6 +412,8 @@ def main(argv: Optional[list[str]] = None) -> None:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--junk", action="store_true",
                     help="Generate schema-valid JUNK locally (no API). Day-2 loop smoke test.")
+    ap.add_argument("--only-bucket", default=None, choices=list(DEFAULT_MIX),
+                    help="Generate ONLY this bucket (e.g. 'supported' to fix over-caution).")
     args = ap.parse_args(argv)
 
     rng = random.Random(args.seed)
@@ -426,7 +428,7 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     while len(accepted) < args.n and attempts < max_attempts:
         attempts += 1
-        bucket = pick_bucket(DEFAULT_MIX, rng)
+        bucket = args.only_bucket or pick_bucket(DEFAULT_MIX, rng)
         topic = rng.choice(TOPIC_SEEDS)
         if args.junk:
             scn = gen_junk(bucket, len(accepted), rng)

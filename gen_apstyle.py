@@ -40,12 +40,17 @@ ABBR_MONTHS = {"January": "Jan.", "February": "Feb.", "August": "Aug.",
                "December": "Dec."}
 NEVER_ABBR = ["March", "April", "May", "June", "July"]
 SUBJECTS = ["the city council", "the school board", "the committee", "the agency",
-            "the department", "the team", "the panel", "the board", "the county"]
+            "the department", "the team", "the panel", "the board", "the county",
+            "the commission", "the task force", "the district", "the bureau",
+            "the authority", "the subcommittee", "the coalition", "the office"]
 NOUNS = ["members", "seats", "projects", "buildings", "programs", "vehicles",
-         "officers", "grants", "reports", "sites"]
+         "officers", "grants", "reports", "sites", "proposals", "contracts",
+         "clinics", "schools", "shelters", "routes", "permits", "positions",
+         "stations", "districts"]
 ITEMS = ["red", "blue", "green", "yellow", "silver", "gold", "black", "white",
-         "copper", "bronze"]
-CITY = ["Austin", "Houston", "Dallas", "El Paso", "Laredo", "Waco", "Tyler"]
+         "copper", "bronze", "purple", "orange", "gray", "teal", "maroon", "navy"]
+CITY = ["Austin", "Houston", "Dallas", "El Paso", "Laredo", "Waco", "Tyler",
+        "Denton", "Plano", "Abilene", "Midland", "Lubbock"]
 
 
 def _rec(rid: str, passage: str, span: str, rule: str, suggestion: str, expl: str) -> dict:
@@ -66,9 +71,15 @@ def _rec(rid: str, passage: str, span: str, rule: str, suggestion: str, expl: st
 def g_numbers(rng: random.Random):
     n = rng.randint(1, 9)  # violation: a number <10 written as a figure
     subj, noun = rng.choice(SUBJECTS), rng.choice(NOUNS)
-    span = f"{subj.capitalize()} has {n} {noun}."
+    S = subj.capitalize()
+    span = rng.choice([
+        f"{S} has {n} {noun}.",
+        f"{S} approved {n} {noun} at the meeting.",
+        f"Officials counted {n} {noun} in the report.",
+        f"The plan adds {n} {noun} next year.",
+    ])
     passage = span
-    fix = f"{subj.capitalize()} has {NUM_WORDS[n]} {noun}."
+    fix = span.replace(f" {n} ", f" {NUM_WORDS[n]} ", 1)
     return passage, span, "numbers: spell out whole numbers one through nine; use figures for 10 and above", fix, \
         f"AP spells out numbers below 10, so '{n}' should be '{NUM_WORDS[n]}'."
 
@@ -106,16 +117,61 @@ def g_oxford(rng: random.Random):
 
 def g_percent(rng: random.Random):
     n = rng.randint(2, 80)
-    span = f"Enrollment rose {n} percent this year."
-    passage = span
-    fix = f"Enrollment rose {n}% this year."
-    return passage, span, "percent: use the % sign with a numeral (AP, 2019+)", fix, \
+    frame = rng.choice([
+        f"Enrollment rose {n} percent this year.",
+        f"The budget grew by {n} percent.",
+        f"Turnout fell {n} percent from last cycle.",
+        f"About {n} percent of residents responded.",
+    ])
+    span = frame
+    fix = frame.replace(f"{n} percent", f"{n}%")
+    return span, span, "percent: use the % sign with a numeral (AP, 2019+)", fix, \
         f"AP now uses '{n}%' rather than spelling out 'percent'."
+
+
+def g_state(rng: random.Random):
+    # AP abbreviates certain states with a city (not USPS codes). Real city-state pairs.
+    city, full, ap = rng.choice([
+        ("Sacramento", "California", "Calif."), ("Miami", "Florida", "Fla."),
+        ("Pittsburgh", "Pennsylvania", "Pa."), ("Boston", "Massachusetts", "Mass."),
+        ("Chicago", "Illinois", "Ill."), ("Atlanta", "Georgia", "Ga."),
+        ("Phoenix", "Arizona", "Ariz."), ("Denver", "Colorado", "Colo.")])
+    frame = rng.choice([
+        f"The company opened an office in {city}, {full}, last month.",
+        f"She grew up in {city}, {full}, before moving away.",
+        f"The conference was held in {city}, {full}.",
+    ])
+    fix = frame.replace(f", {full}", f", {ap}")
+    return frame, frame, f"states: AP abbreviates {full} as {ap} with a city", fix, \
+        f"AP abbreviates '{full}' to '{ap}' when it follows a city name."
+
+
+def g_title(rng: random.Random):
+    # AP: formal title before a name is capitalized; after/standalone is lowercase.
+    role, name = rng.choice([("president", "Maria Lopez"), ("governor", "Dan Reed"),
+                             ("senator", "Amy Cole"), ("mayor", "Jon Park"),
+                             ("director", "Lee Vance")])
+    span = f"The {role.capitalize()} spoke, and {name}, the {role}, took questions."
+    # violation is capitalizing the standalone title; fix lowercases the first one
+    fix = f"The {role} spoke, and {name}, the {role}, took questions."
+    return span, span, "titles: lowercase a title when it stands alone or follows a name", fix, \
+        f"AP lowercases '{role}' when it is not a formal title directly before a name."
+
+
+def g_more_than(rng: random.Random):
+    # AP historically preferred "more than" over "over" for quantities (still common style).
+    n = rng.randint(20, 900)
+    noun = rng.choice(NOUNS)
+    span = f"The program served over {n} {noun} this year."
+    fix = f"The program served more than {n} {noun} this year."
+    return span, span, "usage: use 'more than' (not 'over') with a numeral quantity", fix, \
+        f"AP prefers 'more than {n}' over 'over {n}' for quantities."
 
 
 GENERATORS: list[tuple[str, Callable]] = [
     ("num", g_numbers), ("time", g_time), ("month", g_months),
-    ("oxf", g_oxford), ("pct", g_percent),
+    ("oxf", g_oxford), ("pct", g_percent), ("state", g_state),
+    ("title", g_title), ("morethan", g_more_than),
 ]
 
 
@@ -131,19 +187,32 @@ def main(argv=None):
     from eval import Scenario, verdict_structurally_valid
 
     seen: set[str] = set()
-    recs, i, attempts = [], 0, 0
-    while len(recs) < args.n and attempts < args.n * 20:
-        attempts += 1
-        tag, gen = GENERATORS[len(recs) % len(GENERATORS)]  # even coverage
-        passage, span, rule, suggestion, expl = gen(rng)
-        if passage in seen:
-            continue
-        rec = _rec(f"ap_{tag}_{i:04d}", passage, span, rule, suggestion, expl)
-        scn = Scenario(id=rec["id"], bucket="ap_style", passage=passage,
-                       sources=[], gold_verdicts=rec["gold_verdicts"])
-        if not verdict_structurally_valid(rec["gold_verdicts"][0], scn):
-            continue
-        seen.add(passage); recs.append(rec); i += 1
+    recs, i = [], 0
+    # Round-robin, but retire a generator once it can't produce a new unique passage
+    # after many tries (some rules have a small combo ceiling, e.g. courtesy titles).
+    active = list(GENERATORS)
+    while len(recs) < args.n and active:
+        made_this_pass = 0
+        for tag, gen in list(active):
+            if len(recs) >= args.n:
+                break
+            got = False
+            for _ in range(60):  # try hard for a NEW unique passage from this rule
+                passage, span, rule, suggestion, expl = gen(rng)
+                if passage in seen:
+                    continue
+                rec = _rec(f"ap_{tag}_{i:04d}", passage, span, rule, suggestion, expl)
+                scn = Scenario(id=rec["id"], bucket="ap_style", passage=passage,
+                               sources=[], gold_verdicts=rec["gold_verdicts"])
+                if not verdict_structurally_valid(rec["gold_verdicts"][0], scn):
+                    continue
+                seen.add(passage); recs.append(rec); i += 1
+                got = True; made_this_pass += 1
+                break
+            if not got:  # this rule is exhausted
+                active.remove((tag, gen))
+        if made_this_pass == 0:
+            break
 
     import os
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
