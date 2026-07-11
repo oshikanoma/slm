@@ -21,9 +21,7 @@
         "nearest_span": "In Texas last year, an agent shot and killed a man on South Padre Island ."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2026/07/07/ice-fatal-shooting-houston-lorenzo-salgado-araujo/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -87,9 +85,7 @@
         "nearest_span": "In core and lower-level undergraduate courses, the memo says instructors generally cannot assign materials that are “centered on” or “include” sexual orientation or gender identity and defined the concepts: If an industry-standard textbook contains such content, the memo says faculty do not have to redact it, but they cannot highlight it, test students on it or spend class time on it."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2026/04/10/texas-tech-ban-gender-identity-sexual-orientation-academics/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -153,9 +149,7 @@
         "nearest_span": "Stop Scams Alliance and Gallup’s first joint study finds that scams affected millions of Americans in 2025, imposing significant financial and emotional costs."
       }
     ],
-    "must_contain": [
-      "https://www.gallup.com/analytics/711827/scams-in-america.aspx"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -186,9 +180,7 @@
         "nearest_span": "As a supplement to the Internet Crime Complaint Center ( IC3 ) 2025 Annual Report , the Federal Bureau of Investigation ( FBI ) provides the following data involving cryptocurrency kiosks at the state level."
       }
     ],
-    "must_contain": [
-      "https://www.ic3.gov/PSA/2026/PSA260515-2"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -219,9 +211,7 @@
         "nearest_span": "The .gov means it's official. State government websites often end in .gov Before sharing sensitive information, make sure you're on a State government site. The site is secure. The https://"
       }
     ],
-    "must_contain": [
-      "https://house.texas.gov/videos/22699"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -285,9 +275,7 @@
         "nearest_span": "But almost immediately after he was named interim president in mid-2023, some members of the Texas A&M University System Board of Regents, who oversee the university, were raising concerns."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2025/12/10/texas-a-m-mark-welsh-regents-abbott-fired/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -417,9 +405,7 @@
         "nearest_span": "And I just want to say a heartfelt ‘thank you’ to all those people out there who are working so hard to get drug abuse under control."
       }
     ],
-    "must_contain": [
-      "https://www.reaganlibrary.gov/exhibits/virtual-exhibits/nancy-reagan-and-fight-against-drug-abuse"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -450,9 +436,7 @@
         "nearest_span": "Dallas attorney Chelsie Spencer specializes in making sure Texas businesses that sell hemp-derived THC products know how to stay in compliance with state and federal rules and regulations, an area that can be very confusing."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2026/03/09/texas-cannabis-hemp-thc-police-raids/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -483,9 +467,7 @@
         "nearest_span": "As a father, I can’t ignore that, and as a body, I don’t think we should ignore it.” Data provided from the Texas Poison Center Network confirms a sharp increase in marijuana-related calls starting in 2019, a year after hemp-derived THC was legalized by the federal government, from 923 to 2,592 calls in 2024."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2025/07/22/texas-marijuana-hemp-data-poison-control-overdose/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -549,9 +531,7 @@
         "nearest_span": "CORPUS CHRISTI — James Talarico and Gina Hinojosa , who will lead Texas Democrats’ ticket in November, closed the first full day of their party’s state convention Friday with speeches that sharply focused on populist economic politics and accused Republicans of fixating on culture wars to distract from what they cast as the ruling party’s corruption and hollowing out of the middle class."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2026/06/26/texas-democratic-convention-james-talarico-gina-hinojosa-economy-corruption-culture-wars/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -615,9 +595,7 @@
         "nearest_span": "Trump won in the presidential election, while Republicans have only two seats to protect in states Kamala Harris won."
       }
     ],
-    "must_contain": [
-      "https://www.nytimes.com/interactive/polls/texas-governor-election-polls-2026.html"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -648,9 +626,7 @@
         "nearest_span": "The infested animal is a three-week old calf, and there have been no other detections so far."
       }
     ],
-    "must_contain": [
-      "https://www.texastribune.org/2026/06/03/new-world-screwworm-texas-reported-case/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1621,9 +1597,7 @@
         "nearest_span": "Donations received in 2022: $250,000\nDonor recognition list: John Smith, Jane Doe, Bob Johnson\nGrants received: $100,000"
       }
     ],
-    "must_contain": [
-      "https://helpinghandsnonprofit.org/donations"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1662,9 +1636,7 @@
         "nearest_span": "The Silver Slippers were founded in 2010 and have been a beloved part of the community ever since. Our team has a rich history of success on and off the"
       }
     ],
-    "must_contain": [
-      "https://www.silverslippers.com/news/team-history"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1703,9 +1675,7 @@
         "nearest_span": "The study, titled 'Butterfly Migration Patterns', aimed to explore the complex relationships between monarch butterfly populations and environmental factors."
       }
     ],
-    "must_contain": [
-      "https://research.u.edu/news/2022/entomology-study"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1744,9 +1714,7 @@
         "nearest_span": "The Silver Stallions are a professional sports team competing in the Eastern Conference. They have a dedicated fan base and are known for their high-energy games."
       }
     ],
-    "must_contain": [
-      "https://stallions.com/team-news/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1785,9 +1753,7 @@
         "nearest_span": "The housing market has seen a steady decline in sales over the past quarter, with a 12% drop in the number of properties sold. Home prices have increased slightly, but"
       }
     ],
-    "must_contain": [
-      "https://news.housingmarket.com/housing-market-analysis-2024/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1826,9 +1792,7 @@
         "nearest_span": "The philosophy of judicial review in the United States is based on the principles of stare decisis."
       }
     ],
-    "must_contain": [
-      "https://www.courtrulings.com/judicial-philosophy"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1867,9 +1831,7 @@
         "nearest_span": "National climate reports continue to show a rise in temperatures, but no major hurricanes made landfall in 2024."
       }
     ],
-    "must_contain": [
-      "https://www.nationalweather.com/climate-reports/2024"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1908,9 +1870,7 @@
         "nearest_span": "The Slammers were founded in 2002 and have won four league championships since their inception."
       }
     ],
-    "must_contain": [
-      "https://www.slammers.com/team-history"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1949,9 +1909,7 @@
         "nearest_span": "The current league standing show the Red Storm in first place, with the Blue Hawks trailing closely behind."
       }
     ],
-    "must_contain": [
-      "https://sportsupdate.press/league-profiles/standings"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -1990,9 +1948,7 @@
         "nearest_span": "The US labor market has seen steady growth in the past year, with an average monthly increase of 150,000 jobs."
       }
     ],
-    "must_contain": [
-      "https://usworkforce.gov/statistics/reports/2023/annual"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2031,9 +1987,7 @@
         "nearest_span": "Galactic Slammers are preparing for their seventh consecutive season in the intergalactic league."
       }
     ],
-    "must_contain": [
-      "https://www.galactic-sports-portal.com/galactic-slammers-2024-season-preview"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2072,9 +2026,7 @@
         "nearest_span": "A recent survey found that 80% of residents felt that the police department handled the situation appropriately."
       }
     ],
-    "must_contain": [
-      "https://localnews.org/police-report"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2113,9 +2065,7 @@
         "nearest_span": "Azuria's top contender for governor, Emily J. Miller, secured 30% of the state-wide vote. Meanwhile, in the hotly contested senate seat, Rachel P. Lee narrowly won with 55.4% of the"
       }
     ],
-    "must_contain": [
-      "https://euraznews.net/azuria-election-2023"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2154,9 +2104,7 @@
         "nearest_span": "Public transportation funding includes: bus operations, $40 million; train maintenance, $20 million; other expenses, $30 million."
       }
     ],
-    "must_contain": [
-      "https://finance.city.gov/public-transportation-budget"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2195,9 +2143,7 @@
         "nearest_span": "The incumbent won 8 out of 10 wards, a significant improvement over the previous election."
       }
     ],
-    "must_contain": [
-      "https://localnews.press/council-election-results/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2236,9 +2182,7 @@
         "nearest_span": "Our new climate science building uses natural ventilation to cool the buildings."
       }
     ],
-    "must_contain": [
-      "https://newhaven.edu/projects/climate-science-building/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2277,9 +2221,7 @@
         "nearest_span": "Our local food bank provides food assistance to over 2,000 individuals monthly."
       }
     ],
-    "must_contain": [
-      "https://www.foodbank.org/nonprofit-annual-reports/annual_report_2020.pdf"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2318,9 +2260,7 @@
         "nearest_span": "The highway project will include new interchanges and improved traffic management systems."
       }
     ],
-    "must_contain": [
-      "https://example.com/highway-project-update"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2359,9 +2299,7 @@
         "nearest_span": "The first quarter of 2022 saw a decline in home sales, with prices remaining flat due to high inventory levels."
       }
     ],
-    "must_contain": [
-      "https://homesalesreport.com/q1-2022-housing-market-overview"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2400,9 +2338,7 @@
         "nearest_span": "Regular hand washing can help prevent the spread of common illnesses like the common cold, flu, and other viral infections."
       }
     ],
-    "must_contain": [
-      "https://www.healthline.com/nutrition/hand-washing"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2441,9 +2377,7 @@
         "nearest_span": "The Current Population Survey (CPS) is a monthly survey of households conducted by the US Census Bureau. The CPS is the primary source of information on the labor force, employment,"
       }
     ],
-    "must_contain": [
-      "https://www.census.gov/programs-surveys/cps.html"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2482,9 +2416,7 @@
         "nearest_span": "The 2022 Q4 report highlights the school board's efforts to improve student-teacher ratios and increase extracurricular activities."
       }
     ],
-    "must_contain": [
-      "https://www.schoolboardmeetingminutes.com/2022-q4-report.pdf"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2519,9 +2451,7 @@
         "nearest_span": "The council discussed various proposals for infrastructure development in the city. The mayor highlighted the importance of investing in public transportation."
       }
     ],
-    "must_contain": [
-      "https://citygov.org/council-meeting-may-20-2022"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2560,9 +2490,7 @@
         "nearest_span": "Home prices have increased steadily over the past decade, but the rate of growth has slowed in recent years."
       }
     ],
-    "must_contain": [
-      "https://www.realtor.org/news/state-of-housing"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2601,9 +2529,7 @@
         "nearest_span": "The average temperature varies depending on the location."
       }
     ],
-    "must_contain": [
-      "https://www.weather.gov/climate/temperature"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2638,9 +2564,7 @@
         "nearest_span": "The city council minutes for February covered the approval of new budget allocations."
       }
     ],
-    "must_contain": [
-      "https://citycouncil.example.gov/minutes/202202.pdf"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2679,9 +2603,7 @@
         "nearest_span": "We stand firmly in our commitment to European cooperation and solidarity."
       }
     ],
-    "must_contain": [
-      "https://france.gov/news/2022/01/10/official-statement-on-foreign-policy/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2716,9 +2638,7 @@
         "nearest_span": "Urban budgeting strategies include long-term planning and collaboration with local businesses."
       }
     ],
-    "must_contain": [
-      "https://www.citiesfinance.org/news/2022/05/urban-budgeting-strategies/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2757,9 +2677,7 @@
         "nearest_span": "The following nations have raised their minimum wage rates: France increased to 10.47 euros per hour, while the United Kingdom raised theirs to £9.90."
       }
     ],
-    "must_contain": [
-      "https://www.nationsdatabank.org/national-minimum-wage-standards/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2794,9 +2712,7 @@
         "nearest_span": "The United States Census Bureau — Data and Statistics"
       }
     ],
-    "must_contain": [
-      "https://www.census.gov/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2835,9 +2751,7 @@
         "nearest_span": "An in-depth look at the Yankees' history and legacy."
       }
     ],
-    "must_contain": [
-      "https://yankeespress.com/special-reports"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2872,9 +2786,7 @@
         "nearest_span": "This national map series provides geographic information, including state and county boundaries."
       }
     ],
-    "must_contain": [
-      "https://www.usgs.gov/library/maps/national-map-series"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2905,9 +2817,7 @@
         "nearest_span": "NovaTech Corporation is announcing today a breakthrough in foldable display technology, demonstrating a working prototype that shows great promise for this emerging field."
       }
     ],
-    "must_contain": [
-      "https://www.novatechcorp.com/press/2022/03/14/novatech-unveils-new-research-in-foldable-display-technology/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2946,9 +2856,7 @@
         "nearest_span": "New York is a city with a rich history..."
       }
     ],
-    "must_contain": [
-      "https://www.newyorktimes.com/city-government"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -2983,9 +2891,7 @@
         "nearest_span": "Despite the pandemic, many nonprofits were still providing vital services, such as food banks and pantries."
       }
     ],
-    "must_contain": [
-      "https://www.nonprofit.org/news/2022/mar/covid-19-food-assistance/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3024,9 +2930,7 @@
         "nearest_span": "Members of the community came together to support the local school."
       }
     ],
-    "must_contain": [
-      "https://www.schoolboard.gov/boardnews"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3065,9 +2969,7 @@
         "nearest_span": "Causes of climate change include the increasing levels of greenhouse gases in the atmosphere, such as carbon dioxide and methane."
       }
     ],
-    "must_contain": [
-      "https://www.climateawareness.org/environmental-issues/causes-of-climate-change"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3106,9 +3008,7 @@
         "nearest_span": "At NovaTech, we're dedicated to making technology more accessible and fun for everyone."
       }
     ],
-    "must_contain": [
-      "https://www.novatech.com/press-release/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3147,9 +3047,7 @@
         "nearest_span": "The geology of the United States is characterized by the presence of ancient rocks and the movement of tectonic plates."
       }
     ],
-    "must_contain": [
-      "https://www.geologytoday.org/us-geology-overview"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3188,9 +3086,7 @@
         "nearest_span": "The city's parks department allocated $200 million to new park projects in the previous fiscal year."
       }
     ],
-    "must_contain": [
-      "https://www.cityplanner.net/announcements/city-budget-2023"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3229,9 +3125,7 @@
         "nearest_span": "The Smith campaign's woes began with allegations of misuse of funds and the infamous 'coffee cup scandal'."
       }
     ],
-    "must_contain": [
-      "https://www.fakenewscentral.com/election-scoop"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3270,9 +3164,7 @@
         "nearest_span": "Researchers at top universities are working on AI projects to improve energy efficiency, but no specific breakthroughs have been announced."
       }
     ],
-    "must_contain": [
-      "https://www.forbes.com/ai-energy-breakthroughs/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3311,9 +3203,7 @@
         "nearest_span": "The team is expected to face off against their rivals in a highly anticipated matchup, but no official games have been announced yet."
       }
     ],
-    "must_contain": [
-      "http://sportsbuzz.com/game-preview-next-weekend"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3352,9 +3242,7 @@
         "nearest_span": "Contract breach decision has broad implications, analysts say."
       }
     ],
-    "must_contain": [
-      "https://www.reuters.com/business/law/contract-breach-decision-has-broad-implications-2023-02-15"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3393,9 +3281,7 @@
         "nearest_span": "Officer James was involved in a shooting incident last night."
       }
     ],
-    "must_contain": [
-      "https://www.police-department.gov/news-letters/2024/02/15/officer-shooting"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3434,9 +3320,7 @@
         "nearest_span": "Droughts are a normal part of the Earth's water cycle."
       }
     ],
-    "must_contain": [
-      "https://www.climate.gov/science/droughts"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "quote",
@@ -3473,9 +3357,7 @@
         "nearest_span": "Lee For Council - official news from our campaign!"
       }
     ],
-    "must_contain": [
-      "https://www.leeforcouncil.com/news/"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3514,9 +3396,7 @@
         "nearest_span": "The incident was likely just a joyride gone wrong, based on the reckless abandon displayed by the suspect."
       }
     ],
-    "must_contain": [
-      "https://citytimes.news/high-speed-chase-reported-yesterday-evening"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3555,9 +3435,7 @@
         "nearest_span": "The risk level is currently orange"
       }
     ],
-    "must_contain": [
-      "https://www.greenfield-county.gov/public-health/news/2022-06-15-mosquito-borne-disease-risk-level-red"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3596,9 +3474,7 @@
         "nearest_span": "We're expecting major changes to the city's infrastructure this year."
       }
     ],
-    "must_contain": [
-      "https://urbanplanningtoday.net/latest-updates"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3637,9 +3513,7 @@
         "nearest_span": "A study by a leading urban planning firm suggests that a 20% increase in commute times is not uncommon in urban areas experiencing high population growth."
       }
     ],
-    "must_contain": [
-      "https://www.googlemaps.com/blogs/infrastructure-updates"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3678,9 +3552,7 @@
         "nearest_span": "The proposed new expressway is expected to alleviate traffic congestion in the region."
       }
     ],
-    "must_contain": [
-      "https://www.highwayjournal.com/new-expressway-opens-2028"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3719,9 +3591,7 @@
         "nearest_span": "Police are investigating a shooting that occurred at a downtown convenience store on Tuesday evening."
       }
     ],
-    "must_contain": [
-      "https://downtownbulletin.com/police-investigate-convenience-store-shooting-1234567"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3760,9 +3630,7 @@
         "nearest_span": "NovaSpire has been working on a high-profile project, but details remain scarce."
       }
     ],
-    "must_contain": [
-      "https://techglobe.net/novaspire-latest-development-2023"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",
@@ -3801,9 +3669,7 @@
         "nearest_span": "With the election behind us, it's clear who the real winners are: the voters."
       }
     ],
-    "must_contain": [
-      "https://www.nbcnews.com/news/elections/smith-mayoral-election-2023"
-    ],
+    "must_contain": [],
     "must_not_contain": [],
     "keywords": [
       "claim",

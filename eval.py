@@ -203,6 +203,9 @@ def extract_json(text: str) -> Optional[dict]:
 # ------------------------------------------------------------------------------
 
 FLAG_VERDICTS = {"unsupported", "misleading", "ap_flag"}
+# Buckets where NO claim in the passage is source-backed, so flagging any real claim
+# `unsupported` is correct and no specific checked-source can be pinned.
+_FLAG_FAMILY_BUCKETS = {"distractor", "unsupported", "true_but_unsupported"}
 VALID_TYPES = {"claim", "quote", "link", "ap_style"}
 VALID_VERDICTS = {"supported", "unsupported", "misleading", "ap_flag"}
 # AP-style verdicts check the passage against a deterministic style rule, NOT against
@@ -241,9 +244,12 @@ class Scenario:
 def derive_golden_metadata(scn: "Scenario") -> tuple[list[str], list[str], list[str], Optional[str]]:
     """Auto-derive golden-set metadata from the gold verdict.
 
-    - must_contain: any cited source_url (output must reference the real evidence).
-    - must_not_contain: "http" when the expected verdict is `unsupported` (an
-      unsupported verdict cites nothing, so no URL should appear in the output).
+    - must_contain: the BACKING source_url when supported (output must reference the
+      real evidence). For flag-family verdicts (unsupported/distractor/true_but_
+      unsupported) we do NOT force a specific checked_source_url: any real source in
+      the bundle is a valid "source I checked" since none back the claim, so pinning
+      one would unfairly fail a model that checked a different (equally valid) source.
+      checked_source validity is still enforced by checked_source_is_valid().
     - keywords: verification type + bucket, for slicing metrics.
     - expected_verdict: the single gold verdict label.
     """
@@ -254,16 +260,14 @@ def derive_golden_metadata(scn: "Scenario") -> tuple[list[str], list[str], list[
     if scn.gold_verdicts:
         g = scn.gold_verdicts[0]
         expected = g.get("verdict")
-        # A correct output must reference the real evidence: the backing citation
-        # when supported, and always the checked source it reviewed (v2 contract).
+        # supported: the backing citation is specific and must appear.
         if g.get("source_url"):
             must_contain.append(g["source_url"])
-        if g.get("checked_source_url"):
+        # supported/misleading also pin the checked source (it equals the backing one);
+        # flag-family verdicts do NOT pin a checked_source_url (see docstring).
+        if g.get("checked_source_url") and expected not in ("unsupported",) \
+                and scn.bucket not in _FLAG_FAMILY_BUCKETS:
             must_contain.append(g["checked_source_url"])
-        # NOTE (v2): we no longer forbid "http" on unsupported records — an
-        # unsupported verdict now legitimately carries a checked_source_url. Knowledge
-        # leakage is measured directly (gold-unsupported marked supported), not by URL
-        # presence. must_not_contain stays available for explicit per-record use.
         keywords = [k for k in (g.get("type"), scn.bucket) if k]
     must_contain = list(dict.fromkeys(must_contain))  # de-dup, preserve order
     return must_contain, must_not_contain, keywords, expected
@@ -432,9 +436,6 @@ def _ap_rule_matches(pred: dict, gold: dict) -> bool:
     if not gold_areas:
         return bool(pg)  # gold rule uncategorized -> accept any non-empty rule
     return any(a in pg for a in gold_areas)
-
-
-_FLAG_FAMILY_BUCKETS = {"distractor", "unsupported", "true_but_unsupported"}
 
 
 def _any_unsupported_flag(pred_verdicts: list[dict]) -> Optional[dict]:
