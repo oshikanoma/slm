@@ -4633,5 +4633,1125 @@
     ],
     "expected_verdict": "ap_flag",
     "human_label": null
+  },
+  {
+    "id": "ap_oxf_0200",
+    "bucket": "ap_style",
+    "passage": "The flag was silver, white, and gray.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was silver, white, and gray.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was silver, white and gray.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0089",
+    "bucket": "ap_style",
+    "passage": "Officials counted 7 stations in the report.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Officials counted 7 stations in the report.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "Officials counted seven stations in the report.",
+        "explanation": "AP spells out numbers below 10, so '7' should be 'seven'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0127",
+    "bucket": "ap_style",
+    "passage": "The flag was gold, white, and orange.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was gold, white, and orange.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was gold, white and orange.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0201",
+    "bucket": "ap_style",
+    "passage": "About 57 percent of residents responded.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "About 57 percent of residents responded.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "About 57% of residents responded.",
+        "explanation": "AP now uses '57%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0230",
+    "bucket": "ap_style",
+    "passage": "The flag was black, silver, and maroon.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was black, silver, and maroon.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was black, silver and maroon.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0152",
+    "bucket": "ap_style",
+    "passage": "The school board has 2 projects.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The school board has 2 projects.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "The school board has two projects.",
+        "explanation": "AP spells out numbers below 10, so '2' should be 'two'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0024",
+    "bucket": "ap_style",
+    "passage": "Officials counted 5 districts in the report.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Officials counted 5 districts in the report.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "Officials counted five districts in the report.",
+        "explanation": "AP spells out numbers below 10, so '5' should be 'five'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0116",
+    "bucket": "ap_style",
+    "passage": "The program served over 327 sites this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 327 sites this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 327 sites this year.",
+        "explanation": "AP prefers 'more than 327' over 'over 327' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0019",
+    "bucket": "ap_style",
+    "passage": "The flag was black, maroon, and navy.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was black, maroon, and navy.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was black, maroon and navy.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0227",
+    "bucket": "ap_style",
+    "passage": "Officials counted 1 members in the report.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Officials counted 1 members in the report.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "Officials counted one members in the report.",
+        "explanation": "AP spells out numbers below 10, so '1' should be 'one'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0023",
+    "bucket": "ap_style",
+    "passage": "The program served over 86 proposals this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 86 proposals this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 86 proposals this year.",
+        "explanation": "AP prefers 'more than 86' over 'over 86' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0060",
+    "bucket": "ap_style",
+    "passage": "The program served over 883 vehicles this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 883 vehicles this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 883 vehicles this year.",
+        "explanation": "AP prefers 'more than 883' over 'over 883' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0231",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 11 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 11 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 11% this year.",
+        "explanation": "AP now uses '11%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0184",
+    "bucket": "ap_style",
+    "passage": "The program served over 312 programs this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 312 programs this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 312 programs this year.",
+        "explanation": "AP prefers 'more than 312' over 'over 312' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0191",
+    "bucket": "ap_style",
+    "passage": "The school board has 5 projects.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The school board has 5 projects.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "The school board has five projects.",
+        "explanation": "AP spells out numbers below 10, so '5' should be 'five'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0189",
+    "bucket": "ap_style",
+    "passage": "About 35 percent of residents responded.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "About 35 percent of residents responded.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "About 35% of residents responded.",
+        "explanation": "AP now uses '35%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0047",
+    "bucket": "ap_style",
+    "passage": "The office has 9 contracts.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The office has 9 contracts.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "The office has nine contracts.",
+        "explanation": "AP spells out numbers below 10, so '9' should be 'nine'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0039",
+    "bucket": "ap_style",
+    "passage": "The program served over 276 shelters this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 276 shelters this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 276 shelters this year.",
+        "explanation": "AP prefers 'more than 276' over 'over 276' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0098",
+    "bucket": "ap_style",
+    "passage": "The vote was held on September 28.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on September 28.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Sept. 28.",
+        "explanation": "With a specific date, AP abbreviates 'September' to 'Sept.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0012",
+    "bucket": "ap_style",
+    "passage": "The budget grew by 58 percent.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The budget grew by 58 percent.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "The budget grew by 58%.",
+        "explanation": "AP now uses '58%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_state_0021",
+    "bucket": "ap_style",
+    "passage": "She grew up in Atlanta, Georgia, before moving away.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "She grew up in Atlanta, Georgia, before moving away.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "states: AP abbreviates Georgia as Ga. with a city",
+        "suggestion": "She grew up in Atlanta, Ga., before moving away.",
+        "explanation": "AP abbreviates 'Georgia' to 'Ga.' when it follows a city name."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0168",
+    "bucket": "ap_style",
+    "passage": "The vote was held on February 2.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on February 2.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Feb. 2.",
+        "explanation": "With a specific date, AP abbreviates 'February' to 'Feb.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0146",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 5:00 AM sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 5:00 AM sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 5 a.m. sharp.",
+        "explanation": "AP uses '5 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0102",
+    "bucket": "ap_style",
+    "passage": "The program served over 346 sites this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 346 sites this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 346 sites this year.",
+        "explanation": "AP prefers 'more than 346' over 'over 346' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0207",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 28 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 28 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 28% this year.",
+        "explanation": "AP now uses '28%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_num_0233",
+    "bucket": "ap_style",
+    "passage": "Officials counted 7 members in the report.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Officials counted 7 members in the report.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "numbers: spell out whole numbers one through nine; use figures for 10 and above",
+        "suggestion": "Officials counted seven members in the report.",
+        "explanation": "AP spells out numbers below 10, so '7' should be 'seven'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0139",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 10:00 PM sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 10:00 PM sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 10 p.m. sharp.",
+        "explanation": "AP uses '10 p.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0204",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 2:00 PM sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 2:00 PM sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 2 p.m. sharp.",
+        "explanation": "AP uses '2 p.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0147",
+    "bucket": "ap_style",
+    "passage": "The vote was held on October 8.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on October 8.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Oct. 8.",
+        "explanation": "With a specific date, AP abbreviates 'October' to 'Oct.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0026",
+    "bucket": "ap_style",
+    "passage": "The vote was held on August 27.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on August 27.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Aug. 27.",
+        "explanation": "With a specific date, AP abbreviates 'August' to 'Aug.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0055",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 8:00 A.M. sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 8:00 A.M. sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 8 a.m. sharp.",
+        "explanation": "AP uses '8 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0206",
+    "bucket": "ap_style",
+    "passage": "The flag was teal, purple, and red.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was teal, purple, and red.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was teal, purple and red.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0217",
+    "bucket": "ap_style",
+    "passage": "The vote was held on December 8.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on December 8.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Dec. 8.",
+        "explanation": "With a specific date, AP abbreviates 'December' to 'Dec.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0220",
+    "bucket": "ap_style",
+    "passage": "The program served over 426 buildings this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 426 buildings this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 426 buildings this year.",
+        "explanation": "AP prefers 'more than 426' over 'over 426' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_time_0069",
+    "bucket": "ap_style",
+    "passage": "The meeting starts at 10:00 A.M. sharp.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The meeting starts at 10:00 A.M. sharp.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "time: use lowercase a.m./p.m. with periods; drop ':00' on the hour",
+        "suggestion": "The meeting starts at 10 a.m. sharp.",
+        "explanation": "AP uses '10 a.m.' — lowercase with periods and no ':00' on the hour."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_month_0077",
+    "bucket": "ap_style",
+    "passage": "The vote was held on September 15.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The vote was held on September 15.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "months: abbreviate Jan., Feb., Aug., Sept., Oct., Nov., Dec. when used with a date",
+        "suggestion": "The vote was held on Sept. 15.",
+        "explanation": "With a specific date, AP abbreviates 'September' to 'Sept.'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0237",
+    "bucket": "ap_style",
+    "passage": "The budget grew by 46 percent.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The budget grew by 46 percent.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "The budget grew by 46%.",
+        "explanation": "AP now uses '46%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_pct_0079",
+    "bucket": "ap_style",
+    "passage": "Enrollment rose 80 percent this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "Enrollment rose 80 percent this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "percent: use the % sign with a numeral (AP, 2019+)",
+        "suggestion": "Enrollment rose 80% this year.",
+        "explanation": "AP now uses '80%' rather than spelling out 'percent'."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_oxf_0011",
+    "bucket": "ap_style",
+    "passage": "The flag was green, navy, and bronze.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The flag was green, navy, and bronze.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "punctuation: no serial (Oxford) comma in a simple series",
+        "suggestion": "The flag was green, navy and bronze.",
+        "explanation": "AP omits the comma before 'and' in a simple series."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
+  },
+  {
+    "id": "ap_morethan_0130",
+    "bucket": "ap_style",
+    "passage": "The program served over 699 members this year.",
+    "sources": [],
+    "gold_verdicts": [
+      {
+        "type": "ap_style",
+        "span": "The program served over 699 members this year.",
+        "verdict": "ap_flag",
+        "source_url": null,
+        "evidence_span": null,
+        "checked_source_url": null,
+        "nearest_span": null,
+        "rule": "usage: use 'more than' (not 'over') with a numeral quantity",
+        "suggestion": "The program served more than 699 members this year.",
+        "explanation": "AP prefers 'more than 699' over 'over 699' for quantities."
+      }
+    ],
+    "must_contain": [],
+    "must_not_contain": [],
+    "keywords": [
+      "ap_style",
+      "ap_style"
+    ],
+    "expected_verdict": "ap_flag",
+    "human_label": null
   }
 ]
