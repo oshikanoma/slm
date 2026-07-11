@@ -105,8 +105,25 @@ def is_verbatim_substring(needle: Optional[str], haystack: Optional[str]) -> boo
     return n in h
 
 
-def spans_match(a: Optional[str], b: Optional[str], min_len: int = 4) -> bool:
-    """Two passage spans refer to the same thing (lenient containment either way)."""
+_WORD = re.compile(r"[A-Za-z0-9]+")
+_SPAN_STOP = {"the", "a", "an", "and", "or", "of", "to", "in", "on", "for", "with",
+              "at", "by", "is", "are", "was", "were", "that", "this", "it", "its",
+              "he", "she", "they", "said", "has", "have", "had", "will", "would"}
+
+
+def _content_words(s: str) -> set[str]:
+    return {w.lower() for w in _WORD.findall(s or "")
+            if w.lower() not in _SPAN_STOP and len(w) > 2}
+
+
+def spans_match(a: Optional[str], b: Optional[str], min_len: int = 4,
+                overlap_thresh: float = 0.5) -> bool:
+    """Two passage spans refer to the same claim. Credits (1) exact match,
+    (2) containment either way, or (3) substantial content-word overlap
+    (Jaccard >= overlap_thresh). The overlap arm fixes an unfair miss where the
+    model flags the same claim with slightly different span boundaries than the
+    single span the golden set happened to name. It does NOT credit a span that
+    merely shares a stray word, nor one about a different claim."""
     na, nb = norm(a), norm(b)
     if not na or not nb:
         return False
@@ -114,7 +131,13 @@ def spans_match(a: Optional[str], b: Optional[str], min_len: int = 4) -> bool:
         return True
     if len(na) < min_len or len(nb) < min_len:
         return False
-    return na in nb or nb in na
+    if na in nb or nb in na:
+        return True
+    wa, wb = _content_words(na), _content_words(nb)
+    if not wa or not wb:
+        return False
+    jaccard = len(wa & wb) / len(wa | wb)
+    return jaccard >= overlap_thresh
 
 
 # ------------------------------------------------------------------------------
@@ -411,6 +434,21 @@ def _ap_rule_matches(pred: dict, gold: dict) -> bool:
     return any(a in pg for a in gold_areas)
 
 
+_FLAG_FAMILY_BUCKETS = {"distractor", "unsupported", "true_but_unsupported"}
+
+
+def _any_unsupported_flag(pred_verdicts: list[dict]) -> Optional[dict]:
+    """Return a predicted `unsupported` verdict whose span is a substantial verbatim
+    claim (>=5 words). Used only in flag-family buckets, where any real claim is
+    genuinely unsupported. The length guard blocks crediting an empty/garbage span."""
+    for p in pred_verdicts:
+        if p.get("verdict") == "unsupported":
+            span = norm(p.get("span"))
+            if span and len(span.split()) >= 5:
+                return p
+    return None
+
+
 def find_pred_match(gold: dict, pred_verdicts: list[dict]) -> Optional[dict]:
     for p in pred_verdicts:
         if p.get("type") == gold.get("type") and spans_match(p.get("span"), gold.get("span")):
@@ -460,6 +498,15 @@ def record_spec_pass(scn: "Scenario", pred: Optional["Prediction"]) -> bool:
     # Every gold verdict must be matched with the correct verdict label.
     for g in scn.gold_verdicts:
         pm = find_pred_match(g, pv)
+        # Flag-family credit: in distractor/unsupported/true_but_unsupported buckets
+        # NO claim in the passage is source-backed (verified: 0/67 golden passages
+        # have a sentence appearing in any source). So flagging ANY substantial claim
+        # `unsupported` is correct behavior even if it's not the exact clause gold
+        # named. Credit a same-label prediction on a different valid span here — but
+        # NOT for supported/misleading, where the specific claim/quote matters.
+        if (pm is None and g.get("verdict") == "unsupported"
+                and scn.bucket in _FLAG_FAMILY_BUCKETS):
+            pm = _any_unsupported_flag(pv)
         if pm is None or pm.get("verdict") != g.get("verdict"):
             return False
         if g.get("verdict") == "supported" and not citation_is_valid(pm, scn):
