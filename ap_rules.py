@@ -76,6 +76,17 @@ def ap_check(text: str) -> list[dict]:
         add(m.group(0), "usage: use “more than” (not “over”) with a numeral quantity",
             m.group(0).replace("over", "more than"))
 
+    # 7) Attribution order: AP convention is "Name said", not "said Name" — UNLESS a
+    #    descriptive clause/title follows the name. Flag only the clear, safe case:
+    #    "said <Name>" immediately closed by . ! ? " or end of string (nothing after
+    #    to describe the speaker). One-word name after "said" (not "said the mayor…").
+    for m in re.finditer(r"\bsaid\s+([A-Z][a-z]+)\s*([.!?\"'”’]|$)", text):
+        name = m.group(1)
+        add(m.group(0).strip(),
+            "attribution: put the name before “said” (“Name said”) unless a title or "
+            "descriptive clause follows the name",
+            f"“{name} said”")
+
     return hits
 
 
