@@ -120,22 +120,23 @@ NEWSPAPER_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Spectral:ital,wght@0,400;0,600;1,400&family=Georgia&display=swap');
 
 .gradio-container { background: #f4f1ea !important; max-width: 900px !important; margin: 0 auto !important; }
-#masthead { text-align: center; padding: 28px 0 6px; }
+#masthead { text-align: center; padding: 32px 0 6px; }
 #masthead .paper-name {
   font-family: 'Playfair Display', Georgia, serif; font-weight: 900;
-  font-size: 3.2rem; letter-spacing: -0.5px; color: #1a1a1a; line-height: 1.05; margin: 0;
+  font-size: 3.4rem; letter-spacing: -0.5px; color: #1a1a1a; line-height: 1.1;
+  margin: 22px 0 10px;
 }
 #masthead .kicker {
   font-family: 'Spectral', Georgia, serif; font-style: italic; color: #6b6257;
-  font-size: 1.02rem; margin-top: 8px;
+  font-size: 1.05rem; margin-top: 6px; line-height: 1.5;
 }
 #masthead .ruleline {
-  border: none; border-top: 3px double #1a1a1a; margin: 14px auto 4px; width: 100%;
+  border: none; border-top: 3px double #1a1a1a; margin: 18px auto 4px; width: 100%;
 }
 #masthead .dateline {
-  font-family: 'Spectral', Georgia, serif; text-transform: uppercase; letter-spacing: 2px;
-  font-size: 0.72rem; color: #6b6257; display: flex; justify-content: space-between;
-  border-bottom: 1px solid #cfc7b8; padding: 4px 2px 8px;
+  font-family: 'Spectral', Georgia, serif; letter-spacing: 1px;
+  font-size: 0.78rem; color: #6b6257; display: flex; justify-content: space-between;
+  border-bottom: 1px solid #cfc7b8; padding: 2px 2px 10px;
 }
 .gr-box, .gr-form, textarea, .gr-input {
   font-family: 'Spectral', Georgia, serif !important; background: #fffdf8 !important;
@@ -145,7 +146,7 @@ label span { font-family: 'Spectral', Georgia, serif !important; color: #3a352c 
 button.primary, #analyze-btn {
   background: #8b2635 !important; border: none !important; color: #fff !important;
   font-family: 'Spectral', Georgia, serif !important; font-weight: 600 !important;
-  letter-spacing: 0.5px !important; text-transform: uppercase !important; font-size: 0.85rem !important;
+  letter-spacing: 0.3px !important; font-size: 0.98rem !important;
 }
 button.primary:hover, #analyze-btn:hover { background: #6f1e2a !important; }
 #result, #sources {
