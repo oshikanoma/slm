@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 
 from eval import Scenario, build_messages, record_spec_pass, load_predictions  # noqa: F401
