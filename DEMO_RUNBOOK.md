@@ -48,18 +48,26 @@ python3 diagnose.py --preds tuned_preds.v5.jsonl
 Say: "Per bucket, v6 is **ap_style 100%, misleading 100%, distractor 88%, unsupported 80%,
 true_but_unsupported 86%** — and **supported 53%**, which is my weak spot."
 
-## 4. LIVE DEMO — the browser UI  (easiest, most impressive)
+## 4. LIVE DEMO — the browser UI  (one box, easiest)
 ```bash
-export TAVILY_API_KEY=tvly-dev-...     # open-web search for the Verify tab
+export TAVILY_API_KEY=tvly-dev-...     # open-web search when "retrieve" is on
 python3 app.py                          # opens http://127.0.0.1:7860
 ```
-Two tabs in the browser (no terminal needed once open):
-- **AP Style check** — type a sentence → flag + suggested fix. Try:
-  `The meeting starts at 3:00 PM.` → flags time, suggests "3 p.m."
-  ⚠️ **Use ONE violation per sentence** — model catches one AP issue at a time
-  (every training example had exactly one). Multi-violation sentences → only first flagged.
-- **Verify a claim** — paste a passage → retrieves real sources → cited verdicts with links.
-  Try: `The James Webb Space Telescope launched on December 25, 2021 from French Guiana.`
+One passage box + a "retrieve sources & verify" toggle. Returns AP flags AND claim verdicts.
+
+**AP-only (toggle OFF, faster):** use a PLAIN STYLE sentence, ONE violation:
+  - `The meeting starts at 3:00 PM.`   → ⚑ time → "3 p.m." ✅
+  - `Enrollment rose 12 percent this year.`   → ⚑ percent → "12%" ✅
+  - `The vote was held on December 25.`   → ⚑ months → "Dec. 25" ✅
+
+  ⚠️ TWO honest limits to demo AROUND (not into):
+  (a) **one AP flag per sentence** (training had one violation each);
+  (b) on a sentence that is ALSO a factual news claim (e.g. the JWST one), the model
+      prioritizes *claim verification* over AP — so it may mark it unsupported instead
+      of flagging AP. Keep AP examples to plain style sentences.
+
+**Verify (toggle ON):** paste a claim → real sources → cited verdicts.
+  - `The James Webb Space Telescope launched on December 25, 2021 from French Guiana.`
 
 ### Terminal alternative (for the base-vs-tuned CONTRAST specifically)
 ```bash
