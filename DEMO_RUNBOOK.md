@@ -48,14 +48,27 @@ python3 diagnose.py --preds tuned_preds.v5.jsonl
 Say: "Per bucket, v6 is **ap_style 100%, misleading 100%, distractor 88%, unsupported 80%,
 true_but_unsupported 86%** — and **supported 53%**, which is my weak spot."
 
-## 4. LIVE DEMO — retrieve + verify  (the wow moment)
+## 4. LIVE DEMO — the browser UI  (easiest, most impressive)
 ```bash
-export TAVILY_API_KEY=tvly-dev-...        # (open-web search)
+export TAVILY_API_KEY=tvly-dev-...     # open-web search for the Verify tab
+python3 app.py                          # opens http://127.0.0.1:7860
+```
+Two tabs in the browser (no terminal needed once open):
+- **AP Style check** — type a sentence → flag + suggested fix. Try:
+  `The meeting starts at 3:00 PM.` → flags time, suggests "3 p.m."
+  ⚠️ **Use ONE violation per sentence** — model catches one AP issue at a time
+  (every training example had exactly one). Multi-violation sentences → only first flagged.
+- **Verify a claim** — paste a passage → retrieves real sources → cited verdicts with links.
+  Try: `The James Webb Space Telescope launched on December 25, 2021 from French Guiana.`
+
+### Terminal alternative (for the base-vs-tuned CONTRAST specifically)
+```bash
 python3 demo.py --compare "The James Webb Space Telescope launched on December 25, 2021 from French Guiana."
 ```
-(~1 min to load model, ~15s/claim. Pre-run once before the review so it's warm.)
-Point at the output: **base model says 'supported' with an EMPTY backing quote** (vouching
-with no evidence — the forbidden failure); **tuned model quotes the real backing sentence.**
+Point at output: **base says 'supported' with an EMPTY backing quote** (vouching with no
+evidence — the forbidden failure); **tuned quotes the real backing sentence.**
+
+(Model loads ~1 min cold, ~15s/check. Pre-run once before the review so it's warm.)
 
 ---
 
