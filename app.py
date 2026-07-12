@@ -116,26 +116,80 @@ def analyze(passage: str, do_retrieve: bool, k: int):
     return claim_md + "\n\n" + ap_md, src_md
 
 
-with gr.Blocks(title="Newsroom Verifier SLM (v6)") as app:
-    gr.Markdown("# 📰 Cited Newsroom Verifier SLM (Qwen3-1.7B, v6)\n"
-                "Paste a passage. The model flags **AP Style** issues *and* verifies **claims** "
-                "against retrieved sources — only saying 'supported' when it can quote the evidence. "
-                "It flags and suggests; it never rewrites your text.")
-    inp = gr.Textbox(label="Passage", lines=3,
+NEWSPAPER_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Spectral:ital,wght@0,400;0,600;1,400&family=Georgia&display=swap');
+
+.gradio-container { background: #f4f1ea !important; max-width: 900px !important; margin: 0 auto !important; }
+#masthead { text-align: center; padding: 28px 0 6px; }
+#masthead .paper-name {
+  font-family: 'Playfair Display', Georgia, serif; font-weight: 900;
+  font-size: 3.2rem; letter-spacing: -0.5px; color: #1a1a1a; line-height: 1.05; margin: 0;
+}
+#masthead .kicker {
+  font-family: 'Spectral', Georgia, serif; font-style: italic; color: #6b6257;
+  font-size: 1.02rem; margin-top: 8px;
+}
+#masthead .ruleline {
+  border: none; border-top: 3px double #1a1a1a; margin: 14px auto 4px; width: 100%;
+}
+#masthead .dateline {
+  font-family: 'Spectral', Georgia, serif; text-transform: uppercase; letter-spacing: 2px;
+  font-size: 0.72rem; color: #6b6257; display: flex; justify-content: space-between;
+  border-bottom: 1px solid #cfc7b8; padding: 4px 2px 8px;
+}
+.gr-box, .gr-form, textarea, .gr-input {
+  font-family: 'Spectral', Georgia, serif !important; background: #fffdf8 !important;
+  border-color: #d8d0c0 !important; color: #1a1a1a !important;
+}
+label span { font-family: 'Spectral', Georgia, serif !important; color: #3a352c !important; }
+button.primary, #analyze-btn {
+  background: #8b2635 !important; border: none !important; color: #fff !important;
+  font-family: 'Spectral', Georgia, serif !important; font-weight: 600 !important;
+  letter-spacing: 0.5px !important; text-transform: uppercase !important; font-size: 0.85rem !important;
+}
+button.primary:hover, #analyze-btn:hover { background: #6f1e2a !important; }
+#result, #sources {
+  font-family: 'Spectral', Georgia, serif !important; background: #fffdf8 !important;
+  border: 1px solid #d8d0c0 !important; border-radius: 2px !important; padding: 16px 20px !important;
+  color: #1a1a1a !important; line-height: 1.55 !important;
+}
+#result h3 {
+  font-family: 'Playfair Display', Georgia, serif !important; font-size: 1.1rem !important;
+  border-bottom: 1px solid #cfc7b8; padding-bottom: 4px; margin-top: 4px;
+}
+#sources { font-size: 0.85rem !important; color: #4a453c !important; }
+.gr-examples, .gr-samples-table { font-family: 'Spectral', Georgia, serif !important; }
+footer { display: none !important; }
+"""
+
+# Deterministic dateline built at import (Date.now unavailable in some sandboxes; use fixed label).
+with gr.Blocks(title="The Verifier", css=NEWSPAPER_CSS, theme=gr.themes.Base(
+        primary_hue="red", neutral_hue="stone",
+        font=[gr.themes.GoogleFont("Spectral"), "Georgia", "serif"])) as app:
+    gr.HTML("""
+    <div id="masthead">
+      <div class="dateline"><span>Vol. VI · Fine-Tuned Edition</span><span>Qwen3-1.7B · QLoRA</span></div>
+      <h1 class="paper-name">The Verifier</h1>
+      <div class="kicker">A cited, evidence-bounded newsroom copy desk &mdash;
+        it checks AP style and verifies every claim against a real source, or says so plainly.</div>
+      <hr class="ruleline"/>
+    </div>
+    """)
+    inp = gr.Textbox(label="Copy to check", lines=3,
                      placeholder="Enrollment rose 12 percent, according to a district report.")
     with gr.Row():
-        retrieve = gr.Checkbox(value=False, label="Retrieve sources & verify claims "
-                               "(slower; uncheck for fast AP-only)")
-        k = gr.Slider(2, 6, value=4, step=1, label="Sources")
-    btn = gr.Button("Analyze", variant="primary")
-    out = gr.Markdown()
-    src = gr.Markdown()
+        retrieve = gr.Checkbox(value=False,
+                               label="Retrieve sources & verify claims (slower; off = AP style only)")
+        k = gr.Slider(2, 6, value=4, step=1, label="Sources to pull")
+    btn = gr.Button("Send to the copy desk", variant="primary", elem_id="analyze-btn")
+    out = gr.Markdown(elem_id="result")
+    src = gr.Markdown(elem_id="sources")
     btn.click(analyze, [inp, retrieve, k], [out, src])
     gr.Examples([
-        ["The meeting starts at 3:00 PM.", False, 4],
+        ["The meeting has 5 members and starts at 3:00 PM on December 25.", False, 4],
         ["Enrollment rose 12 percent this year.", False, 4],
         ["The James Webb Space Telescope launched on December 25, 2021 from French Guiana.", True, 4],
-    ], [inp, retrieve, k])
+    ], [inp, retrieve, k], label="Try a headline")
 
 
 if __name__ == "__main__":
