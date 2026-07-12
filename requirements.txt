@@ -16,3 +16,6 @@ openai>=1.0
 # Pulls Texas Tribune (Creative Commons) articles into golden-set scaffolds.
 requests>=2.31
 beautifulsoup4>=4.12
+
+# --- Browser UI (app.py) ---
+gradio>=4
