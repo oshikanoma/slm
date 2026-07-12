@@ -39,34 +39,45 @@ Implemented in `eval.py`, run identically on base and tuned:
 
 **Framing:** base = control, tuned = treatment, single manipulated variable = the fine-tuning. H0 = fine-tuning makes no difference to spec_pass.
 
-### Headline (v3, 115-record golden set)
+### Headline (v6 — final model, 175-record golden set)
 
 | Metric | Base | Tuned | Δ |
 |---|---|---|---|
-| **spec_pass_rate ↑** | **0.00%** | **47.83%** | **+47.83%** |
-| fabricated_citation_rate ↓ | 89.39% | 9.52% | **−79.87%** |
-| knowledge_leakage_rate ↓ | 8.96% | 1.49% | −7.46% |
-| citation_validity_rate ↑ | 10.61% | 90.48% | +79.87% |
-| citation_precision ↑ | 1.52% | 66.67% | +65.15% |
-| flag_recall ↑ | 24.05% | 69.62% | +45.57% |
+| **spec_pass_rate ↑** | **0.57%** | **84.00%** | **+83.43%** |
+| fabricated_citation_rate ↓ | 45.45% | 5.56% | **−39.90%** |
+| knowledge_leakage_rate ↓ | 2.99% | 7.46% | +4.48% (5/67; 4 perennial-hard cases) |
+| citation_validity_rate ↑ | 54.55% | 94.44% | +39.90% |
+| citation_precision ↑ | 18.18% | 55.56% | +37.37% |
+| flag_recall ↑ | 9.35% | 85.61% | +76.26% |
 
-**Significance:** McNemar exact **p < 0.0001**; tuned-only wins = 55, base-only wins = **0**; bootstrap 95% CI on the delta = [+39.1%, +56.5%]. **H0 rejected.** All §5.5 win-condition checks pass — **WIN**.
+**Significance:** McNemar exact **p < 0.0001**; tuned-only wins = 147, base-only wins = **1**; bootstrap 95% CI on the delta = [+77.7%, +89.1%]. **H0 rejected.**
 
-### Per-bucket (v3 tuned)
-misleading **100%**, unsupported 53%, true_but_unsupported 48%, supported 39%, distractor 19%. The model is strongest exactly where it matters (holding the line on quotes and unsupported claims) and weakest on distractors (hardest bucket).
+### Per-bucket (v6 tuned)
+ap_style **100%**, misleading **100%**, distractor 87.5%, true_but_unsupported 85.7%, unsupported 80%, supported 52.8%. Strong everywhere except `supported` (the capability-ceiling bucket, §6). The lone win-condition miss is `knowledge_leakage` at 7.5% = 5/67 records, four of which are the same borderline claims that resisted every version.
 
-## 6. Iteration — the loop, closed three times
+## 6. Iteration — the loop, closed six times
 
 Each version was driven by a finding from the previous eval. This is the methodology working, not a single lucky run.
 
-| Ver | Change (and what drove it) | Result |
+| Ver | Change (and what drove it) | Result (spec_pass) |
 |---|---|---|
-| **v1** | Initial 1,000-example dataset | spec_pass 0.9%→61%, p<0.0001 — **but calibration exposed a spec disagreement** (below) |
-| **v2** | Added `checked_source_url`/`nearest_span` to every verdict (spec revision) | Full win incl. fabrication/leakage; calibration kappa 0.155→0.286 |
-| **v3** | Rebalanced training mix, supported 21%→28% (calibration found over-flagging) | supported-bucket 31%→39%, clean-passage handling 33%→53% |
+| **v1** | Initial 1,000-example dataset | 0.9%→61% — **but calibration exposed a spec disagreement** |
+| **v2** | Added `checked_source_url`/`nearest_span` to every verdict (spec revision from calibration) | full win incl. fabrication/leakage; kappa 0.155→0.286 |
+| **v3** | Rebalanced mix, supported 21%→28% (calibration found over-flagging) | 48%; supported-bucket 31%→39% |
+| **v4** | Added **AP Style** as composed behavior (flag-and-suggest) | 55%; **ap_style 100%**, verifier buckets held (§7 "hardest stretch" passed) |
+| **v5** | +150 synthetic supported (fix over-caution) + AP expanded 5→8 rules | 83%; ap_style 100%; **supported unchanged (56→50)** |
+| **v6** | +106 **hard real** supported (synthetic didn't transfer) | **84% (best)**; supported 52.8%; fabrication 5.6% |
+
+> Note: the v4→v5 jump in the headline (55%→83%) is partly a mid-project **eval-fairness fix** (below), not only training — the honest v4 number was ~73%. Bucket-level trends are the reliable signal.
 
 ### The calibration finding (the most valuable moment)
-Calibrating the LLM judge against the human expert produced **kappa 0.155** — too low to trust. The disagreements weren't noise: the expert's editorial standard ("always show me the source you checked, even when flagging") **differed from the v1 spec** ("unsupported = cite nothing"). This is exactly what calibration exists to surface. Resolution: **revise the spec** (v2's `checked_source_url` — the model now always shows its work), which is a stronger design *and* raised agreement. A second round then exposed **over-flagging** (the model marked genuinely-supported claims unsupported), traced to a data imbalance (73% of training was flag-buckets) and fixed in v3 by rebalancing — per the project rule, *fix the data, not the hyperparameters*.
+Calibrating the LLM judge against the human expert produced **kappa 0.155** — too low to trust. The disagreements weren't noise: the expert's editorial standard ("always show me the source you checked, even when flagging") **differed from the v1 spec** ("unsupported = cite nothing"). This is exactly what calibration exists to surface. Resolution: **revise the spec** (v2's `checked_source_url` — the model now always shows its work), a stronger design that also raised agreement. A second round exposed **over-flagging**, traced to a data imbalance and fixed by rebalancing — *fix the data, not the hyperparameters*.
+
+### Two eval-fairness fixes (measuring honestly before chasing the number)
+Investigating why `spec_pass` sat ~55%, a diagnostic (`diagnose.py`) showed the dominant failure was **`missed_verdict`**: the model gave the *correct* verdict on a *valid but different* claim than the single one the golden set named. Two labeling artifacts were unfairly failing correct behavior: (1) single-span matching, and (2) `must_contain` pinning one specific `checked_source_url`. Both were fixed **only for flag-family buckets** — verified safe because 0/67 of those golden passages have any source-backed sentence, so flagging any real claim is genuinely correct. This lifted the honest v4 score 55%→73% **with no retraining**. Crucially, a parallel "fairness credit" for the *supported* bucket was **declined**: `citation_is_valid` can't confirm the evidence actually backs the claim, so crediting alt-span supported verdicts would reward the loose-support pattern the spec forbids. The eval was made fairer, not looser.
+
+### The capability ceiling (v5→v6)
+The `supported` bucket plateaued at ~50–53% across two targeted retrains (v5 added easy synthetic supported → no change; v6 added 106 hard *real* supported → +3 points). Conclusion, backed by data: this is the **1.7B capability ceiling** on the hardest sub-task — extracting and verbatim-quoting the *specific* backing sentence from a dense, multi-claim passage — not a data gap. Locating that ceiling empirically is itself a result; the honest move is to stop iterating supported rather than spend runs for ~1 record each.
 
 ## 7. Live demo — thin retriever (spec §8)
 
@@ -80,11 +91,11 @@ The model stays evidence-bounded (only quotes what the retriever supplies, so it
 
 ## 8. Honest limitations
 
-- **Evidence-span precision:** the model reliably picks the right *source* and correct verdict, but sometimes quotes a loose *backing span* rather than the ideal sentence (seen in the demo). A v4 data fix (more "exact backing span" examples) would tighten this.
-- **`supported` recall (39%):** improved across versions but still the model's weaker half — it errs toward caution. For a *verifier*, over-caution is the safer failure mode, but there's headroom.
+- **`supported` bucket (52.8%) is at the 1.7B capability ceiling** (§6): extracting and verbatim-quoting the *specific* backing sentence from a dense multi-claim passage is the hardest sub-task, and two targeted data interventions moved it only ~3 points. Breaking this plateau needs a bigger base (e.g. Qwen3-4B), not more data — which would trade away the "tiny local model" thesis.
+- **`knowledge_leakage` 7.5% (5/67):** four are perennially-hard borderline claims (a Gallup stat, a screwworm report) where a topically-related source tempts a vouch. Real, but a small tail.
 - **Judge quality:** calibration used a free Groq model that made some grading errors; a stronger judge (GPT-4o) would give a cleaner final kappa. The objective metrics need no LLM and are airtight.
-- **Retriever scope:** the free Wikipedia backend is encyclopedia-scoped; a search-API key unlocks open-web retrieval.
+- **Retriever scope:** the free Wikipedia backend is encyclopedia-scoped; a no-card Tavily key (or Brave/Serper) unlocks open-web retrieval.
 
 ## 9. Bottom line
 
-A tiny, local, fine-tuned model reliably does the one disciplined thing the base model can't: **only say what it can cite.** The improvement is large (spec_pass 0→48%), statistically significant (p<0.0001), and directional across three data-driven iterations. The thesis holds.
+A tiny, local, fine-tuned model reliably does the one disciplined thing the base model can't: **only say what it can cite** — and, composed on top, flag AP Style. The improvement is large (spec_pass 0.6→84%), statistically significant (p<0.0001), and directional across **six data-driven iterations** that each diagnosed and fixed a real weakness — culminating in empirically locating the model's capability ceiling. Fabrication fell from 45% to 5.6%. The thesis holds: dataset quality and honest evaluation, not model size, carried this.

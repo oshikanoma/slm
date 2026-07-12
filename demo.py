@@ -25,7 +25,7 @@ from eval import Scenario, build_messages, record_spec_pass, load_predictions  #
 from retriever import build_bundle, _active_backend
 
 BASE = "Qwen/Qwen3-1.7B"
-ADAPTER = "artifacts/qwen3-verifier-lora-v3"
+ADAPTER = "artifacts/qwen3-verifier-lora-v6"  # latest/best adapter
 
 
 def _load_model(with_adapter: bool):
