@@ -55,19 +55,19 @@ python3 app.py                          # opens http://127.0.0.1:7860
 ```
 One passage box + a "retrieve sources & verify" toggle. Returns AP flags AND claim verdicts.
 
-**AP-only (toggle OFF, faster):** use a PLAIN STYLE sentence, ONE violation:
-  - `The meeting starts at 3:00 PM.`   → ⚑ time → "3 p.m." ✅
-  - `Enrollment rose 12 percent this year.`   → ⚑ percent → "12%" ✅
-  - `The vote was held on December 25.`   → ⚑ months → "Dec. 25" ✅
+**AP Style is now DETERMINISTIC code** (`ap_rules.py`) — it runs on every input, catches
+EVERY violation instantly, on any sentence (incl. claims). No more single-sentence caveat.
+  - `The meeting has 5 members and starts at 3:00 PM on December 25.` → flags 5→five, 3 p.m., Dec. 25 (all three)
 
-  ⚠️ TWO honest limits to demo AROUND (not into):
-  (a) **one AP flag per sentence** (training had one violation each);
-  (b) on a sentence that is ALSO a factual news claim (e.g. the JWST one), the model
-      prioritizes *claim verification* over AP — so it may mark it unsupported instead
-      of flagging AP. Keep AP examples to plain style sentences.
-
-**Verify (toggle ON):** paste a claim → real sources → cited verdicts.
+**Claim verification = the SLM** (toggle "retrieve & verify" ON): real sources → cited verdicts.
   - `The James Webb Space Telescope launched on December 25, 2021 from French Guiana.`
+    → ✅ SUPPORTED (NPR source + backing quote) AND ⚑ AP: "December 25" → "Dec. 25"
+
+**KEY TALKING POINT (this is the mature systems answer):** "AP style is deterministic, so
+I check it in **code** — exactly my Brainlift's thesis that deterministic editorial tasks
+should be offloaded. The **SLM** is reserved for the non-deterministic part: verifying claims
+against evidence with restraint, which a prompt can't reliably enforce. Code does what's
+objective; the fine-tuned model does what needs judgment."
 
 ### Terminal alternative (for the base-vs-tuned CONTRAST specifically)
 ```bash
