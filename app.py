@@ -20,6 +20,7 @@ import gradio as gr
 
 from eval import Scenario, build_messages
 from retriever import build_bundle, _active_backend
+from ap_rules import ap_check  # deterministic AP checker (code, not model)
 
 BASE = "Qwen/Qwen3-1.7B"
 ADAPTER = "artifacts/qwen3-verifier-lora-v6"
@@ -62,49 +63,57 @@ def _run(passage: str, sources: list[dict], max_new_tokens: int) -> dict:
 def _fmt(obj: dict) -> str:
     if "_raw" in obj:
         return f"_(model returned non-JSON)_\n\n```\n{obj['_raw'][:600]}\n```"
-    verdicts = obj.get("verdicts", [])
+    # Claim verdicts only — AP is handled deterministically by ap_rules, not the model.
+    verdicts = [v for v in obj.get("verdicts", []) if v.get("verdict") != "ap_flag"]
     if not verdicts:
-        return "✅ **Clean** — no AP issues and nothing to flag."
+        return "### Claim verdicts\n✅ Nothing flagged against the retrieved sources."
     icons = {"supported": "✅ SUPPORTED", "unsupported": "❌ UNSUPPORTED",
-             "misleading": "⚠️ MISLEADING", "ap_flag": "⚑ AP STYLE"}
-    ap, claims = [], []
+             "misleading": "⚠️ MISLEADING"}
+    claims = []
     for v in verdicts:
         vd = v.get("verdict", "")
         head = f"**{icons.get(vd, vd)}** — {v.get('span','')}"
-        if vd == "ap_flag":
-            body = [f"  • Rule: {v.get('rule','')}", f"  • Suggested: {v.get('suggestion','')}"]
-            ap.append(head + "\n" + "\n".join(body))
-        else:
-            body = []
-            if v.get("source_url"):
-                body.append(f"  • Cited: {v['source_url']}")
-                body.append(f"  • Backing: \"{v.get('evidence_span','')}\"")
-            elif v.get("checked_source_url"):
-                body.append(f"  • Checked (no support found): {v['checked_source_url']}")
-            if v.get("explanation"):
-                body.append(f"  • {v['explanation']}")
-            claims.append(head + ("\n" + "\n".join(body) if body else ""))
-    out = []
-    if claims:
-        out.append("### Claim verdicts\n" + "\n\n".join(claims))
-    if ap:
-        out.append("### AP Style\n" + "\n\n".join(ap))
-    return "\n\n".join(out)
+        body = []
+        if v.get("source_url"):
+            body.append(f"  • Cited: {v['source_url']}")
+            body.append(f"  • Backing: \"{v.get('evidence_span','')}\"")
+        elif v.get("checked_source_url"):
+            body.append(f"  • Checked (no support found): {v['checked_source_url']}")
+        if v.get("explanation"):
+            body.append(f"  • {v['explanation']}")
+        claims.append(head + ("\n" + "\n".join(body) if body else ""))
+    return "### Claim verdicts\n" + "\n\n".join(claims)
+
+
+def _fmt_ap(hits: list[dict]) -> str:
+    if not hits:
+        return "✅ **AP Style:** no issues found."
+    lines = ["### ⚑ AP Style (deterministic checker)"]
+    for h in hits:
+        lines.append(f"- **{h['span']}** — {h['rule']}\n  → suggested: {h['suggestion']}")
+    return "\n".join(lines)
 
 
 def analyze(passage: str, do_retrieve: bool, k: int):
+    """AP style = deterministic code (instant, catches every violation).
+    Claim verification = the SLM (only when sources are retrieved)."""
     if not passage.strip():
         return "Enter a passage.", ""
-    sources, src_md = [], "_(retrieval off — AP-only, fast)_"
-    if do_retrieve:
-        backend, _ = _active_backend()
-        sources = build_bundle(passage, k=int(k))
-        src_md = ("\n".join(f"- [{s['url']}]({s['url']})" for s in sources)
-                  if sources else f"_(no sources retrieved; backend: {backend})_")
-    # shorter cap when not retrieving -> faster AP-only pass
-    max_tok = 512 if do_retrieve else 256
-    obj = _run(passage, sources, max_tok)
-    return _fmt(obj), src_md
+    # 1) AP: always, instant, complete.
+    ap_md = _fmt_ap(ap_check(passage))
+    # 2) Claim verification: only meaningful WITH sources (the SLM's job).
+    if not do_retrieve:
+        return ap_md + "\n\n_(claim verification skipped — turn on 'retrieve & verify' " \
+               "to check claims against real sources)_", "_(retrieval off)_"
+    backend, _ = _active_backend()
+    sources = build_bundle(passage, k=int(k))
+    src_md = ("\n".join(f"- [{s['url']}]({s['url']})" for s in sources)
+              if sources else f"_(no sources retrieved; backend: {backend})_")
+    if not sources:
+        return ap_md + "\n\n_(no sources retrieved — can't verify claims)_", src_md
+    obj = _run(passage, sources, 512)
+    claim_md = _fmt(obj)
+    return claim_md + "\n\n" + ap_md, src_md
 
 
 with gr.Blocks(title="Newsroom Verifier SLM (v6)") as app:
