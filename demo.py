@@ -95,7 +95,7 @@ def main(argv=None):
     scn = Scenario(id="demo", bucket="", passage=args.passage, sources=bundle,
                    gold_verdicts=[])
 
-    print("\n=== TUNED model (v3 adapter) verdicts ===")
+    print(f"\n=== TUNED model ({os.path.basename(ADAPTER)}) verdicts ===")
     tmodel, tok, device = _load_model(with_adapter=True)
     _print_verdicts(_run(tmodel, tok, device, scn))
 
