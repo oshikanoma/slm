@@ -550,6 +550,8 @@ class Counter:
 
 def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> dict[str, Any]:
     spec_pass = Counter()              # HEADLINE: binary pass/fail per record
+    verdict_accuracy = Counter()       # per gold verdict: correct LABEL? (lenient — no
+                                       # exact-citation requirement). The mentor's "accuracy".
     valid_output = Counter()
     metadata_checks = Counter()        # must_contain / must_not_contain
     citation_validity = Counter()      # over predicted `supported`
@@ -581,6 +583,16 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
         if not passed:
             failures["spec_fail"].append({"id": scn.id, "bucket": scn.bucket,
                                           "raw": pred.raw[:300]})
+
+        # --- verdict accuracy (lenient: correct LABEL per gold verdict, citation
+        #     exactness NOT required). Uses the same fair matching as spec_pass,
+        #     incl. flag-family credit for a same-label flag on a different valid span. ---
+        for g in scn.gold_verdicts:
+            pm = find_pred_match(g, pv)
+            if pm is None and g.get("verdict") == "unsupported" and scn.bucket in _FLAG_FAMILY_BUCKETS:
+                pm = _any_unsupported_flag(pv)
+            correct = pm is not None and pm.get("verdict") == g.get("verdict")
+            verdict_accuracy.add(correct)
 
         # --- objective keyword checks ---
         metadata_checks.add(metadata_checks_pass(scn, pred))
@@ -642,6 +654,7 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
         "n_scenarios": len(scenarios),
         "metrics": {
             "spec_pass_rate": spec_pass,
+            "verdict_accuracy": verdict_accuracy,
             "valid_output_rate": valid_output,
             "metadata_checks_rate": metadata_checks,
             "citation_validity_rate": citation_validity,
@@ -661,6 +674,7 @@ def compute_metrics(scenarios: list[Scenario], preds: dict[str, Prediction]) -> 
 # Direction of "better": arrow shown in the table; True means higher is better.
 METRIC_HIGHER_BETTER = {
     "spec_pass_rate": True,
+    "verdict_accuracy": True,
     "valid_output_rate": True,
     "metadata_checks_rate": True,
     "citation_validity_rate": True,
@@ -672,6 +686,7 @@ METRIC_HIGHER_BETTER = {
 }
 METRIC_ORDER = [
     "spec_pass_rate",
+    "verdict_accuracy",
     "valid_output_rate",
     "metadata_checks_rate",
     "citation_validity_rate",
