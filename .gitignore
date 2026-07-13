@@ -18,9 +18,10 @@ artifacts/
 base_preds*.jsonl
 tuned_preds*.jsonl
 calib*.jsonl
-# transient scoring output (keep the committed results.v*.colab.md evidence files)
-/results.md
-/results-*.md
+# transient scoring output (keep committed: RESULTS.md, results.v*.colab.md, results.leaderboard.md)
+# NOTE: macOS FS is case-insensitive, so be explicit — do NOT ignore RESULTS.md.
+/results-[0-9]*.md
+/results.judged.md
 
 # Local junk / scratch data + backups
 data/junk*.jsonl
