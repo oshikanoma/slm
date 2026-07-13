@@ -35,7 +35,7 @@ reality but absent from the sources — these measure **knowledge leakage**, the
 ```bash
 python3 eval.py score --testset data/golden.json --base /tmp/base.v5.jsonl --tuned tuned_preds.v5.jsonl
 ```
-This prints the full table + McNemar significance. Talking points:
+This prints the full table + McNemar significance.
 - **spec_pass: base ~9% → tuned ~74%** (Colab v6: **0.6% → 84%**)
 - **fabricated_citation: 61% → 3%** — base invents/empties citations; tuned doesn't. THE headline.
 - **flag_recall 10% → 71%** — base barely flags problems; tuned catches them.
@@ -43,24 +43,23 @@ This prints the full table + McNemar significance. Talking points:
 
 ## 2b. FRONTIER LEADERBOARD  (the mentor's ask — the thesis test)
 ```bash
-python3 compare_models.py --auto        # base + tuned + frontier models
+python3 compare_models.py --auto
 ```
-Or show the saved table: `results.leaderboard.md`
+Saved table: `results.leaderboard.md`
 
 | Model | spec_pass | verdict_acc |
 |---|---|---|
 | **Tuned Qwen3-1.7B (ours)** | **73.7%** | **74.9%** |
 | GPT-OSS-120B (zero-shot) | 30.3% | 46.3% |
 | Llama-3.3-70B (zero-shot) | 14.3% | 25.7% |
+| Qwen3-32B (zero-shot) | 13.7% | 26.3% |
 | Base Qwen3-1.7B (zero-shot) | 9.1% | 19.4% |
 
-Say: "My fine-tuned 1.7B beats a prompted **120B by 2.4× and a 70B by 5×** — models ~70×
-larger. The frontier models get a capability gradient (bigger = better), so the task
-rewards scale — but **fine-tuning on the right data beats 70× the parameters.** All run
-zero-shot with the same prompt on the same 175-record golden set. `verdict_accuracy`
-(lenient label-correct) shows the same ordering, so it's not a quirk of the strict metric."
-Note honestly: the 70B *refused/returned empty on ~60% of the sensitive news passages* —
-a robustness point for the tuned model, which always returns a structured verdict.
+Say: "My fine-tuned 1.7B beats a prompted **120B by 2.4×**. The cleanest comparison is
+**Qwen3-32B** — same model family, 19× bigger, not fine-tuned → 13.7% vs my 73.7%. Same
+architecture; the only difference is the training data. All zero-shot, same prompt, same
+175-record golden set. `verdict_accuracy` (lenient) shows the same ordering." This is the
+thesis: **behavior from data, not scale.**
 
 ## 3. Per-bucket + the honest story  (`diagnose.py`)
 ```bash
@@ -69,39 +68,18 @@ python3 diagnose.py --preds tuned_preds.v5.jsonl
 Say: "Per bucket, v6 is **ap_style 100%, misleading 100%, distractor 88%, unsupported 80%,
 true_but_unsupported 86%** — and **supported 53%**, which is my weak spot."
 
-## 4. LIVE DEMO — the browser UI  (one box, easiest)
+## 4. LIVE DEMO — retrieve + verify  (the wow moment)
 ```bash
-export TAVILY_API_KEY=tvly-dev-...     # open-web search when "retrieve" is on
-python3 app.py                          # opens http://127.0.0.1:7860
-```
-One passage box + a "retrieve sources & verify" toggle. Returns AP flags AND claim verdicts.
-
-**AP Style is now DETERMINISTIC code** (`ap_rules.py`) — it runs on every input, catches
-EVERY violation instantly, on any sentence (incl. claims). No more single-sentence caveat.
-  - `The meeting has 5 members and starts at 3:00 PM on December 25.` → flags 5→five, 3 p.m., Dec. 25 (all three)
-
-**Claim verification = the SLM** (toggle "retrieve & verify" ON): real sources → cited verdicts.
-  - `The James Webb Space Telescope launched on December 25, 2021 from French Guiana.`
-    → ✅ SUPPORTED (NPR source + backing quote) AND ⚑ AP: "December 25" → "Dec. 25"
-
-**KEY TALKING POINT (this is the mature systems answer):** "AP style is deterministic, so
-I check it in **code** — exactly my Brainlift's thesis that deterministic editorial tasks
-should be offloaded. The **SLM** is reserved for the non-deterministic part: verifying claims
-against evidence with restraint, which a prompt can't reliably enforce. Code does what's
-objective; the fine-tuned model does what needs judgment."
-
-### Terminal alternative (for the base-vs-tuned CONTRAST specifically)
-```bash
+export TAVILY_API_KEY=tvly-dev-...        # (open-web search)
 python3 demo.py --compare "The James Webb Space Telescope launched on December 25, 2021 from French Guiana."
 ```
-Point at output: **base says 'supported' with an EMPTY backing quote** (vouching with no
-evidence — the forbidden failure); **tuned quotes the real backing sentence.**
-
-(Model loads ~1 min cold, ~15s/check. Pre-run once before the review so it's warm.)
+(~1 min to load model, ~15s/claim. Pre-run once before the review so it's warm.)
+Point at the output: **base model says 'supported' with an EMPTY backing quote** (vouching
+with no evidence — the forbidden failure); **tuned model quotes the real backing sentence.**
 
 ---
 
-## "What I'd do better next time"  (they WILL ask — have this ready)
+## "What I'd do better next time"
 1. **Build the eval fairness in from day one.** Two labeling artifacts (single-span matching;
    pinning one checked-source) were unfairly failing correct answers — real score was ~73%,
    not the 55% I first saw. I caught it with a failure-diagnostic, but should've designed the
@@ -112,7 +90,7 @@ evidence — the forbidden failure); **tuned quotes the real backing sentence.**
 3. **Match synthetic data to the real distribution.** v5's easy synthetic 'supported' examples
    didn't transfer; only v6's hard *real* ones helped — and even then, `supported` plateaued.
 4. **Know the ceiling.** `supported` capped at ~53% across two targeted retrains → it's the
-   **1.7B capability limit** on exact long-span extraction, not a data gap. A bigger base
+   **1.7B capability limit** on exact long-span extraction, not a data gap. A bigger base  
    (Qwen3-4B) is the only real lever — a deliberate trade against the "tiny local model" thesis.
 
 ## Iteration story (one line): 
