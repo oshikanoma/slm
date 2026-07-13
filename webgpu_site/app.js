@@ -1,52 +1,43 @@
-// The Verifier — 100% in-browser (WebGPU). No server: the model runs on the
-// visitor's own GPU via WebLLM. Weights stream from HF Hub and cache locally.
-import * as webllm from "https://esm.run/@mlc-ai/web-llm@0.2.84";
-import { SYSTEM_PROMPT, USE_FINETUNED, FINETUNED_REPO, FINETUNED_ID,
-         BASE_ID, PREBUILT_WASM } from "./config.js";
+// The Verifier — 100% in-browser (WebGPU). No server: YOUR fine-tuned model runs
+// on the visitor's own GPU via Transformers.js. Weights (ONNX q4) stream from the
+// HF Hub and cache locally after the first load.
+import { AutoTokenizer, AutoModelForCausalLM } from
+  "https://esm.run/@huggingface/transformers@4.2.0";
+import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
 
 const $ = (id) => document.getElementById(id);
-let engine = null;
-let loading = false;
-
-// ---- Model selection -------------------------------------------------------
-// De-risk mode: stock prebuilt Qwen3-1.7B (proves the pipeline end-to-end).
-// Fine-tuned mode: your converted weights on HF, REUSING the official Qwen3
-// wasm (same arch/quant/prefill-chunk-size), so no wasm compile is needed.
-function modelId() { return USE_FINETUNED ? FINETUNED_ID : BASE_ID; }
-
-function appConfig() {
-  if (!USE_FINETUNED) return undefined; // use built-in prebuiltAppConfig
-  return {
-    model_list: [{
-      model: FINETUNED_REPO,
-      model_id: FINETUNED_ID,
-      model_lib: webllm.modelLibURLPrefix + webllm.modelVersion + "/" + PREBUILT_WASM,
-    }],
-  };
-}
+let tokenizer = null, model = null, loading = false;
 
 // ---- WebGPU capability check ----------------------------------------------
 function webgpuSupported() { return typeof navigator !== "undefined" && !!navigator.gpu; }
 
 // ---- Lazy model load with progress ----------------------------------------
-async function ensureEngine() {
-  if (engine || loading) return engine;
+async function ensureModel() {
+  if (model || loading) return model;
   loading = true;
-  setStatus("Loading the model into your browser… first time downloads ~1&nbsp;GB " +
-            "(then it's cached and instant). This runs entirely on your device.");
+  setStatus("Loading your fine-tuned model into the browser… first time downloads " +
+            "~2&nbsp;GB (then it's cached and instant). Runs entirely on your device.");
   try {
-    engine = await webllm.CreateMLCEngine(modelId(), {
-      appConfig: appConfig(),
-      initProgressCallback: (p) => setStatus(escapeHtml(p.text || "loading…")),
+    const progress = (p) => {
+      if (p.status === "progress" && p.file && p.total) {
+        const pct = Math.round((p.loaded / p.total) * 100);
+        setStatus(`Downloading ${escapeHtml(p.file)} — ${pct}% (cached after first load)`);
+      } else if (p.status === "ready") {
+        setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
+      }
+    };
+    tokenizer = await AutoTokenizer.from_pretrained(MODEL_REPO, { progress_callback: progress });
+    model = await AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
+      dtype: MODEL_DTYPE, device: MODEL_DEVICE, progress_callback: progress,
     });
-    setStatus("✅ Model loaded — running on your GPU. Nothing you type leaves your device.");
+    setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
   } catch (e) {
     setStatus("");
-    throw e;
-  } finally {
     loading = false;
+    throw e;
   }
-  return engine;
+  loading = false;
+  return model;
 }
 
 // ---- Prompt assembly: mirrors eval.py render_user_prompt exactly -----------
@@ -58,17 +49,23 @@ function renderUserPrompt(passage, sources) {
 }
 
 async function verifyClaims(passage, sources) {
-  const eng = await ensureEngine();
-  const reply = await eng.chat.completions.create({
-    messages: [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: renderUserPrompt(passage, sources) },
-    ],
-    temperature: 0,
-    max_tokens: 640,
-    response_format: { type: "json_object" },
+  await ensureModel();
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: renderUserPrompt(passage, sources) },
+  ];
+  // Apply the model's own chat template (enable_thinking off — same as serving).
+  // return_dict (default) gives { input_ids, attention_mask } tensors.
+  const inputs = tokenizer.apply_chat_template(messages, {
+    add_generation_prompt: true, return_dict: true, enable_thinking: false,
   });
-  const text = reply.choices?.[0]?.message?.content ?? "";
+  const outputs = await model.generate({
+    ...inputs, max_new_tokens: 640, do_sample: false,
+  });
+  // Keep only newly generated tokens (everything past the prompt length).
+  const promptLen = inputs.input_ids.dims.at(-1);
+  const gen = outputs.slice(null, [promptLen, null]);
+  const text = tokenizer.batch_decode(gen, { skip_special_tokens: true })[0] ?? "";
   try { return JSON.parse(text); }
   catch { return { _raw: text }; }
 }
