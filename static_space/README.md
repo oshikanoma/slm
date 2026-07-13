@@ -6,7 +6,7 @@ colorTo: gray
 sdk: static
 pinned: false
 license: apache-2.0
-short_description: Fine-tuned Qwen3-1.7B newsroom verifier — live AP-style checker + eval results.
+short_description: Fine-tuned Qwen3-1.7B newsroom verifier + AP checker
 ---
 
 # The Verifier
