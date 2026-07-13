@@ -21,6 +21,27 @@ NUM_WORDS = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
 ORD_WORDS = {"1st": "first", "2nd": "second", "3rd": "third", "4th": "fourth",
              "5th": "fifth", "6th": "sixth", "7th": "seventh", "8th": "eighth",
              "9th": "ninth"}
+# Spelled-out numbers -> figures, for AGE detection ("fifty-year-old" -> "50-year-old").
+_ONES = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+         "seven": 7, "eight": 8, "nine": 9}
+_TENS = {"ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14,
+         "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19,
+         "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60,
+         "seventy": 70, "eighty": 80, "ninety": 90}
+
+
+def _word_to_num(word: str):
+    """'fifty' -> 50, 'fifty-two' -> 52, 'seven' -> 7. None if not parseable."""
+    w = word.lower().strip()
+    if w in _TENS:
+        return _TENS[w]
+    if w in _ONES:
+        return _ONES[w]
+    if "-" in w:
+        a, b = w.split("-", 1)
+        if a in _TENS and b in _ONES and _TENS[a] >= 20:
+            return _TENS[a] + _ONES[b]
+    return None
 ABBR_MONTHS = {"January": "Jan.", "February": "Feb.", "August": "Aug.",
                "September": "Sept.", "October": "Oct.", "November": "Nov.",
                "December": "Dec."}
@@ -71,11 +92,11 @@ def ap_check(text: str) -> list[dict]:
 
     # 1) Numbers one-nine as figures. Skip when the figure is legitimately correct:
     #    %, times (3 p.m.), dates (Dec. 5), decades, ordinals, money, ages-as-adjective.
-    for m in re.finditer(r"(?<![\d$%.:'])\b([1-9])\b(?![%'\d])", text):
+    for m in re.finditer(r"(?<![\d$%.:'-])\b([1-9])\b(?![%'\d-])", text):
         n, after = m.group(1), text[m.end():m.end() + 12]
         before = text[max(0, m.start() - 14):m.start()]
-        if re.match(r"\s*(?:%|percent|:|st|nd|rd|th|a\.m|p\.m|\s*[AaPp]\.?[Mm])", after):
-            continue  # part of %, time, or ordinal
+        if re.match(r"\s*(?:%|percent|:|st|nd|rd|th|a\.m|p\.m|\s*[AaPp]\.?[Mm]|-year|\s+years?\s+old)", after):
+            continue  # part of %, time, ordinal, or age ("5-year-old", "5 years old")
         if re.search(r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\.?\s+$", before):
             continue  # date: "Dec. 5"
         if before.rstrip().endswith("$"):
@@ -88,6 +109,18 @@ def ap_check(text: str) -> list[dict]:
         o = m.group(1)
         if o in ORD_WORDS:
             add(o, "ordinals: spell out first through ninth", f"“{ORD_WORDS[o]}”")
+
+    # 2b) Ages: AP always uses figures for ages ("50-year-old", "a 5-year-old boy").
+    #     Catch spelled-out ages, incl. as a hyphenated adjective.
+    for m in re.finditer(r"\b([A-Za-z]+(?:-[A-Za-z]+)?)-year-old\b", text):
+        num = _word_to_num(m.group(1))
+        if num is not None:
+            add(m.group(0), "ages: use figures for ages (and hyphenate as a modifier)",
+                f"“{num}-year-old”")
+    for m in re.finditer(r"\b([a-z]+(?:-[a-z]+)?)\s+years?\s+old\b", text):
+        num = _word_to_num(m.group(1))
+        if num is not None:
+            add(m.group(0), "ages: use figures for ages", f"“{num} years old”")
 
     # 3) Time: uppercase AM/PM or ":00" on the hour; and 12 a.m./p.m. -> midnight/noon.
     for m in re.finditer(r"\b(\d{1,2})(:\d{2})?\s*([APap]\.?[Mm]\.?)", text):
@@ -167,6 +200,10 @@ _SELFTEST = [
     ("The board has 5 members.", "5"),
     ("The board has five members.", None),
     ("She finished 3rd in the race.", "3rd"),
+    ("An ICE agent killed the fifty-year-old on Tuesday.", "fifty-year-old"),
+    ("The victim was forty-two years old.", "forty-two years old"),
+    ("Police arrested the 50-year-old suspect.", None),
+    ("The 5-year-old boy was found safe.", None),
     ("The meeting starts at 3:00 PM.", "3:00 PM"),
     ("The meeting starts at 3 p.m.", None),
     ("The event ends at 12 p.m. sharp.", "12 p.m."),
