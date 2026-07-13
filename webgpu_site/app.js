@@ -9,12 +9,12 @@
 import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
 import { buildBundle } from "./retriever.js";
 
-// Load via esm.sh — verified to keep onnxruntime-web's `webgpuInit` intact.
-// jsDelivr/esm.run re-transpile ORT and strip webgpuInit ("H().webgpuInit is not
-// a function"); esm.sh preserves it. If WebGPU init still fails on a given GPU,
-// ensureModel() automatically retries on the WASM (CPU) backend, which never
-// touches webgpuInit — so the app produces a result regardless.
-const TRANSFORMERS_URL = "https://esm.sh/@huggingface/transformers@4.2.0";
+// SELF-HOSTED, not a CDN. Every CDN (esm.run/jsDelivr/esm.sh) re-compiles
+// onnxruntime and deletes its `webgpuInit` function ("j().webgpuInit is not a
+// function"). We instead ship the FULLY-BUNDLED transformers.js (ORT inline,
+// webgpuInit present) plus its .wasm companions from ./vendor/, so nothing is
+// re-processed and the engine stays intact.
+const TRANSFORMERS_URL = "./vendor/transformers.js";
 
 const $ = (id) => document.getElementById(id);
 let tokenizer = null, model = null, loading = false;
@@ -29,7 +29,11 @@ async function ensureModel() {
   setStatus("Loading your fine-tuned model into the browser… first time downloads " +
             "~2&nbsp;GB (then it's cached and instant). Runs entirely on your device.");
   try {
-    const { AutoTokenizer, AutoModelForCausalLM } = await import(TRANSFORMERS_URL);
+    const { AutoTokenizer, AutoModelForCausalLM, env } = await import(TRANSFORMERS_URL);
+    // Load the WASM/GPU runtime binaries from our own /vendor, not a CDN.
+    env.backends.onnx.wasm.wasmPaths = new URL("./vendor/", location.href).href;
+    // Model weights still stream from the HF Hub (too big to self-host).
+    env.allowLocalModels = false;
     const progress = (p) => {
       if (p.status === "progress" && p.file && p.total) {
         const pct = Math.round((p.loaded / p.total) * 100);
