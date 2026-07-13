@@ -41,6 +41,27 @@ This prints the full table + McNemar significance. Talking points:
 - **flag_recall 10% → 71%** — base barely flags problems; tuned catches them.
 - **McNemar p < 0.0001, base-only wins = 0** — statistically real, not noise.
 
+## 2b. FRONTIER LEADERBOARD  (the mentor's ask — the thesis test)
+```bash
+python3 compare_models.py --auto        # base + tuned + frontier models
+```
+Or show the saved table: `results.leaderboard.md`
+
+| Model | spec_pass | verdict_acc |
+|---|---|---|
+| **Tuned Qwen3-1.7B (ours)** | **73.7%** | **74.9%** |
+| GPT-OSS-120B (zero-shot) | 30.3% | 46.3% |
+| Llama-3.3-70B (zero-shot) | 14.3% | 25.7% |
+| Base Qwen3-1.7B (zero-shot) | 9.1% | 19.4% |
+
+Say: "My fine-tuned 1.7B beats a prompted **120B by 2.4× and a 70B by 5×** — models ~70×
+larger. The frontier models get a capability gradient (bigger = better), so the task
+rewards scale — but **fine-tuning on the right data beats 70× the parameters.** All run
+zero-shot with the same prompt on the same 175-record golden set. `verdict_accuracy`
+(lenient label-correct) shows the same ordering, so it's not a quirk of the strict metric."
+Note honestly: the 70B *refused/returned empty on ~60% of the sensitive news passages* —
+a robustness point for the tuned model, which always returns a structured verdict.
+
 ## 3. Per-bucket + the honest story  (`diagnose.py`)
 ```bash
 python3 diagnose.py --preds tuned_preds.v5.jsonl

@@ -55,6 +55,18 @@ Implemented in `eval.py`, run identically on base and tuned:
 ### Per-bucket (v6 tuned)
 ap_style **100%**, misleading **100%**, distractor 87.5%, true_but_unsupported 85.7%, unsupported 80%, supported 52.8%. Strong everywhere except `supported` (the capability-ceiling bucket, §6). The lone win-condition miss is `knowledge_leakage` at 7.5% = 5/67 records, four of which are the same borderline claims that resisted every version.
 
+### Leaderboard vs prompted frontier models (the thesis test)
+The real question isn't "tuned vs base" — it's "does a fine-tuned 1.7B beat *prompted frontier models* on the same golden set?" All frontier models run zero-shot with the identical `GEN_SYSTEM` prompt (`run_frontier.py`, via Groq). Two metrics: strict `spec_pass` and lenient `verdict_accuracy` (label-correct, no exact-citation requirement).
+
+| Model | spec_pass | verdict_acc | fabricated↓ | flag_recall |
+|---|---|---|---|---|
+| **Tuned Qwen3-1.7B (ours)** | **73.7%** | **74.9%** | **2.9%** | **71.2%** |
+| GPT-OSS-120B (zero-shot) | 30.3% | 46.3% | 6.1% | 38.8% |
+| Llama-3.3-70B (zero-shot) | 14.3% | 25.7% | 2.4% | 18.7% |
+| Base Qwen3-1.7B (zero-shot) | 9.1% | 19.4% | 61.4% | 10.1% |
+
+**The fine-tuned 1.7B beats a prompted 120B by ~2.4× and a 70B by ~5×** — a model ~70× larger. The frontier models show a capability gradient (120B > 70B > base), so the task genuinely rewards scale — but **fine-tuning on the right data helps far more than 70× the parameters.** That is the spec's defensible win stated precisely: reliable, constrained behavior in a tiny local model, rivaling (here, beating) prompted frontier models. Not "smarter than GPT" — *behavior from data.*
+
 ## 6. Iteration — the loop, closed six times
 
 Each version was driven by a finding from the previous eval. This is the methodology working, not a single lucky run.
