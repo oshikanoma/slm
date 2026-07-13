@@ -23,7 +23,10 @@ from retriever import build_bundle, _active_backend
 from ap_rules import ap_check  # deterministic AP checker (code, not model)
 
 BASE = "Qwen/Qwen3-1.7B"
-ADAPTER = "artifacts/qwen3-verifier-lora-v6"
+# Local adapter path if present, else fall back to the published HF Hub repo (Colab/remote).
+_LOCAL_ADAPTER = "artifacts/qwen3-verifier-lora-v6"
+ADAPTER = _LOCAL_ADAPTER if os.path.isdir(_LOCAL_ADAPTER) else \
+    os.environ.get("HF_ADAPTER_REPO", "tiffuhknee/qwen3-1.7b-newsroom-verifier")
 _MODEL = {"m": None, "tok": None, "dev": None}
 
 
@@ -33,10 +36,14 @@ def _load():
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     from peft import PeftModel
-    dev = "mps" if torch.backends.mps.is_available() else "cpu"
+    if torch.cuda.is_available():            # Colab / GPU box
+        dev, dtype = "cuda", torch.float16
+    elif getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        dev, dtype = "mps", torch.float16
+    else:
+        dev, dtype = "cpu", torch.float32
     tok = AutoTokenizer.from_pretrained(BASE)
-    m = AutoModelForCausalLM.from_pretrained(
-        BASE, torch_dtype=torch.float16 if dev == "mps" else torch.float32).to(dev)
+    m = AutoModelForCausalLM.from_pretrained(BASE, torch_dtype=dtype).to(dev)
     m = PeftModel.from_pretrained(m, ADAPTER).to(dev)
     m.eval()
     _MODEL.update(m=m, tok=tok, dev=dev)
@@ -195,4 +202,8 @@ with gr.Blocks(title="The Verifier", css=NEWSPAPER_CSS, theme=gr.themes.Base(
 
 if __name__ == "__main__":
     print("Loading UI... model loads on first analyze (~1 min), then stays warm.")
-    app.launch(inbrowser=True)
+    # SHARE=1 -> public gradio.live URL (Colab / remote). Else local browser.
+    if os.environ.get("SHARE") == "1":
+        app.launch(share=True, server_name="0.0.0.0")
+    else:
+        app.launch(inbrowser=True)
