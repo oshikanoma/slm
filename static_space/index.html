@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The Verifier — Cited Newsroom Verifier SLM</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root{--paper:#f4f1ea;--ink:#1a1a1a;--muted:#6b6257;--rule:#cfc7b8;--accent:#8b2635;--box:#fffdf8;}
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Spectral',Georgia,serif;
+       margin:0;line-height:1.55;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 60px;}
+  header{text-align:center;padding:34px 0 6px;}
+  .dateline{font-size:.78rem;color:var(--muted);letter-spacing:1px;display:flex;
+       justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:10px;}
+  h1.paper{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:3.4rem;
+       letter-spacing:-.5px;margin:22px 0 10px;}
+  .kicker{font-style:italic;color:var(--muted);font-size:1.05rem;}
+  .rule{border:none;border-top:3px double var(--ink);margin:18px 0 4px;}
+  h2{font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;border-bottom:1px solid var(--rule);
+       padding-bottom:6px;margin-top:42px;}
+  textarea{width:100%;font-family:'Spectral',Georgia,serif;font-size:1rem;padding:12px 14px;
+       background:var(--box);border:1px solid var(--rule);border-radius:2px;resize:vertical;}
+  button{background:var(--accent);color:#fff;border:none;font-family:'Spectral',serif;
+       font-weight:600;font-size:1rem;padding:10px 20px;border-radius:2px;cursor:pointer;margin-top:10px;}
+  button:hover{background:#6f1e2a;}
+  .box{background:var(--box);border:1px solid var(--rule);border-radius:2px;padding:16px 20px;margin-top:14px;}
+  .flag{border-left:3px solid var(--accent);padding:6px 0 6px 12px;margin:10px 0;}
+  .flag .span{font-weight:600;}
+  .flag .rule{color:var(--muted);font-size:.9rem;}
+  .flag .fix{color:#2a6b35;font-size:.95rem;}
+  .clean{color:#2a6b35;font-weight:600;}
+  table{border-collapse:collapse;width:100%;margin-top:12px;font-size:.95rem;}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);}
+  th{font-family:'Playfair Display',serif;}
+  tr.ours{background:#f6efe1;font-weight:600;}
+  .v-supported{color:#2a6b35;font-weight:600;} .v-empty{color:var(--accent);font-weight:600;}
+  .muted{color:var(--muted);font-size:.9rem;}
+  code{background:#efe9dc;padding:1px 5px;border-radius:3px;font-size:.88rem;}
+  a{color:var(--accent);}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.cols{grid-template-columns:1fr;}h1.paper{font-size:2.4rem;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="dateline"><span>Vol. VI &middot; Fine-Tuned Edition</span><span>Qwen3-1.7B &middot; QLoRA</span></div>
+    <h1 class="paper">The Verifier</h1>
+    <div class="kicker">A cited, evidence-bounded newsroom copy desk &mdash; it checks AP style and
+      verifies claims against real sources, or says so plainly.</div>
+    <hr class="rule"/>
+  </header>
+
+  <h2>Check AP Style &mdash; live</h2>
+  <p class="muted">Deterministic AP Stylebook checker (14 rule areas), running in your browser.
+    Type a sentence; it flags every violation instantly. Try:
+    <em>"The board has 5 members and meets at 3:00 PM on December 8, said Smith."</em></p>
+  <textarea id="apin" rows="3" placeholder="Paste a sentence to check for AP Style issues..."></textarea>
+  <button onclick="runAP()">Check AP Style</button>
+  <div id="apout" class="box" style="display:none"></div>
+
+  <h2>Verify a claim &mdash; the model's job</h2>
+  <p class="muted">The fine-tuned SLM verifies claims against retrieved sources &mdash; it only says
+    <strong>supported</strong> when it can quote the verbatim backing sentence, and refuses to vouch
+    otherwise. The model runs in the notebook / local app and is published on the
+    <a href="https://huggingface.co/tiffuhknee/qwen3-1.7b-newsroom-verifier" target="_blank">HF Hub</a>.
+    Below is a real base-vs-tuned run on the same retrieved sources:</p>
+  <div class="box">
+    <p><strong>Claim:</strong> &ldquo;The James Webb Space Telescope launched on December 25, 2021 from French Guiana.&rdquo;<br>
+    <span class="muted">Retrieved: NPR, NASA, Wikipedia (via live web search)</span></p>
+    <div class="cols">
+      <div>
+        <p><strong>Tuned Qwen3-1.7B (ours)</strong></p>
+        <p><span class="v-supported">&#10003; SUPPORTED</span></p>
+        <p class="muted">backing quote:</p>
+        <p>&ldquo;NASA&rsquo;s James Webb Space Telescope launches on Dec. 25 &hellip; from a European spaceport in French Guiana.&rdquo;</p>
+      </div>
+      <div>
+        <p><strong>Base Qwen3-1.7B</strong></p>
+        <p><span class="v-empty">&#10003; SUPPORTED</span></p>
+        <p class="muted">backing quote:</p>
+        <p><span class="v-empty">&ldquo;&rdquo; &mdash; empty</span> &mdash; it vouched with <em>no evidence</em>. The forbidden failure.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Does a tiny fine-tuned model beat frontier models?</h2>
+  <p class="muted">All models run zero-shot with the same prompt on the same 175-record golden set.
+    <code>spec_pass</code> = strict (verdict + verbatim citation + no fabrication).
+    <code>verdict_acc</code> = label correct.</p>
+  <table>
+    <tr><th>Model</th><th>Size</th><th>spec_pass</th><th>verdict_acc</th><th>fabricated&darr;</th></tr>
+    <tr class="ours"><td>Tuned Qwen3-1.7B (ours)</td><td>1.7B</td><td>73.7%</td><td>74.9%</td><td>2.9%</td></tr>
+    <tr><td>GPT-OSS-120B (zero-shot)</td><td>120B</td><td>30.3%</td><td>46.3%</td><td>6.1%</td></tr>
+    <tr><td>Llama-3.3-70B (zero-shot)</td><td>70B</td><td>14.3%</td><td>25.7%</td><td>2.4%</td></tr>
+    <tr><td>Qwen3-32B (zero-shot)</td><td>32B</td><td>13.7%</td><td>26.3%</td><td>22.5%</td></tr>
+    <tr><td>Base Qwen3-1.7B (zero-shot)</td><td>1.7B</td><td>9.1%</td><td>19.4%</td><td>61.4%</td></tr>
+  </table>
+  <p class="muted" style="margin-top:12px;">Our fine-tuned 1.7B beats a prompted <strong>120B by 2.4&times;</strong>.
+    Cleanest control: <strong>Qwen3-32B</strong> &mdash; same family, 19&times; bigger, not fine-tuned &rarr; 13.7% vs 73.7%.
+    Same architecture; the only difference is the training data. <strong>Behavior from data, not scale.</strong></p>
+
+  <h2>Trained in six data-driven rounds</h2>
+  <table>
+    <tr><th>Version</th><th>What changed</th><th>spec_pass</th></tr>
+    <tr><td>v2</td><td>+ checked-source contract</td><td>44.4%</td></tr>
+    <tr><td>v3</td><td>rebalanced (fix over-flagging)</td><td>47.8%</td></tr>
+    <tr><td>v4</td><td>+ AP Style (composed behavior)</td><td>54.8%</td></tr>
+    <tr><td>v5</td><td>+ synthetic supported</td><td>83.4%</td></tr>
+    <tr class="ours"><td>v6</td><td>+ hard real supported</td><td>84.0%</td></tr>
+  </table>
+
+  <hr class="rule" style="margin-top:40px;"/>
+  <p class="muted">Model: <a href="https://huggingface.co/tiffuhknee/qwen3-1.7b-newsroom-verifier" target="_blank">huggingface.co/tiffuhknee/qwen3-1.7b-newsroom-verifier</a>
+   &middot; Code, dataset &amp; eval harness: <a href="https://github.com/oshikanoma/slm" target="_blank">github.com/oshikanoma/slm</a></p>
+</div>
+
+<script src="ap_rules.js"></script>
+<script>
+function runAP(){
+  const t=document.getElementById('apin').value;
+  const out=document.getElementById('apout');
+  out.style.display='block';
+  const hits=apCheck(t);
+  if(!t.trim()){out.innerHTML='<span class="muted">Enter a sentence.</span>';return;}
+  if(!hits.length){out.innerHTML='<span class="clean">&#10003; No AP Style issues found.</span>';return;}
+  out.innerHTML=hits.map(h=>
+    `<div class="flag"><div class="span">&#9873; ${escapeHtml(h.span)}</div>`+
+    `<div class="rule">${escapeHtml(h.rule)}</div>`+
+    `<div class="fix">&rarr; suggested: ${escapeHtml(h.suggestion)}</div></div>`).join('');
+}
+function escapeHtml(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+</script>
+</body>
+</html>
