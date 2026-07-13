@@ -1,8 +1,11 @@
 // The Verifier — 100% in-browser (WebGPU). No server: YOUR fine-tuned model runs
 // on the visitor's own GPU via Transformers.js. Weights (ONNX q4) stream from the
 // HF Hub and cache locally after the first load.
+// IMPORTANT: load the PREBUILT web bundle from jsDelivr, not esm.run. esm.run
+// re-transpiles the package and breaks onnxruntime-web's WebGPU binding
+// ("H().webgpuInit is not a function"). This dist file is served as-is.
 import { AutoTokenizer, AutoModelForCausalLM } from
-  "https://esm.run/@huggingface/transformers@4.2.0";
+  "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/dist/transformers.web.js";
 import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
 import { buildBundle } from "./retriever.js";
 
