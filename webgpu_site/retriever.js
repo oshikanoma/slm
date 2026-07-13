@@ -53,8 +53,10 @@ async function fetchExtract(title, maxChars) {
 }
 
 // Whole-web search via the Cloudflare Worker relay.
+// Tavily is a SEMANTIC engine — send the passage nearly verbatim (a natural
+// sentence) rather than keyword-stripped, which scores far better.
 async function searchWeb(passage, k) {
-  const query = passageToQuery(passage);
+  const query = (passage || "").replace(WS, " ").trim().slice(0, 380);
   const r = await fetch(WORKER_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

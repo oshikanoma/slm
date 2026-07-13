@@ -47,7 +47,8 @@ export default {
         body: JSON.stringify({
           query,
           max_results: k,
-          search_depth: "basic",
+          search_depth: "advanced", // markedly better relevance than "basic"
+          topic: "general",
           include_raw_content: false, // the shorter `content` snippet is enough + faster
         }),
       });
