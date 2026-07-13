@@ -58,14 +58,19 @@
 
   <main>
     <label for="passage">Copy to check</label>
-    <textarea id="passage" rows="4" placeholder="Enrollment rose 12 percent, according to a district report. See https://example.com/report"></textarea>
-    <p class="hint">Include links right in the text — they'll be detected and listed.</p>
+    <textarea id="passage" rows="4" placeholder="The James Webb Space Telescope launched in 2021 from French Guiana."></textarea>
+    <p class="hint">Paste a sentence — it looks up sources automatically (via Wikipedia)
+      and verifies each claim against them. Links in the text are detected too.</p>
 
-    <label for="sources">Sources <span style="font-weight:400;color:var(--muted)">(paste the article text the claim should be checked against)</span></label>
-    <textarea id="sources" rows="5" placeholder="https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+    <details>
+      <summary style="cursor:pointer;color:var(--muted);font-size:.9rem;margin-top:6px">
+        Advanced: check against your own sources instead</summary>
+      <label for="sources" style="margin-top:10px">Your sources <span style="font-weight:400;color:var(--muted)">(optional — overrides auto-lookup)</span></label>
+      <textarea id="sources" rows="4" placeholder="https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
 The James Webb Space Telescope was launched on 25 December 2021 from French Guiana.
 
 (Separate multiple sources with a blank line. First line = URL, rest = text.)"></textarea>
+    </details>
 
     <button id="analyze">Send to the copy desk</button>
     <div id="status"></div>
