@@ -38,19 +38,30 @@ async function ensureModel() {
     };
     tokenizer = await AutoTokenizer.from_pretrained(MODEL_REPO, { progress_callback: progress });
 
-    // Try WebGPU (fast); if its backend fails to init on this GPU/driver, fall
-    // back to WASM (CPU) so the app still works — slower but universal.
-    const tryLoad = (device) => AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
+    const load = (device) => AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
       dtype: MODEL_DTYPE, device, progress_callback: progress,
     });
+    // A tiny generation to PROVE the backend actually runs — the webgpuInit
+    // failure happens at generate time, not load time, so we must exercise it
+    // here (inside try) or the fallback would never trigger.
+    const warmup = async (m) => {
+      const enc = tokenizer("hi", { return_tensor: true });
+      await m.generate({ ...enc, max_new_tokens: 1 });
+    };
+
     try {
-      model = await tryLoad(MODEL_DEVICE);           // "webgpu"
+      if (!webgpuSupported()) throw new Error("navigator.gpu absent");
+      setStatus("Trying the fast GPU engine…");
+      const m = await load("webgpu");
+      await warmup(m);                    // throws here if webgpuInit is broken
+      model = m;
       setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
     } catch (gpuErr) {
-      console.warn("WebGPU load failed, falling back to CPU (WASM):", gpuErr);
-      setStatus("WebGPU unavailable on this browser — loading the slower CPU engine instead…");
-      model = await tryLoad("wasm");
-      setStatus("✅ Model ready (CPU mode — slower). Nothing you type leaves your device.");
+      console.warn("WebGPU path unavailable, using CPU (WASM):", gpuErr);
+      setStatus("Using the CPU engine (slower, but works everywhere) — loading…");
+      const m = await load("wasm");
+      model = m;
+      setStatus("✅ Model ready (CPU mode). First verification is slow; nothing leaves your device.");
     }
   } catch (e) {
     setStatus("");
