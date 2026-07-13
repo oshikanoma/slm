@@ -42,8 +42,12 @@ async function ensureModel() {
     };
     tokenizer = await AutoTokenizer.from_pretrained(MODEL_REPO, { progress_callback: progress });
 
+    // use_external_data_format: the model is >2GB so its weights live in a
+    // separate model_q4.onnx_data file; this tells the loader to fetch it
+    // (without it: "Failed to load external data file … MountedFiles").
     const load = (device) => AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
       dtype: MODEL_DTYPE, device, progress_callback: progress,
+      use_external_data_format: true,
     });
     // A tiny generation to PROVE the backend actually runs — the webgpuInit
     // failure happens at generate time, not load time, so we must exercise it
