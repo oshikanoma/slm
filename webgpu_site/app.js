@@ -131,11 +131,12 @@ function renderLinks(links) {
   return `<h3>🔗 Links found in your copy</h3><ul class="verdicts">${items}</ul>`;
 }
 
-function renderSources(sources, query) {
+function renderSources(sources, query, backend) {
   if (!sources.length) return "";
+  const where = backend === "web" ? "the web" : "Wikipedia";
   const items = sources.map((s) => `<li>${linkify(s.url)}</li>`).join("");
   return `<h3>📚 Sources it looked up</h3>` +
-    `<p class="note">Searched Wikipedia for: “${escapeHtml(query)}”</p>` +
+    `<p class="note">Searched ${where} for: “${escapeHtml(query)}”</p>` +
     `<ul class="verdicts">${items}</ul>`;
 }
 
@@ -152,25 +153,25 @@ async function onAnalyze() {
 
   $("analyze").disabled = true;
   try {
-    // Sources: auto-look-up from Wikipedia, unless the user pasted their own.
-    let sources, query = "";
+    // Sources: auto-look-up (web via Worker, else Wikipedia) unless the user
+    // pasted their own under "Advanced".
+    let sources, query = "", backend = "";
     const manual = parseSources(manualRaw);
     if (manual.length) {
       sources = manual;
     } else {
       $("result").innerHTML = `<p class="note">Looking up sources…</p>` + tail;
       const res = await buildBundle(passage, 4);
-      sources = res.bundle; query = res.query;
+      sources = res.bundle; query = res.query; backend = res.backend;
     }
 
     if (!sources.length) {
       $("result").innerHTML =
-        `<p class="note">No sources found for this passage — try rephrasing, or paste a source below. ` +
-        `(Free lookup uses Wikipedia, so obscure or breaking-news claims may not be found.)</p>` + tail;
+        `<p class="note">No sources found for this passage — try rephrasing, or paste a source below.</p>` + tail;
       return;
     }
 
-    const srcMd = manual.length ? "" : renderSources(sources, query);
+    const srcMd = manual.length ? "" : renderSources(sources, query, backend);
     $("result").innerHTML =
       `<p class="note">Verifying against ${sources.length} source(s) on your GPU…</p>` + srcMd + tail;
     const obj = await verifyClaims(passage, sources);

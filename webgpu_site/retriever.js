@@ -1,10 +1,12 @@
 // Browser-side source retrieval — the "paste a sentence, it looks up sources"
-// behavior, running entirely client-side. Mirrors retriever.py's FREE default
-// (Wikipedia), which is the only search backend that permits browser (CORS)
-// access without a secret API key. passage -> query -> titles -> page text.
-//
-// (Open-web search — Tavily/Brave/Serper — needs a secret key a static site
-// can't hold, so it isn't available here; same as the original app with no key.)
+// behavior. Two backends, best first:
+//   1. WHOLE-WEB via a Cloudflare Worker relay (config WORKER_URL) that holds the
+//      Tavily key server-side and returns {url,text} sources — real open-web
+//      search (news, any site), which a static page can't do on its own.
+//   2. FALLBACK: free in-browser Wikipedia search (CORS-friendly, no key) when
+//      no Worker is configured. Same as the original app with no Tavily key.
+
+import { WORKER_URL } from "./config.js";
 
 const WS = /\s+/g;
 const QUOTED = /["“](.+?)["”]/;
@@ -50,9 +52,22 @@ async function fetchExtract(title, maxChars) {
   return { url, text, title: page.title };
 }
 
-// passage -> [{url, text}] bundle the model verifies against.
-// Over-fetches titles then keeps the first k with usable text.
-export async function buildBundle(passage, k = 4, perSourceChars = 1800) {
+// Whole-web search via the Cloudflare Worker relay.
+async function searchWeb(passage, k) {
+  const query = passageToQuery(passage);
+  const r = await fetch(WORKER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, k }),
+  });
+  if (!r.ok) throw new Error(`search relay HTTP ${r.status}`);
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  return { query: d.query || query, bundle: d.bundle || [], backend: "web" };
+}
+
+// Free Wikipedia fallback (no key).
+async function searchWikipedia(passage, k, perSourceChars) {
   const query = passageToQuery(passage);
   const titles = await searchTitles(query, k + 2);
   const bundle = [];
@@ -63,5 +78,15 @@ export async function buildBundle(passage, k = 4, perSourceChars = 1800) {
       if (src && src.text.length >= 120) bundle.push(src);
     } catch { /* skip a source that fails to fetch */ }
   }
-  return { query, bundle };
+  return { query, bundle, backend: "wikipedia" };
+}
+
+// passage -> {query, bundle:[{url,text}], backend}. Prefers whole-web (Worker),
+// falls back to Wikipedia if no Worker is set or the relay errors.
+export async function buildBundle(passage, k = 4, perSourceChars = 1800) {
+  if (WORKER_URL) {
+    try { return await searchWeb(passage, k); }
+    catch (e) { console.warn("web search relay failed, falling back to Wikipedia:", e); }
+  }
+  return await searchWikipedia(passage, k, perSourceChars);
 }
