@@ -190,6 +190,111 @@ def build_bundle(passage: str, k: int = 4, per_source_chars: int = 1800,
     return bundle
 
 
+# ------------------------------------------------------------------------------
+# Inline-link verification: check links that are ALREADY IN the passage
+# ------------------------------------------------------------------------------
+# The rest of this module hunts the open web for sources. This block does the
+# opposite: it pulls URLs the author already put in their copy and verifies them
+# in place -- first that the link is alive, then (via the model) that the linked
+# page actually backs the claim next to it. That is the "link verification"
+# behavior the spec reserves as verdict type "link".
+
+# Markdown [text](url) OR a bare http(s) URL. Trailing punctuation is trimmed.
+# The markdown target allows one level of balanced parens so URLs like
+# .../Python_(programming_language) aren't truncated at the inner ")".
+_MD_LINK = re.compile(r"\[[^\]]*\]\((https?://(?:[^\s()]|\([^\s()]*\))+)\)")
+_BARE_URL = re.compile(r"https?://[^\s<>\"']+")
+_URL_TRAILING = ".,;:!?)]}\"'"
+
+
+def extract_links(text: str) -> list[str]:
+    """Return de-duplicated URLs found in `text` (markdown links + bare URLs)."""
+    if not text:
+        return []
+    found: list[str] = []
+    # Markdown targets have explicit ")" boundaries, so take them verbatim.
+    md_spans = [m.span(1) for m in _MD_LINK.finditer(text)]
+    for m in _MD_LINK.finditer(text):
+        found.append(m.group(1))
+    # Bare URLs run to whitespace, so trim trailing sentence punctuation.
+    for m in _BARE_URL.finditer(text):
+        if any(a <= m.start() < b for a, b in md_spans):
+            continue  # already captured as a markdown link target
+        found.append(m.group(0).rstrip(_URL_TRAILING))
+    seen, out = set(), []
+    for u in found:
+        if u not in seen:
+            seen.add(u); out.append(u)
+    return out
+
+
+def check_link_alive(url: str, timeout: int = 12) -> dict:
+    """Fast liveness probe. Returns {url, status, code, final_url, note}.
+
+    status is one of: "alive", "redirect", "dead". A redirect is still reachable
+    (status carries the final_url so the writer can see where it actually lands).
+    """
+    try:
+        resp = requests.get(url, headers={"User-Agent": UA}, timeout=timeout,
+                            allow_redirects=True, stream=True)
+        code = resp.status_code
+        final = str(resp.url)
+        resp.close()
+    except requests.exceptions.Timeout:
+        return {"url": url, "status": "dead", "code": None, "final_url": None,
+                "note": "timed out"}
+    except requests.exceptions.RequestException as e:
+        return {"url": url, "status": "dead", "code": None, "final_url": None,
+                "note": f"unreachable ({type(e).__name__})"}
+    if code >= 400:
+        return {"url": url, "status": "dead", "code": code, "final_url": final,
+                "note": f"HTTP {code}"}
+    # Compare ignoring a trailing slash so http->https or "/"-normalisation isn't noise.
+    redirected = final.rstrip("/") != url.rstrip("/")
+    return {"url": url, "status": "redirect" if redirected else "alive",
+            "code": code, "final_url": final,
+            "note": (f"redirects to {final}" if redirected else "")}
+
+
+def bundle_from_links(passage: str, per_source_chars: int = 1800,
+                      delay: float = 0.3, verbose: bool = False) -> tuple[list[dict], list[dict]]:
+    """Verify links already present in `passage`.
+
+    Returns (sources, statuses):
+      - sources : [{url, text}] for every link that is alive AND yielded readable
+                  text -- ready to drop into the model prompt so the SLM can judge
+                  whether the page backs the adjacent claim.
+      - statuses: [{url, status, code, final_url, note}] for EVERY link found,
+                  including dead ones (which never make it into `sources`).
+    """
+    urls = extract_links(passage)
+    sources: list[dict] = []
+    statuses: list[dict] = []
+    for u in urls:
+        st = check_link_alive(u)
+        statuses.append(st)
+        if st["status"] == "dead":
+            if verbose:
+                print(f"    [dead link] {u}: {st['note']}", file=sys.stderr)
+            continue
+        target = st.get("final_url") or u
+        try:
+            time.sleep(delay)
+            resp = fetch(target)
+            if "html" not in resp.headers.get("Content-Type", ""):
+                st["note"] = (st["note"] + "; " if st["note"] else "") + "not HTML"
+                continue
+            text = extract_main_text(resp.text, max_chars=per_source_chars)
+        except Exception as e:
+            st["note"] = (st["note"] + "; " if st["note"] else "") + f"fetch failed: {e}"
+            continue
+        if len(text) < 120:
+            st["note"] = (st["note"] + "; " if st["note"] else "") + "too little readable text"
+            continue
+        sources.append({"url": u, "text": text})
+    return sources, statuses
+
+
 if __name__ == "__main__":
     import argparse, json
     ap = argparse.ArgumentParser(description="Build a source bundle for a passage.")

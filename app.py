@@ -15,11 +15,12 @@ from __future__ import annotations
 
 import json
 import os
+import re
 
 import gradio as gr
 
 from eval import Scenario, build_messages
-from retriever import build_bundle, _active_backend
+from retriever import build_bundle, bundle_from_links, extract_links, _active_backend
 from ap_rules import ap_check  # deterministic AP checker (code, not model)
 
 BASE = "Qwen/Qwen3-1.7B"
@@ -101,26 +102,165 @@ def _fmt_ap(hits: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def analyze(passage: str, do_retrieve: bool, k: int):
-    """AP style = deterministic code (instant, catches every violation).
-    Claim verification = the SLM (only when sources are retrieved)."""
+def _fmt_links(statuses: list[dict]) -> str:
+    """Liveness report for links found IN the passage (before content verification)."""
+    if not statuses:
+        return ""
+    icons = {"alive": "🔗 ALIVE", "redirect": "↪️ REDIRECT", "dead": "🚫 DEAD"}
+    lines = ["### 🔗 Links in your copy"]
+    for s in statuses:
+        head = f"- **{icons.get(s['status'], s['status'])}** — {s['url']}"
+        if s.get("note"):
+            head += f"\n  → {s['note']}"
+        lines.append(head)
+    return "\n".join(lines)
+
+
+def analyze_core(passage: str, do_retrieve: bool, k: int) -> tuple[str, str]:
+    """Run the full copy-desk pass on ONE passage. Returns (report_md, sources_md).
+
+    Layers, cheapest first:
+      1) AP style       — deterministic, instant, always.
+      2) Link liveness  — probe every URL in the copy (dead/redirect/alive).
+      3) Claim + link verification — the SLM, against BOTH linked pages and
+         (optionally) retrieved sources.
+    """
     if not passage.strip():
         return "Enter a passage.", ""
     # 1) AP: always, instant, complete.
     ap_md = _fmt_ap(ap_check(passage))
-    # 2) Claim verification: only meaningful WITH sources (the SLM's job).
-    if not do_retrieve:
-        return ap_md + "\n\n_(claim verification skipped — turn on 'retrieve & verify' " \
-               "to check claims against real sources)_", "_(retrieval off)_"
-    backend, _ = _active_backend()
-    sources = build_bundle(passage, k=int(k))
+
+    # 2) Links already in the copy: liveness + fetch live pages as sources.
+    link_sources, link_statuses = ([], [])
+    if extract_links(passage):
+        link_sources, link_statuses = bundle_from_links(passage)
+    links_md = _fmt_links(link_statuses)
+
+    # Verification runs if the author included links OR asked for web retrieval.
+    if not do_retrieve and not link_sources:
+        tail = "\n\n_(claim verification skipped — add a link, or turn on " \
+               "'retrieve & verify', to check claims against real sources)_"
+        report = "\n\n".join(x for x in (links_md, ap_md) if x) + tail
+        return report, "_(retrieval off)_"
+
+    # 3) Assemble sources: linked pages first, then retrieved (deduped by url).
+    sources = list(link_sources)
+    src_note = ""
+    if do_retrieve:
+        backend, _ = _active_backend()
+        have = {s["url"] for s in sources}
+        for s in build_bundle(passage, k=int(k)):
+            if s["url"] not in have:
+                sources.append(s); have.add(s["url"])
+        if not sources:
+            src_note = f"_(no sources retrieved; backend: {backend})_"
+
     src_md = ("\n".join(f"- [{s['url']}]({s['url']})" for s in sources)
-              if sources else f"_(no sources retrieved; backend: {backend})_")
+              if sources else (src_note or "_(no sources)_"))
     if not sources:
-        return ap_md + "\n\n_(no sources retrieved — can't verify claims)_", src_md
+        report = "\n\n".join(x for x in (links_md, ap_md) if x) \
+            + "\n\n_(no sources — can't verify claims)_"
+        return report, src_md
+
     obj = _run(passage, sources, 512)
     claim_md = _fmt(obj)
-    return claim_md + "\n\n" + ap_md, src_md
+    report = "\n\n".join(x for x in (claim_md, links_md, ap_md) if x)
+    return report, src_md
+
+
+def analyze(passage: str, do_retrieve: bool, k: int):
+    """Single-passage entry point for the paste box."""
+    return analyze_core(passage, do_retrieve, k)
+
+
+# ------------------------------------------------------------------------------
+# Whole-document mode: read a file, chunk it, verify every chunk, roll up a report
+# ------------------------------------------------------------------------------
+
+def _read_document(path: str) -> str:
+    """Best-effort plain-text extraction from .txt/.md/.pdf/.docx."""
+    ext = os.path.splitext(path)[1].lower()
+    if ext == ".pdf":
+        try:
+            from pypdf import PdfReader
+        except Exception:
+            try:
+                from PyPDF2 import PdfReader  # older name; either works
+            except Exception:
+                raise RuntimeError("PDF support needs 'pypdf' (pip install pypdf). "
+                                   "Or paste the text, or upload .txt/.md.")
+        return "\n\n".join((pg.extract_text() or "") for pg in PdfReader(path).pages)
+    if ext == ".docx":
+        try:
+            import docx  # python-docx
+        except Exception:
+            raise RuntimeError("DOCX support needs 'python-docx' (pip install python-docx). "
+                               "Or paste the text, or upload .txt/.md.")
+        return "\n".join(p.text for p in docx.Document(path).paragraphs)
+    # .txt / .md / anything else: read as UTF-8 text.
+    with open(path, "r", encoding="utf-8", errors="replace") as fh:
+        return fh.read()
+
+
+def chunk_document(text: str, max_chars: int = 600) -> list[str]:
+    """Split into verifiable chunks on blank lines, packing short paragraphs
+    together and hard-splitting any paragraph longer than max_chars."""
+    paras = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+    chunks: list[str] = []
+    buf = ""
+    for p in paras:
+        if len(p) > max_chars and buf:  # keep document order: flush first
+            chunks.append(buf); buf = ""
+        while len(p) > max_chars:  # a single huge paragraph -> hard slices
+            cut = p.rfind(" ", 0, max_chars)
+            cut = cut if cut > 0 else max_chars
+            chunks.append(p[:cut].strip())
+            p = p[cut:].strip()
+        if not buf:
+            buf = p
+        elif len(buf) + len(p) + 2 <= max_chars:
+            buf += "\n\n" + p
+        else:
+            chunks.append(buf); buf = p
+    if buf:
+        chunks.append(buf)
+    return chunks
+
+
+def analyze_document(file_obj, do_retrieve: bool, k: int):
+    """Run the copy-desk pass across an uploaded document, chunk by chunk."""
+    if file_obj is None:
+        return "Upload a document (.txt, .md, .pdf, or .docx).", ""
+    path = file_obj if isinstance(file_obj, str) else getattr(file_obj, "name", None)
+    try:
+        text = _read_document(path)
+    except Exception as e:
+        return f"Could not read the document: {e}", ""
+    chunks = chunk_document(text)
+    if not chunks:
+        return "The document appears to be empty.", ""
+
+    sections, all_sources, risk = [], [], 0
+    for i, ch in enumerate(chunks, 1):
+        report, src_md = analyze_core(ch, do_retrieve, k)
+        # Count libel-risk items = claims the model could not back with a source.
+        risk += report.count("❌ UNSUPPORTED") + report.count("⚠️ MISLEADING")
+        preview = ch if len(ch) <= 160 else ch[:157] + "…"
+        sections.append(f"---\n\n#### § {i}\n> {preview}\n\n{report}")
+        if src_md and src_md not in all_sources and not src_md.startswith("_("):
+            all_sources.append(src_md)
+
+    header = (f"## Document report — {len(chunks)} section(s)\n\n"
+              f"**Potential legal-risk items** (unsupported or misleading factual "
+              f"claims): **{risk}**\n")
+    if risk:
+        header += ("\n> ⚠️ Each item below marked UNSUPPORTED or MISLEADING is an "
+                   "assertion the desk could not tie to a real source — the kind of "
+                   "unbacked factual claim that carries defamation/libel exposure. "
+                   "Add a citation or soften it.\n")
+    body = "\n\n".join(sections)
+    sources_md = "\n\n".join(all_sources) if all_sources else "_(no sources)_"
+    return header + "\n" + body, sources_md
 
 
 NEWSPAPER_CSS = """
@@ -183,27 +323,54 @@ with gr.Blocks(title="The Verifier", css=NEWSPAPER_CSS, theme=gr.themes.Base(
       <hr class="ruleline"/>
     </div>
     """)
-    inp = gr.Textbox(label="Copy to check", lines=3,
-                     placeholder="Enrollment rose 12 percent, according to a district report.")
-    with gr.Row():
-        retrieve = gr.Checkbox(value=False,
-                               label="Retrieve sources & verify claims (slower; off = AP style only)")
-        k = gr.Slider(2, 6, value=4, step=1, label="Sources to pull")
-    btn = gr.Button("Send to the copy desk", variant="primary", elem_id="analyze-btn")
-    out = gr.Markdown(elem_id="result")
-    src = gr.Markdown(elem_id="sources")
-    btn.click(analyze, [inp, retrieve, k], [out, src])
-    gr.Examples([
-        ["The meeting has 5 members and starts at 3:00 PM on December 25.", False, 4],
-        ["Enrollment rose 12 percent this year.", False, 4],
-        ["The James Webb Space Telescope launched on December 25, 2021 from French Guiana.", True, 4],
-    ], [inp, retrieve, k], label="Try a headline")
+    with gr.Tabs():
+        with gr.Tab("Paste copy"):
+            inp = gr.Textbox(
+                label="Copy to check", lines=4,
+                placeholder="Paste a sentence or paragraph. Include links "
+                            "(e.g. https://… ) and the desk will verify them too.")
+            with gr.Row():
+                retrieve = gr.Checkbox(
+                    value=False,
+                    label="Retrieve sources & verify claims (slower; off = AP style + links only)")
+                k = gr.Slider(2, 6, value=4, step=1, label="Sources to pull")
+            btn = gr.Button("Send to the copy desk", variant="primary", elem_id="analyze-btn")
+            out = gr.Markdown(elem_id="result")
+            src = gr.Markdown(elem_id="sources")
+            btn.click(analyze, [inp, retrieve, k], [out, src])
+            gr.Examples([
+                ["The meeting has 5 members and starts at 3:00 PM on December 25.", False, 4],
+                ["Enrollment rose 12 percent this year.", False, 4],
+                ["The James Webb Space Telescope launched on December 25, 2021 from French Guiana.", True, 4],
+                ["The report (https://en.wikipedia.org/wiki/James_Webb_Space_Telescope) "
+                 "says the telescope launched in 2021.", False, 4],
+            ], [inp, retrieve, k], label="Try a headline")
+
+        with gr.Tab("Whole document"):
+            gr.Markdown("Upload a **.txt, .md, .pdf, or .docx**. The desk splits it "
+                        "into sections and checks every claim and link throughout — "
+                        "flagging unbacked factual assertions (the libel-risk ones).")
+            doc = gr.File(label="Document", file_types=[".txt", ".md", ".pdf", ".docx"])
+            with gr.Row():
+                doc_retrieve = gr.Checkbox(
+                    value=False,
+                    label="Retrieve sources & verify claims (much slower on long docs)")
+                doc_k = gr.Slider(2, 6, value=4, step=1, label="Sources per section")
+            doc_btn = gr.Button("Check the whole document", variant="primary", elem_id="analyze-btn")
+            doc_out = gr.Markdown(elem_id="result")
+            doc_src = gr.Markdown(elem_id="sources")
+            doc_btn.click(analyze_document, [doc, doc_retrieve, doc_k], [doc_out, doc_src])
 
 
 if __name__ == "__main__":
     print("Loading UI... model loads on first analyze (~1 min), then stays warm.")
-    # SHARE=1 -> public gradio.live URL (Colab / remote). Else local browser.
+    # SHARE=1        -> public gradio.live URL (Colab / remote).
+    # GRADIO_SERVER_NAME set (e.g. server/systemd) -> bind that host:port, no browser.
+    # else           -> local browser.
     if os.environ.get("SHARE") == "1":
         app.launch(share=True, server_name="0.0.0.0")
+    elif os.environ.get("GRADIO_SERVER_NAME"):
+        app.launch(server_name=os.environ["GRADIO_SERVER_NAME"],
+                   server_port=int(os.environ.get("GRADIO_SERVER_PORT", "7860")))
     else:
         app.launch(inbrowser=True)

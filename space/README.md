@@ -18,6 +18,11 @@ A fine-tuned **Qwen3-1.7B** (QLoRA) that acts as a newsroom copy desk:
 - **Verifies claims** against retrieved sources — it only marks a claim `supported` when it
   can quote the verbatim backing sentence from a real source, and refuses to vouch otherwise
   (the anti-hallucination behavior a prompt can't guarantee).
+- **Verifies links in your copy** — paste text with URLs and it checks each link is alive
+  (dead / redirect / alive) *and* whether the linked page actually backs the adjacent claim.
+- **Checks whole documents** — upload a `.txt`, `.md`, `.pdf`, or `.docx` and it splits the
+  document into sections, verifies every claim and link, and tallies unbacked factual
+  assertions (the defamation/libel-risk items).
 - **Flags AP Style** issues deterministically (numbers, dates, times, ages, attribution, …).
 
 **Thesis:** a tiny fine-tuned model beats prompted frontier models at this narrow task —
