@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Verifier — in your browser</title>
+<meta name="description" content="A fine-tuned newsroom verifier that fact-checks claims and flags AP style — running entirely in your browser via WebGPU. Nothing you type leaves your device." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1a1a1a; --paper:#f4f1ea; --card:#fffdf8; --line:#d8d0c0; --rule:#cfc7b8; --muted:#6b6257; --accent:#8b2635; }
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font-family:'Spectral',Georgia,serif;
+         margin:0; padding:0 16px 64px; line-height:1.55; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header { text-align:center; padding: 34px 0 6px; }
+  .dateline { font-size:.78rem; letter-spacing:1px; color:var(--muted); display:flex;
+              justify-content:space-between; border-bottom:1px solid var(--rule); padding-bottom:10px; }
+  h1.paper-name { font-family:'Playfair Display',Georgia,serif; font-weight:900; font-size:3.4rem;
+                  letter-spacing:-.5px; margin:22px 0 10px; line-height:1.1; }
+  .kicker { font-style:italic; color:var(--muted); font-size:1.05rem; }
+  .ruleline { border:none; border-top:3px double var(--ink); margin:18px 0 4px; }
+  .badge { display:inline-block; background:var(--accent); color:#fff; font-size:.72rem; letter-spacing:.5px;
+           padding:3px 9px; border-radius:2px; margin-top:10px; text-transform:uppercase; }
+  label { display:block; font-weight:600; color:#3a352c; margin:18px 0 6px; }
+  textarea { width:100%; font-family:'Spectral',Georgia,serif; font-size:1rem; background:var(--card);
+             border:1px solid var(--line); border-radius:2px; padding:12px 14px; color:var(--ink); resize:vertical; }
+  .hint { font-size:.82rem; color:var(--muted); margin:4px 0 0; }
+  button { margin-top:16px; background:var(--accent); color:#fff; border:none; font-family:'Spectral',Georgia,serif;
+           font-weight:600; font-size:1rem; letter-spacing:.3px; padding:11px 20px; border-radius:2px; cursor:pointer; }
+  button:hover { background:#6f1e2a; }
+  button:disabled { opacity:.55; cursor:default; }
+  #status { min-height:1.2em; font-size:.9rem; color:var(--muted); margin-top:14px; }
+  #result { background:var(--card); border:1px solid var(--line); border-radius:2px; padding:8px 22px 18px; margin-top:18px; }
+  #result:empty { display:none; }
+  #result h3 { font-family:'Playfair Display',Georgia,serif; font-size:1.1rem; border-bottom:1px solid var(--rule);
+               padding-bottom:4px; margin:18px 0 8px; }
+  ul.verdicts { list-style:none; padding:0; margin:0; }
+  ul.verdicts li { padding:10px 0; border-bottom:1px dotted var(--rule); }
+  .sub { font-size:.9rem; color:#4a453c; margin-top:3px; }
+  .note { font-size:.86rem; color:var(--muted); font-style:italic; }
+  .err { color:var(--accent); font-weight:600; }
+  a { color:var(--accent); }
+  footer { text-align:center; color:var(--muted); font-size:.8rem; margin-top:36px; }
+  pre { white-space:pre-wrap; background:#f0ece2; padding:10px; border-radius:2px; font-size:.82rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="dateline"><span>In-Browser Edition</span><span>Qwen3-1.7B · WebGPU</span></div>
+    <h1 class="paper-name">The Verifier</h1>
+    <div class="kicker">A cited newsroom copy desk that checks AP style and verifies every
+      claim against a real source — now running entirely on your own device.</div>
+    <span class="badge">100% private · no server · nothing leaves your browser</span>
+    <hr class="ruleline" />
+  </header>
+
+  <main>
+    <label for="passage">Copy to check</label>
+    <textarea id="passage" rows="4" placeholder="Enrollment rose 12 percent, according to a district report. See https://example.com/report"></textarea>
+    <p class="hint">Include links right in the text — they'll be detected and listed.</p>
+
+    <label for="sources">Sources <span style="font-weight:400;color:var(--muted)">(paste the article text the claim should be checked against)</span></label>
+    <textarea id="sources" rows="5" placeholder="https://en.wikipedia.org/wiki/James_Webb_Space_Telescope
+The James Webb Space Telescope was launched on 25 December 2021 from French Guiana.
+
+(Separate multiple sources with a blank line. First line = URL, rest = text.)"></textarea>
+
+    <button id="analyze">Send to the copy desk</button>
+    <div id="status"></div>
+    <div id="result"></div>
+  </main>
+
+  <footer>
+    Fine-tuned Qwen3-1.7B (QLoRA) · runs in-browser via
+    <a href="https://github.com/mlc-ai/web-llm" target="_blank" rel="noopener">WebLLM</a> ·
+    <a href="https://huggingface.co/tiffuhknee/qwen3-1.7b-newsroom-verifier" target="_blank" rel="noopener">model on HF</a> ·
+    <a href="https://github.com/oshikanoma/slm" target="_blank" rel="noopener">source</a>
+  </footer>
+</div>
+
+<script src="./ap_rules.js"></script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
