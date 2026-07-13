@@ -9,10 +9,12 @@
 import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
 import { buildBundle } from "./retriever.js";
 
-// jsDelivr's dependency-resolving ESM build (+esm) rewrites the package's bare
-// imports (onnxruntime-web/webgpu, …) to real URLs so the browser can load them.
-const TRANSFORMERS_URL =
-  "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/+esm";
+// Load via esm.sh — verified to keep onnxruntime-web's `webgpuInit` intact.
+// jsDelivr/esm.run re-transpile ORT and strip webgpuInit ("H().webgpuInit is not
+// a function"); esm.sh preserves it. If WebGPU init still fails on a given GPU,
+// ensureModel() automatically retries on the WASM (CPU) backend, which never
+// touches webgpuInit — so the app produces a result regardless.
+const TRANSFORMERS_URL = "https://esm.sh/@huggingface/transformers@4.2.0";
 
 const $ = (id) => document.getElementById(id);
 let tokenizer = null, model = null, loading = false;
@@ -32,15 +34,24 @@ async function ensureModel() {
       if (p.status === "progress" && p.file && p.total) {
         const pct = Math.round((p.loaded / p.total) * 100);
         setStatus(`Downloading ${escapeHtml(p.file)} — ${pct}% (cached after first load)`);
-      } else if (p.status === "ready") {
-        setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
       }
     };
     tokenizer = await AutoTokenizer.from_pretrained(MODEL_REPO, { progress_callback: progress });
-    model = await AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
-      dtype: MODEL_DTYPE, device: MODEL_DEVICE, progress_callback: progress,
+
+    // Try WebGPU (fast); if its backend fails to init on this GPU/driver, fall
+    // back to WASM (CPU) so the app still works — slower but universal.
+    const tryLoad = (device) => AutoModelForCausalLM.from_pretrained(MODEL_REPO, {
+      dtype: MODEL_DTYPE, device, progress_callback: progress,
     });
-    setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
+    try {
+      model = await tryLoad(MODEL_DEVICE);           // "webgpu"
+      setStatus("✅ Model ready — running on your GPU. Nothing you type leaves your device.");
+    } catch (gpuErr) {
+      console.warn("WebGPU load failed, falling back to CPU (WASM):", gpuErr);
+      setStatus("WebGPU unavailable on this browser — loading the slower CPU engine instead…");
+      model = await tryLoad("wasm");
+      setStatus("✅ Model ready (CPU mode — slower). Nothing you type leaves your device.");
+    }
   } catch (e) {
     setStatus("");
     loading = false;
