@@ -4,6 +4,7 @@
 import { AutoTokenizer, AutoModelForCausalLM } from
   "https://esm.run/@huggingface/transformers@4.2.0";
 import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
+import { buildBundle } from "./retriever.js";
 
 const $ = (id) => document.getElementById(id);
 let tokenizer = null, model = null, loading = false;
@@ -127,36 +128,56 @@ function renderAP(hits) {
 function renderLinks(links) {
   if (!links.length) return "";
   const items = links.map((u) => `<li>🔗 ${linkify(u)}</li>`).join("");
-  return `<h3>🔗 Links found in your copy</h3><ul class="verdicts">${items}</ul>` +
-    `<p class="note">A browser page can't fetch other sites to auto-verify a link's ` +
-    `content — paste the linked page's text into “Sources” and the model checks the claim against it.</p>`;
+  return `<h3>🔗 Links found in your copy</h3><ul class="verdicts">${items}</ul>`;
+}
+
+function renderSources(sources, query) {
+  if (!sources.length) return "";
+  const items = sources.map((s) => `<li>${linkify(s.url)}</li>`).join("");
+  return `<h3>📚 Sources it looked up</h3>` +
+    `<p class="note">Searched Wikipedia for: “${escapeHtml(query)}”</p>` +
+    `<ul class="verdicts">${items}</ul>`;
 }
 
 // ---- Main handler ----------------------------------------------------------
 async function onAnalyze() {
   const passage = $("passage").value.trim();
-  const sourcesRaw = $("sources").value.trim();
+  const manualRaw = ($("sources")?.value || "").trim();
   if (!passage) { $("result").innerHTML = "<p>Enter a passage.</p>"; return; }
 
   // AP + links are instant and offline.
   const ap = window.apCheck(passage);
   const links = extractLinks(passage);
-  let html = renderLinks(links) + renderAP(ap);
+  const tail = renderLinks(links) + renderAP(ap);
 
-  // Claim verification needs sources + the model.
-  const sources = parseSources(sourcesRaw);
-  if (!sources.length) {
-    $("result").innerHTML =
-      `<p class="note">Add one or more sources below to verify the claim against them.</p>` + html;
-    return;
-  }
   $("analyze").disabled = true;
-  $("result").innerHTML = `<p class="note">Verifying against ${sources.length} source(s)…</p>` + html;
   try {
+    // Sources: auto-look-up from Wikipedia, unless the user pasted their own.
+    let sources, query = "";
+    const manual = parseSources(manualRaw);
+    if (manual.length) {
+      sources = manual;
+    } else {
+      $("result").innerHTML = `<p class="note">Looking up sources…</p>` + tail;
+      const res = await buildBundle(passage, 4);
+      sources = res.bundle; query = res.query;
+    }
+
+    if (!sources.length) {
+      $("result").innerHTML =
+        `<p class="note">No sources found for this passage — try rephrasing, or paste a source below. ` +
+        `(Free lookup uses Wikipedia, so obscure or breaking-news claims may not be found.)</p>` + tail;
+      return;
+    }
+
+    const srcMd = manual.length ? "" : renderSources(sources, query);
+    $("result").innerHTML =
+      `<p class="note">Verifying against ${sources.length} source(s) on your GPU…</p>` + srcMd + tail;
     const obj = await verifyClaims(passage, sources);
-    $("result").innerHTML = renderVerdicts(obj) + renderLinks(links) + renderAP(ap);
+    $("result").innerHTML = renderVerdicts(obj) + srcMd + tail;
   } catch (e) {
-    $("result").innerHTML = `<p class="err">Error: ${escapeHtml(String(e && e.message || e))}</p>` + html;
+    $("result").innerHTML =
+      `<p class="err">Error: ${escapeHtml(String((e && e.message) || e))}</p>` + tail;
   } finally {
     $("analyze").disabled = false;
   }
