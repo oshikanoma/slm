@@ -10,6 +10,6 @@ export const MODEL_DTYPE = "q4";       // -> onnx/model_q4.onnx
 export const MODEL_DEVICE = "webgpu";
 
 // Whole-web search relay (Cloudflare Worker holding the Tavily key).
-// Set this to your deployed Worker URL to enable open-web lookup.
-// While empty, the app falls back to free in-browser Wikipedia search.
-export const WORKER_URL = "";
+// When set, the app does open-web lookup; if it ever errors, it falls back
+// to free in-browser Wikipedia search automatically.
+export const WORKER_URL = "https://verifier-search.tiffuhknee.workers.dev";
