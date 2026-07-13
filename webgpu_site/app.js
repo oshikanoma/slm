@@ -1,13 +1,18 @@
 // The Verifier — 100% in-browser (WebGPU). No server: YOUR fine-tuned model runs
 // on the visitor's own GPU via Transformers.js. Weights (ONNX q4) stream from the
 // HF Hub and cache locally after the first load.
-// IMPORTANT: load the PREBUILT web bundle from jsDelivr, not esm.run. esm.run
-// re-transpiles the package and breaks onnxruntime-web's WebGPU binding
-// ("H().webgpuInit is not a function"). This dist file is served as-is.
-import { AutoTokenizer, AutoModelForCausalLM } from
-  "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/dist/transformers.web.js";
+//
+// The heavy Transformers.js library is loaded LAZILY (dynamic import inside
+// ensureModel) — NOT as a top-level import. A top-level import that throws would
+// abort the whole module and leave the button dead; lazy-loading keeps the UI
+// working and surfaces any library-load error on screen instead of silently.
 import { SYSTEM_PROMPT, MODEL_REPO, MODEL_DTYPE, MODEL_DEVICE } from "./config.js";
 import { buildBundle } from "./retriever.js";
+
+// jsDelivr's dependency-resolving ESM build (+esm) rewrites the package's bare
+// imports (onnxruntime-web/webgpu, …) to real URLs so the browser can load them.
+const TRANSFORMERS_URL =
+  "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0/+esm";
 
 const $ = (id) => document.getElementById(id);
 let tokenizer = null, model = null, loading = false;
@@ -22,6 +27,7 @@ async function ensureModel() {
   setStatus("Loading your fine-tuned model into the browser… first time downloads " +
             "~2&nbsp;GB (then it's cached and instant). Runs entirely on your device.");
   try {
+    const { AutoTokenizer, AutoModelForCausalLM } = await import(TRANSFORMERS_URL);
     const progress = (p) => {
       if (p.status === "progress" && p.file && p.total) {
         const pct = Math.round((p.loaded / p.total) * 100);
@@ -216,4 +222,6 @@ function boot() {
     $("analyze").textContent = "Check AP style & links";
   }
 }
-document.addEventListener("DOMContentLoaded", boot);
+// Module scripts are deferred, so DOMContentLoaded may already have fired.
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
